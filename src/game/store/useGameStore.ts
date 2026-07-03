@@ -11,6 +11,7 @@ import { selectSessionQueue } from "../engine/leitner";
 import { updateProgress } from "../engine/leitner";
 import { buildRound } from "../engine/session";
 import { useProgressStore } from "./useProgressStore";
+import { useSessionHistory } from "./useSessionHistory";
 
 export type GamePhase =
   | "home"
@@ -132,6 +133,14 @@ export const useGameStore = create<GameState>((set, get) => ({
     const nextIndex = state.currentIndex + 1;
 
     if (nextIndex >= state.queue.length) {
+      // Record completed session to history
+      useSessionHistory.getState().addSession({
+        mode: state.mode,
+        score: state.score,
+        hits: state.hits,
+        total: state.queue.length,
+        maxStreak: state.maxStreak,
+      });
       set({ phase: "scorecard" });
       return;
     }

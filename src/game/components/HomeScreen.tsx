@@ -1,5 +1,7 @@
 import type { Seed } from "../../data/schema";
 import type { SessionMode } from "../engine/session";
+import { useSessionHistory } from "../store/useSessionHistory";
+import { SessionHistory } from "./SessionHistory";
 
 interface HomeScreenProps {
   seed: Seed;
@@ -49,8 +51,16 @@ export function HomeScreen({ seed, cardsSeen, onStart }: HomeScreenProps) {
           comingSoon
         />
       </div>
+
+      {/* Session history */}
+      <SessionHistorySection />
     </div>
   );
+}
+
+function SessionHistorySection() {
+  const { sessions } = useSessionHistory();
+  return <SessionHistory sessions={sessions} />;
 }
 
 function StatCard({ label, value }: { label: string; value: string }) {
