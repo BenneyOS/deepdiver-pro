@@ -53,6 +53,36 @@ export function selectSessionQueue(
   return weighted.slice(0, count).map((w) => w.card);
 }
 
+export function selectBossDealsQueue(
+  cards: Card[],
+  progressMap: Map<string, CardProgress>,
+  count: number,
+): Card[] {
+  const active = cards.filter((c) => c.active);
+  const weighted = active.map((card) => {
+    const baseWeight = selectionWeight(card, progressMap.get(card.id));
+    const tierBonus = card.tier >= 3 ? 4 : 0;
+    return { card, weight: baseWeight + tierBonus };
+  });
+  weighted.sort((a, b) => b.weight - a.weight);
+  return weighted.slice(0, count).map((w) => w.card);
+}
+
+export function selectFamilyFocusQueue(
+  cards: Card[],
+  progressMap: Map<string, CardProgress>,
+  family: string,
+  count: number,
+): Card[] {
+  const familyCards = cards.filter((c) => c.active && c.family === family);
+  const weighted = familyCards.map((card) => ({
+    card,
+    weight: selectionWeight(card, progressMap.get(card.id)),
+  }));
+  weighted.sort((a, b) => b.weight - a.weight);
+  return weighted.slice(0, count).map((w) => w.card);
+}
+
 export function updateProgress(
   current: CardProgress | undefined,
   cardId: string,

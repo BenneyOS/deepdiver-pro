@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Card, Seed } from "../../data/schema";
+import type { Card, Family, Seed } from "../../data/schema";
 import type { Wager, RoundResult } from "../engine/scoring";
 import type { Round, SessionMode } from "../engine/session";
 import {
@@ -7,11 +7,12 @@ import {
   nextStreak,
   nextMomentum,
 } from "../engine/scoring";
-import { selectSessionQueue } from "../engine/leitner";
+import { selectSessionQueue, selectBossDealsQueue, selectFamilyFocusQueue } from "../engine/leitner";
 import { updateProgress } from "../engine/leitner";
 import { buildRound } from "../engine/session";
 import { useProgressStore } from "./useProgressStore";
 import { useSessionHistory } from "./useSessionHistory";
+import { trackEvent } from "../analytics";
 
 export type GamePhase =
   | "home"
@@ -37,7 +38,9 @@ interface GameState {
   rounds: RoundResult[];
   allCards: Card[];
 
-  startSession: (seed: Seed, mode: SessionMode) => void;
+  focusFamily: Family | null;
+
+  startSession: (seed: Seed, mode: SessionMode, focusFamily?: Family) => void;
   selectAnswer: (optionIndex: number) => void;
   placeWager: (wager: Wager) => void;
   nextRound: () => void;
@@ -60,15 +63,38 @@ export const useGameStore = create<GameState>((set, get) => ({
   hits: 0,
   rounds: [],
   allCards: [],
+  focusFamily: null,
 
-  startSession: (seed: Seed, mode: SessionMode) => {
+  startSession: (seed: Seed, mode: SessionMode, focusFamily?: Family) => {
     const progressMap = useProgressStore.getState().progressMap;
-    const count = mode === "boss-deals" ? 12 : 7;
-    const queue = selectSessionQueue(seed.cards, progressMap, count);
+    let queue: Card[];
+
+    switch (mode) {
+      case "boss-deals":
+        queue = selectBossDealsQueue(seed.cards, progressMap, 12);
+        break;
+      case "family-focus":
+        queue = selectFamilyFocusQueue(
+          seed.cards,
+          progressMap,
+          focusFamily ?? "A",
+          7,
+        );
+        break;
+      default:
+        queue = selectSessionQueue(seed.cards, progressMap, 7);
+        break;
+    }
     const allCards = seed.cards;
     const firstRound = queue.length > 0 ? buildRound(queue[0], allCards) : null;
 
+    trackEvent({
+      event: "session_started",
+      properties: { mode, focusFamily },
+    });
+
     set({
+      focusFamily: focusFamily ?? null,
       phase: "answer",
       mode,
       queue,
@@ -109,6 +135,18 @@ export const useGameStore = create<GameState>((set, get) => ({
       points,
     };
 
+    trackEvent({
+      event: "round_completed",
+      properties: {
+        cardId: round.card.id,
+        family: round.card.family,
+        tier: round.card.tier,
+        correct,
+        wager,
+        points,
+      },
+    });
+
     // Update Leitner progress
     const progressStore = useProgressStore.getState();
     const currentProgress = progressStore.getProgress(round.card.id);
@@ -140,6 +178,18 @@ export const useGameStore = create<GameState>((set, get) => ({
         hits: state.hits,
         total: state.queue.length,
         maxStreak: state.maxStreak,
+      });
+      const accuracy = state.queue.length > 0 ? (state.hits / state.queue.length) * 100 : 0;
+      trackEvent({
+        event: "session_completed",
+        properties: {
+          mode: state.mode,
+          score: state.score,
+          hits: state.hits,
+          total: state.queue.length,
+          maxStreak: state.maxStreak,
+          accuracy: Math.round(accuracy),
+        },
       });
       set({ phase: "scorecard" });
       return;

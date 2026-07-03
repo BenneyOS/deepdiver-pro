@@ -5,6 +5,7 @@ import { authRoutes } from "./routes/auth.js";
 import { cardRoutes } from "./routes/cards.js";
 import { progressRoutes } from "./routes/progress.js";
 import { sessionRoutes } from "./routes/sessions.js";
+import { adminRoutes } from "./routes/admin.js";
 
 const app = Fastify({ logger: true });
 
@@ -23,6 +24,7 @@ async function start(): Promise<void> {
   await app.register(cardRoutes);
   await app.register(progressRoutes);
   await app.register(sessionRoutes);
+  await app.register(adminRoutes);
 
   app.get("/health", async () => ({ status: "ok" }));
 

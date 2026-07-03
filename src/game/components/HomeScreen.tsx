@@ -1,4 +1,6 @@
-import type { Seed } from "../../data/schema";
+import { useState } from "react";
+import type { Seed, Family } from "../../data/schema";
+import { FAMILY_LABELS } from "../../data/schema";
 import type { SessionMode } from "../engine/session";
 import { useSessionHistory } from "../store/useSessionHistory";
 import { SessionHistory } from "./SessionHistory";
@@ -6,10 +8,14 @@ import { SessionHistory } from "./SessionHistory";
 interface HomeScreenProps {
   seed: Seed;
   cardsSeen: number;
-  onStart: (mode: SessionMode) => void;
+  onStart: (mode: SessionMode, focusFamily?: Family) => void;
 }
 
 export function HomeScreen({ seed, cardsSeen, onStart }: HomeScreenProps) {
+  const [showFamilyPicker, setShowFamilyPicker] = useState(false);
+
+  const families = Object.keys(seed.families) as Family[];
+
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       {/* Title */}
@@ -38,19 +44,42 @@ export function HomeScreen({ seed, cardsSeen, onStart }: HomeScreenProps) {
         />
         <ModeButton
           title="Boss Deals"
-          description="12 cards — weighted to tiers 3–4 (questions & objections)"
+          description="12 cards — weighted to tiers 3-4 (diagnostics & objections)"
           onClick={() => onStart("boss-deals")}
-          disabled
-          comingSoon
         />
         <ModeButton
           title="Family Focus"
           description="7 cards — drill a single situation family"
-          onClick={() => onStart("family-focus")}
-          disabled
-          comingSoon
+          onClick={() => setShowFamilyPicker(!showFamilyPicker)}
         />
       </div>
+
+      {/* Family picker for Family Focus mode */}
+      {showFamilyPicker && (
+        <div className="rounded-2xl bg-[var(--ink-light)] p-4 shadow-xl animate-card-deal">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+            Choose a family
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {families.map((fam) => (
+              <button
+                key={fam}
+                type="button"
+                onClick={() => {
+                  setShowFamilyPicker(false);
+                  onStart("family-focus", fam);
+                }}
+                className="rounded-xl bg-slate-700 px-3 py-3 text-left transition-colors hover:bg-slate-600 min-h-[44px]"
+              >
+                <span className="text-xs font-bold text-[var(--accent)]">{fam}.</span>{" "}
+                <span className="text-xs text-[var(--text-secondary)]">
+                  {FAMILY_LABELS[fam]}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Session history */}
       <SessionHistorySection />
@@ -76,37 +105,16 @@ interface ModeButtonProps {
   title: string;
   description: string;
   onClick: () => void;
-  disabled?: boolean;
-  comingSoon?: boolean;
 }
 
-function ModeButton({
-  title,
-  description,
-  onClick,
-  disabled,
-  comingSoon,
-}: ModeButtonProps) {
+function ModeButton({ title, description, onClick }: ModeButtonProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled}
-      className={`w-full rounded-xl p-4 text-left transition-colors min-h-[44px]
-        ${
-          disabled
-            ? "cursor-not-allowed bg-slate-800/50 opacity-60"
-            : "bg-[var(--ink-light)] hover:bg-slate-700"
-        }`}
+      className="w-full rounded-xl bg-[var(--ink-light)] p-4 text-left transition-colors hover:bg-slate-700 min-h-[44px]"
     >
-      <div className="flex items-center justify-between">
-        <span className="font-bold text-[var(--text-primary)]">{title}</span>
-        {comingSoon && (
-          <span className="rounded-full bg-slate-700 px-2 py-0.5 text-xs text-[var(--text-muted)]">
-            M5
-          </span>
-        )}
-      </div>
+      <span className="font-bold text-[var(--text-primary)]">{title}</span>
       <p className="mt-1 text-xs text-[var(--text-muted)]">{description}</p>
     </button>
   );

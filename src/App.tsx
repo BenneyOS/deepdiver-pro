@@ -36,7 +36,7 @@ function App() {
         <HomeScreen
           seed={seed}
           cardsSeen={cardsSeen}
-          onStart={(mode) => game.startSession(seed, mode)}
+          onStart={(mode, focusFamily) => game.startSession(seed, mode, focusFamily)}
         />
       </main>
     );

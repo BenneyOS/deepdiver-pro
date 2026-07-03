@@ -5,10 +5,12 @@ import {
   selectionWeight,
   nextDueAt,
   selectSessionQueue,
+  selectBossDealsQueue,
+  selectFamilyFocusQueue,
   updateProgress,
   INTERVAL_HOURS,
 } from "../leitner";
-import type { Card, CardProgress } from "../../../data/schema";
+import type { Card, CardProgress, Tier } from "../../../data/schema";
 
 function makeCard(id: string, overrides?: Partial<Card>): Card {
   return {
@@ -186,5 +188,49 @@ describe("updateProgress", () => {
       now.getTime() + INTERVAL_HOURS[2] * 60 * 60 * 1000,
     );
     expect(result.nextDueAt).toBe(expectedDue.toISOString());
+  });
+});
+
+describe("selectBossDealsQueue", () => {
+  it("favors tier 3-4 cards over tier 1-2", () => {
+    const cards = [
+      makeCard("t1", { tier: 1 }),
+      makeCard("t2", { tier: 2 }),
+      makeCard("t3", { tier: 3 }),
+      makeCard("t4", { tier: 4 }),
+    ];
+    const result = selectBossDealsQueue(cards, new Map(), 2);
+    const tiers = result.map((c) => c.tier);
+    expect(tiers).toContain(3);
+    expect(tiers).toContain(4);
+  });
+
+  it("returns up to count cards", () => {
+    const tiers: Tier[] = [1, 2, 3, 4];
+    const cards = Array.from({ length: 20 }, (_, i) =>
+      makeCard(`c${i}`, { tier: tiers[i % 4] }),
+    );
+    const result = selectBossDealsQueue(cards, new Map(), 12);
+    expect(result.length).toBe(12);
+  });
+});
+
+describe("selectFamilyFocusQueue", () => {
+  it("only returns cards from the target family", () => {
+    const cards = [
+      makeCard("a1", { family: "A" }),
+      makeCard("b1", { family: "B" }),
+      makeCard("a2", { family: "A" }),
+      makeCard("c1", { family: "C" }),
+    ];
+    const result = selectFamilyFocusQueue(cards, new Map(), "A", 7);
+    expect(result.every((c) => c.family === "A")).toBe(true);
+    expect(result.length).toBe(2);
+  });
+
+  it("returns empty array for unknown family", () => {
+    const cards = [makeCard("a1", { family: "A" })];
+    const result = selectFamilyFocusQueue(cards, new Map(), "Z", 7);
+    expect(result.length).toBe(0);
   });
 });
