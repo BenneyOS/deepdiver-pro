@@ -23,7 +23,7 @@ function App() {
 
   if (!initialized) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--ink)]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--ink)]" role="status" aria-label="Loading">
         <p className="text-[var(--text-muted)]">Loading…</p>
       </div>
     );
@@ -32,19 +32,19 @@ function App() {
   if (game.phase === "home") {
     const cardsSeen = [...progressMap.values()].filter((p) => p.seen > 0).length;
     return (
-      <div className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-8">
+      <main className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-8">
         <HomeScreen
           seed={seed}
           cardsSeen={cardsSeen}
           onStart={(mode) => game.startSession(seed, mode)}
         />
-      </div>
+      </main>
     );
   }
 
   if (game.phase === "scorecard") {
     return (
-      <div className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-8">
+      <main className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-8" aria-label="Scorecard">
         <Scorecard
           score={game.score}
           maxStreak={game.maxStreak}
@@ -54,7 +54,7 @@ function App() {
           onHome={() => game.goHome()}
           onReplay={() => game.startSession(seed, game.mode)}
         />
-      </div>
+      </main>
     );
   }
 
@@ -62,7 +62,7 @@ function App() {
   if (!round) return null;
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-4">
+    <main className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-4" aria-label={`Round ${game.currentIndex + 1} of ${game.queue.length}`}>
       <Hud
         dealNumber={game.currentIndex + 1}
         totalDeals={game.queue.length}
@@ -83,7 +83,7 @@ function App() {
         ) : (
           <>
             {/* Scenario card (compact during answer phase) */}
-            <div className="mx-auto w-full max-w-md rounded-2xl bg-[var(--ink-light)] p-5 shadow-xl">
+            <div className="mx-auto w-full max-w-md rounded-2xl bg-[var(--ink-light)] p-5 shadow-xl animate-card-deal" key={game.currentIndex}>
               <blockquote className="border-l-4 border-[var(--accent)] pl-4 text-lg leading-relaxed text-[var(--text-primary)] italic">
                 &ldquo;{round.card.prompt}&rdquo;
               </blockquote>
@@ -105,7 +105,7 @@ function App() {
           </>
         )}
       </div>
-    </div>
+    </main>
   );
 }
 

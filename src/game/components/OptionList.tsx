@@ -16,17 +16,21 @@ export function OptionList({
   disabled,
 }: OptionListProps) {
   return (
-    <div className="mx-auto w-full max-w-md">
-      <p className="mb-3 text-center text-sm font-medium text-[var(--text-secondary)]">
+    <div className="mx-auto w-full max-w-md" role="group" aria-label={tierLabel}>
+      <p className="mb-3 text-center text-sm font-medium text-[var(--text-secondary)]" id="tier-label">
         {tierLabel}
       </p>
-      <div className="space-y-2">
+      <div className="space-y-2" role="radiogroup" aria-labelledby="tier-label">
         {options.map((option, i) => {
           const isSelected = selectedIndex === i;
+          const label = String.fromCharCode(65 + i);
           return (
             <button
               key={i}
               type="button"
+              role="radio"
+              aria-checked={isSelected}
+              aria-label={`Option ${label}: ${option.text}`}
               disabled={disabled}
               onClick={() => onSelect(i)}
               className={`w-full rounded-xl px-4 py-3 text-left text-sm leading-relaxed transition-colors
@@ -39,7 +43,7 @@ export function OptionList({
                 min-h-[44px]`}
             >
               <span className="mr-2 font-bold text-[var(--text-muted)]">
-                {String.fromCharCode(65 + i)}.
+                {label}.
               </span>
               {option.text}
             </button>
