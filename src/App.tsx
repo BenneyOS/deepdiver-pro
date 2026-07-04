@@ -109,7 +109,7 @@ function App() {
         total={game.queue.length}
       />
       {/* FIX 2: Momentum as separate, visually distinct element */}
-      <MomentumMeter momentum={game.momentum} />
+      <MomentumMeter momentum={game.momentum} streak={game.streak} />
 
       <div className="mt-4 w-full space-y-4">
         {game.phase === "reveal" && game.isCorrect !== null && game.selectedWager ? (
