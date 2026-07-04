@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { AnswerOption } from "../engine/session";
 
 interface OptionListProps {
@@ -15,14 +16,25 @@ export function OptionList({
   onSelect,
   disabled,
 }: OptionListProps) {
+  const [bouncingIdx, setBouncingIdx] = useState<number | null>(null);
+
+  function handleSelect(i: number) {
+    setBouncingIdx(i);
+    setTimeout(() => {
+      setBouncingIdx(null);
+      onSelect(i);
+    }, 200);
+  }
+
   return (
-    <div className="mx-auto w-full max-w-md" role="group" aria-label={tierLabel}>
-      <p className="mb-3 text-center text-sm font-medium text-[var(--text-secondary)]" id="tier-label">
+    <div className="mx-auto w-full max-w-md animate-section-enter" role="group" aria-label={tierLabel} style={{ animationDelay: "150ms" }}>
+      <p className="mb-3 text-center text-sm font-medium text-[var(--text-dim)]" id="tier-label">
         {tierLabel}
       </p>
       <div className="space-y-2" role="radiogroup" aria-labelledby="tier-label">
         {options.map((option, i) => {
           const isSelected = selectedIndex === i;
+          const isBouncing = bouncingIdx === i;
           const label = String.fromCharCode(65 + i);
           return (
             <button
@@ -32,17 +44,19 @@ export function OptionList({
               aria-checked={isSelected}
               aria-label={`Option ${label}: ${option.text}`}
               disabled={disabled}
-              onClick={() => onSelect(i)}
-              className={`w-full rounded-xl px-4 py-3 text-left text-sm leading-relaxed transition-colors
+              onClick={() => handleSelect(i)}
+              className={`w-full rounded-2xl px-4 py-3 text-left text-sm leading-relaxed transition-all
                 ${
                   isSelected
-                    ? "bg-[var(--accent)] text-white"
-                    : "bg-[var(--ink-light)] text-[var(--text-secondary)] hover:bg-slate-700"
+                    ? "bg-[var(--accent)] text-[var(--accent-ink)]"
+                    : "bg-[var(--card)] text-[var(--text-dim)] hover:bg-[var(--card-2)]"
                 }
-                ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
+                ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer active:scale-[0.97]"}
+                ${isBouncing ? "animate-option-bounce" : ""}
                 min-h-[44px]`}
+              style={{ transitionTimingFunction: "var(--ease-standard)" }}
             >
-              <span className="mr-2 font-bold text-[var(--text-muted)]">
+              <span className="mr-2 font-bold text-[var(--text-faint)]">
                 {label}.
               </span>
               {option.text}

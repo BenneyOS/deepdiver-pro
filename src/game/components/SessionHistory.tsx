@@ -17,15 +17,15 @@ interface SessionHistoryProps {
 export function SessionHistory({ sessions }: SessionHistoryProps) {
   if (sessions.length === 0) {
     return (
-      <div className="rounded-2xl bg-[var(--ink-light)] p-4 text-center shadow-xl">
-        <p className="text-sm text-[var(--text-muted)]">No sessions yet. Start a Quick Drill!</p>
+      <div className="rounded-2xl bg-[var(--card)] p-4 text-center shadow-xl">
+        <p className="text-sm text-[var(--text-faint)]">No sessions yet. Start a Quick Drill!</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl bg-[var(--ink-light)] p-4 shadow-xl">
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+    <div className="rounded-2xl bg-[var(--card)] p-4 shadow-xl">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
         Recent Sessions
       </p>
       <div className="space-y-2">
@@ -42,18 +42,18 @@ export function SessionHistory({ sessions }: SessionHistoryProps) {
           return (
             <div
               key={session.id}
-              className="flex items-center justify-between rounded-xl bg-slate-800/50 px-3 py-2"
+              className="flex items-center justify-between rounded-xl bg-[var(--card-2)]/50 px-3 py-2"
             >
               <div className="flex items-center gap-3">
-                <span className="text-lg font-black text-[var(--accent)]">{grade}</span>
+                <span className="font-telemetry text-lg font-black text-[var(--accent)]">{grade}</span>
                 <div>
-                  <p className="text-xs font-medium text-[var(--text-primary)]">{rank}</p>
-                  <p className="text-xs text-[var(--text-muted)]">{dateStr} &middot; {session.mode}</p>
+                  <p className="text-xs font-medium text-[var(--text)]">{rank}</p>
+                  <p className="text-xs text-[var(--text-faint)]">{dateStr} &middot; {session.mode}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm font-bold text-[var(--text-primary)]">{session.score}</p>
-                <p className="text-xs text-[var(--text-muted)]">{session.hits}/{session.total}</p>
+                <p className="font-telemetry text-sm font-bold text-[var(--text)]">{session.score}</p>
+                <p className="font-telemetry text-xs text-[var(--text-faint)]">{session.hits}/{session.total}</p>
               </div>
             </div>
           );

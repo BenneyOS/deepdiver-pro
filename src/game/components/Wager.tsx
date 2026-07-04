@@ -6,8 +6,8 @@ interface WagerProps {
 
 export function Wager({ onWager }: WagerProps) {
   return (
-    <div className="mx-auto w-full max-w-md animate-card-deal" role="group" aria-label="Confidence wager">
-      <p className="mb-4 text-center text-sm font-medium text-[var(--text-secondary)]" id="wager-label">
+    <div className="mx-auto w-full max-w-md animate-section-enter" role="group" aria-label="Confidence wager" style={{ animationDelay: "100ms" }}>
+      <p className="mb-4 text-center text-sm font-medium text-[var(--text-dim)]" id="wager-label">
         How confident are you?
       </p>
       <div className="flex gap-3" role="radiogroup" aria-labelledby="wager-label">
@@ -15,21 +15,23 @@ export function Wager({ onWager }: WagerProps) {
           type="button"
           onClick={() => onWager("hunch")}
           aria-label="Hunch — 1 times points multiplier"
-          className="flex-1 rounded-xl bg-slate-700 px-4 py-4 text-center transition-colors hover:bg-slate-600 min-h-[44px]"
+          className="flex-1 rounded-2xl bg-[var(--card)] px-4 py-4 text-center transition-all hover:bg-[var(--card-2)] active:scale-[0.97] min-h-[44px]"
+          style={{ transitionTimingFunction: "var(--ease-standard)" }}
         >
-          <div className="text-lg font-bold text-[var(--text-primary)]">
+          <div className="text-lg font-bold text-[var(--text)]">
             Hunch
           </div>
-          <div className="text-xs text-[var(--text-muted)]">&times;1 points</div>
+          <div className="font-telemetry text-xs text-[var(--text-faint)]">&times;1 points</div>
         </button>
         <button
           type="button"
           onClick={() => onWager("read-the-room")}
           aria-label="Read the Room — 2 times points multiplier"
-          className="flex-1 rounded-xl bg-[var(--accent)] px-4 py-4 text-center transition-colors hover:bg-blue-700 min-h-[44px]"
+          className="flex-1 rounded-2xl bg-[var(--accent)] px-4 py-4 text-center transition-all hover:brightness-110 active:scale-[0.97] min-h-[44px]"
+          style={{ transitionTimingFunction: "var(--ease-standard)" }}
         >
-          <div className="text-lg font-bold text-white">Read the Room</div>
-          <div className="text-xs text-blue-200">&times;2 points</div>
+          <div className="text-lg font-bold text-[var(--accent-ink)]">Read the Room</div>
+          <div className="font-telemetry text-xs text-[var(--accent-ink)]/70">&times;2 points</div>
         </button>
       </div>
     </div>

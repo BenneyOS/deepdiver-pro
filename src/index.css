@@ -1,16 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #0F1419;
-  --ink-light: #1A2129;
-  --accent: #3B82F6;
-  --accent-hover: #2563EB;
-  --success: #22C55E;
-  --danger: #EF4444;
-  --warning: #F59E0B;
-  --text-primary: #F1F5F9;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  /* Design PRD v2 — deep ink + gold palette */
+  --page: #14161C;
+  --card: #1E212A;
+  --card-2: #262A34;
+  --accent: #E8B84B;
+  --accent-ink: #3A2A05;
+  --success: #35C48A;
+  --reward: #FFE08A;
+  --danger: #E5637A;
+  --text: #F0EDE6;
+  --text-dim: #9AA0AC;
+  --text-faint: #5A616E;
+
+  /* Legacy aliases for gradual migration */
+  --ink: var(--page);
+  --ink-light: var(--card);
+  --accent-hover: #D4A43A;
+  --text-primary: var(--text);
+  --text-secondary: var(--text-dim);
+  --text-muted: var(--text-faint);
+
+  /* Motion easings */
+  --ease-spring: cubic-bezier(.3, 1.6, .4, 1);
+  --ease-standard: cubic-bezier(.2, .9, .3, 1);
+
+  /* Fonts */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 }
 
 html, body, #root {
@@ -20,9 +39,9 @@ html, body, #root {
 }
 
 body {
-  background-color: var(--ink);
-  color: var(--text-primary);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--page);
+  color: var(--text);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
@@ -45,7 +64,9 @@ body {
   }
 }
 
-/* Card deal animation */
+/* === ANIMATIONS === */
+
+/* Card deal — gentle rise + fade */
 @keyframes card-deal {
   from {
     opacity: 0;
@@ -58,7 +79,7 @@ body {
 }
 
 .animate-card-deal {
-  animation: card-deal 0.3s ease-out;
+  animation: card-deal 250ms var(--ease-standard);
 }
 
 /* Momentum pulse */
@@ -69,4 +90,112 @@ body {
 
 .animate-momentum-pulse {
   animation: momentum-pulse 1.5s ease-in-out infinite;
+}
+
+/* Option spring bounce on tap */
+@keyframes option-bounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.92); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.animate-option-bounce {
+  animation: option-bounce 350ms var(--ease-spring);
+}
+
+/* Streak pop — signature reward moment */
+@keyframes streak-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.animate-streak-pop {
+  animation: streak-pop 400ms var(--ease-spring);
+}
+
+/* Points count-up shimmer */
+@keyframes points-glow {
+  0% { text-shadow: 0 0 0 transparent; }
+  50% { text-shadow: 0 0 12px var(--reward); }
+  100% { text-shadow: 0 0 0 transparent; }
+}
+
+.animate-points-glow {
+  animation: points-glow 600ms ease-out;
+}
+
+/* Particle burst */
+@keyframes particle-burst {
+  0% { opacity: 1; transform: scale(0.3); }
+  50% { opacity: 0.8; }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
+.animate-particle-burst {
+  animation: particle-burst 500ms ease-out forwards;
+}
+
+/* Path node idle bob */
+@keyframes node-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-node-bob {
+  animation: node-bob 1.6s ease-in-out infinite;
+}
+
+/* Rank spring-in */
+@keyframes rank-spring {
+  0% { opacity: 0; transform: scale(0.5); }
+  60% { transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-rank-spring {
+  animation: rank-spring 500ms var(--ease-spring);
+}
+
+/* Agentic log line fade-in */
+@keyframes log-line-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-log-line {
+  animation: log-line-in 300ms var(--ease-standard) both;
+}
+
+/* Mastery bar fill */
+@keyframes bar-fill {
+  from { width: 0; }
+}
+
+/* Progressive section enter */
+@keyframes section-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-section-enter {
+  animation: section-enter 300ms var(--ease-standard) both;
+}
+
+/* Serif italic for buyer quotes */
+.font-buyer-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+/* Mono for telemetry / scores */
+.font-telemetry {
+  font-family: var(--font-mono);
 }

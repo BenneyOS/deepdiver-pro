@@ -1,39 +1,60 @@
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { Seed } from "./data/schema";
 import seedData from "./data/seed.json";
 import { useGameStore } from "./game/store/useGameStore";
 import { useProgressStore } from "./game/store/useProgressStore";
-import { HomeScreen } from "./game/components/HomeScreen";
+import { PathHomeScreen } from "./game/components/PathHomeScreen";
 import { Hud } from "./game/components/Hud";
 import { MomentumMeter } from "./game/components/MomentumMeter";
 import { OptionList } from "./game/components/OptionList";
 import { Wager } from "./game/components/Wager";
 import { Reveal } from "./game/components/Reveal";
 import { Scorecard } from "./game/components/Scorecard";
+import { AgenticLog } from "./game/components/AgenticLog";
+import { Ada } from "./game/components/Ada";
 
 const seed = seedData as Seed;
 
 function App() {
-  const { hydrate, initialized, progressMap } = useProgressStore();
+  const { hydrate, initialized } = useProgressStore();
   const game = useGameStore();
+  const [showLog, setShowLog] = useState(false);
+  const [logKey, setLogKey] = useState(0);
 
   useEffect(() => {
     hydrate();
   }, [hydrate]);
 
+  // Show agentic log between rounds (not on first or last)
+  const handleNextRound = useCallback(() => {
+    const isLast = game.currentIndex === game.queue.length - 1;
+    if (!isLast && game.currentIndex > 0 && game.currentIndex % 3 === 0) {
+      setShowLog(true);
+      setLogKey((k) => k + 1);
+    } else {
+      game.nextRound();
+    }
+  }, [game]);
+
+  const handleLogComplete = useCallback(() => {
+    setShowLog(false);
+    game.nextRound();
+  }, [game]);
+
   if (!initialized) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--ink)]" role="status" aria-label="Loading">
-        <p className="text-[var(--text-muted)]">Loading…</p>
+      <div className="flex min-h-screen items-center justify-center bg-[var(--page)]" role="status" aria-label="Loading">
+        <Ada expression="thinking" size={48} />
+        <p className="ml-3 text-[var(--text-faint)]">Loading&hellip;</p>
       </div>
     );
   }
 
   if (game.phase === "home") {
-    const cardsSeen = [...progressMap.values()].filter((p) => p.seen > 0).length;
+    const cardsSeen = [...useProgressStore.getState().progressMap.values()].filter((p) => p.seen > 0).length;
     return (
-      <main className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-8">
-        <HomeScreen
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8">
+        <PathHomeScreen
           seed={seed}
           cardsSeen={cardsSeen}
           onStart={(mode, focusFamily) => game.startSession(seed, mode, focusFamily)}
@@ -44,7 +65,7 @@ function App() {
 
   if (game.phase === "scorecard") {
     return (
-      <main className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-8" aria-label="Scorecard">
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8" aria-label="Scorecard">
         <Scorecard
           score={game.score}
           maxStreak={game.maxStreak}
@@ -61,8 +82,24 @@ function App() {
   const round = game.currentRound;
   if (!round) return null;
 
+  // Agentic Log transition between rounds
+  if (showLog) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[var(--page)] px-4 py-4">
+        <AgenticLog
+          key={logKey}
+          hits={game.hits}
+          total={game.currentIndex + 1}
+          streak={game.streak}
+          momentum={game.momentum}
+          onComplete={handleLogComplete}
+        />
+      </main>
+    );
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center bg-[var(--ink)] px-4 py-4" aria-label={`Round ${game.currentIndex + 1} of ${game.queue.length}`}>
+    <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-4" aria-label={`Round ${game.currentIndex + 1} of ${game.queue.length}`}>
       <Hud
         dealNumber={game.currentIndex + 1}
         totalDeals={game.queue.length}
@@ -77,14 +114,15 @@ function App() {
             card={round.card}
             correct={game.isCorrect}
             wager={game.selectedWager}
-            onNext={() => game.nextRound()}
+            streak={game.streak}
+            onNext={handleNextRound}
             isLastRound={game.currentIndex === game.queue.length - 1}
           />
         ) : (
           <>
-            {/* Scenario card (compact during answer phase) */}
-            <div className="mx-auto w-full max-w-md rounded-2xl bg-[var(--ink-light)] p-5 shadow-xl animate-card-deal" key={game.currentIndex}>
-              <blockquote className="border-l-4 border-[var(--accent)] pl-4 text-lg leading-relaxed text-[var(--text-primary)] italic">
+            {/* Scenario card */}
+            <div className="mx-auto w-full max-w-md rounded-2xl bg-[var(--card)] p-5 shadow-xl animate-card-deal" key={game.currentIndex}>
+              <blockquote className="border-l-2 border-[var(--accent)] pl-4 text-lg leading-relaxed text-[var(--text)] font-buyer-quote">
                 &ldquo;{round.card.prompt}&rdquo;
               </blockquote>
             </div>
