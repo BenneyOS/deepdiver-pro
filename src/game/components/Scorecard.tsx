@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import type { Card, Family } from "../../data/schema";
 import { FAMILY_LABELS } from "../../data/schema";
 import type { RoundResult } from "../engine/scoring";
@@ -47,7 +47,7 @@ export function Scorecard({
     familyStats.set(fam, stats);
   }
 
-  const buildShareText = useCallback(() => {
+  function buildShareText(): string {
     const familyLines = [...familyStats.entries()]
       .map(([fam, stats]) => {
         const pct = stats.seen > 0 ? Math.round((stats.hit / stats.seen) * 100) : 0;
@@ -65,9 +65,9 @@ export function Scorecard({
       "",
       "readtheroom.app",
     ].join("\n");
-  }, [grade, rank, score, hits, total, maxStreak, accuracy, familyStats]);
+  }
 
-  const handleShare = useCallback(async () => {
+  async function handleShare(): Promise<void> {
     const text = buildShareText();
 
     if (navigator.share) {
@@ -88,7 +88,7 @@ export function Scorecard({
       setShareStatus("error");
       setTimeout(() => setShareStatus("idle"), 2000);
     }
-  }, [buildShareText]);
+  }
 
   return (
     <div className="mx-auto w-full max-w-md space-y-5 animate-card-deal" aria-label="Session scorecard">
