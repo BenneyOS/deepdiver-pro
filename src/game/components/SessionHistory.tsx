@@ -17,14 +17,14 @@ interface SessionHistoryProps {
 export function SessionHistory({ sessions }: SessionHistoryProps) {
   if (sessions.length === 0) {
     return (
-      <div className="rounded-2xl bg-[var(--card)] p-4 text-center shadow-xl">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 text-center">
         <p className="text-sm text-[var(--text-faint)]">No sessions yet. Start a Quick Drill!</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl bg-[var(--card)] p-4 shadow-xl">
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
         Recent Sessions
       </p>
@@ -42,17 +42,17 @@ export function SessionHistory({ sessions }: SessionHistoryProps) {
           return (
             <div
               key={session.id}
-              className="flex items-center justify-between rounded-xl bg-[var(--card-2)]/50 px-3 py-2"
+              className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--card-2)] px-3 py-2"
             >
               <div className="flex items-center gap-3">
-                <span className="font-telemetry text-lg font-black text-[var(--accent)]">{grade}</span>
+                <span className="font-telemetry text-lg font-black text-[var(--ink)]">{grade}</span>
                 <div>
-                  <p className="text-xs font-medium text-[var(--text)]">{rank}</p>
+                  <p className="text-xs font-medium text-[var(--ink)]">{rank}</p>
                   <p className="text-xs text-[var(--text-faint)]">{dateStr} &middot; {session.mode}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-telemetry text-sm font-bold text-[var(--text)]">{session.score}</p>
+                <p className="font-telemetry text-sm font-bold text-[var(--ink)]">{session.score}</p>
                 <p className="font-telemetry text-xs text-[var(--text-faint)]">{session.hits}/{session.total}</p>
               </div>
             </div>

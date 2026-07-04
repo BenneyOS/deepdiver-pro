@@ -56,7 +56,7 @@ export function AgenticLog({ hits, total, streak, momentum, onComplete }: Agenti
 
   return (
     <div className="mx-auto w-full max-w-md animate-card-deal">
-      <div className="rounded-2xl bg-[var(--card)] p-5 shadow-xl">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
         <div className="mb-4 flex items-center gap-3">
           <Ada expression="thinking" size={36} />
           <span className="text-sm font-medium text-[var(--text-dim)]">Ada is thinking&hellip;</span>
@@ -65,10 +65,10 @@ export function AgenticLog({ hits, total, streak, momentum, onComplete }: Agenti
           {lines.slice(0, visibleLines).map((line, i) => (
             <p
               key={i}
-              className="animate-log-line text-xs text-[var(--text-faint)]"
+              className="animate-log-line text-xs text-[var(--text-dim)]"
               style={{ animationDelay: `${i * 100}ms` }}
             >
-              <span className="text-[var(--accent)]">&#9656;</span>{" "}
+              <span className="text-[var(--accent-ink)]">&#9656;</span>{" "}
               {line}
             </p>
           ))}
