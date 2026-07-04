@@ -96,7 +96,7 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
             </span>
           </div>
         )}
-        {/* FIX 2: Mastery bar — lifetime progress, separate from session/momentum */}
+        {/* Mastery bar — lifetime progress */}
         <div className="flex-1 ml-3">
           <div className="flex items-center justify-between text-xs">
             <span className="text-[var(--text-dim)]">Mastery</span>

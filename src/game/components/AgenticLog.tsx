@@ -5,11 +5,10 @@ interface AgenticLogProps {
   hits: number;
   total: number;
   streak: number;
-  momentum: number;
   onComplete: () => void;
 }
 
-function generateLogLines(hits: number, total: number, streak: number, momentum: number): string[] {
+function generateLogLines(hits: number, total: number, streak: number): string[] {
   const lines: string[] = [];
 
   lines.push(`reading your last ${total} answers\u2026`);
@@ -25,13 +24,7 @@ function generateLogLines(hits: number, total: number, streak: number, momentum:
   }
 
   if (streak >= 3) {
-    lines.push(`${streak}-streak momentum \u2014 raising difficulty`);
-  }
-
-  if (momentum >= 75) {
-    lines.push("you're hot \u2014 queuing harder scenarios");
-  } else if (momentum <= 30) {
-    lines.push("easing up \u2014 reinforcing fundamentals");
+    lines.push(`${streak}-streak \u2014 raising difficulty`);
   }
 
   lines.push("selecting next scenario\u2026");
@@ -39,9 +32,9 @@ function generateLogLines(hits: number, total: number, streak: number, momentum:
   return lines;
 }
 
-export function AgenticLog({ hits, total, streak, momentum, onComplete }: AgenticLogProps) {
+export function AgenticLog({ hits, total, streak, onComplete }: AgenticLogProps) {
   const [visibleLines, setVisibleLines] = useState(0);
-  const lines = generateLogLines(hits, total, streak, momentum);
+  const lines = generateLogLines(hits, total, streak);
 
   useEffect(() => {
     if (visibleLines < lines.length) {
