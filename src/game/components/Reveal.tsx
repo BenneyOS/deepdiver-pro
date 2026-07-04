@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Card, Tier } from "../../data/schema";
 import { FAMILY_LABELS, TIER_LABELS } from "../../data/schema";
 import type { Wager } from "../engine/scoring";
@@ -36,6 +37,12 @@ export function Reveal({
     ? (streak >= 3 ? "impressed" : "pleased")
     : "unbothered";
 
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  function toggleSection(section: string) {
+    setExpandedSection((prev) => (prev === section ? null : section));
+  }
+
   return (
     <div className="mx-auto w-full max-w-md space-y-4">
       {/* Result banner with Ada */}
@@ -67,7 +74,7 @@ export function Reveal({
         </div>
       </div>
 
-      {/* Card anatomy */}
+      {/* Card summary — always visible */}
       <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm animate-section-enter" style={{ animationDelay: "100ms" }}>
         {/* Header badges */}
         <div className="mb-3 flex items-center justify-between">
@@ -86,45 +93,63 @@ export function Reveal({
           &ldquo;{card.prompt}&rdquo;
         </blockquote>
 
-        {/* Pattern */}
-        <p className="mb-3 text-sm text-[var(--text-dim)]">
-          <span className="font-semibold text-[var(--ink)]">
-            Pattern:
-          </span>{" "}
+        {/* Pattern — always visible as top-level takeaway */}
+        <p className="text-sm text-[var(--text-dim)]">
+          <span className="font-semibold text-[var(--ink)]">Pattern:</span>{" "}
           {card.pattern}
         </p>
+      </div>
 
-        {/* Diagnostic fields */}
-        <div className="space-y-3 rounded-xl border border-[var(--border)] bg-[var(--card-2)] p-4">
+      {/* Expandable diagnostic sections */}
+      <div className="space-y-2 animate-section-enter" style={{ animationDelay: "200ms" }}>
+        <ExpandableSection
+          title="Root Cause & Consequence"
+          expanded={expandedSection === "root"}
+          onToggle={() => toggleSection("root")}
+        >
           <DiagField label="Root Cause" value={card.rootCause} />
           <DiagField label="Consequence" value={card.consequence} />
-          <DiagField label="Diagnostic" value={card.diagnostic} />
+        </ExpandableSection>
+
+        <ExpandableSection
+          title="Diagnostic & Angle"
+          expanded={expandedSection === "diag"}
+          onToggle={() => toggleSection("diag")}
+        >
+          <DiagField label="Diagnostic Question" value={card.diagnostic} />
           <DiagField label="Angle" value={card.angle} />
+        </ExpandableSection>
+
+        <ExpandableSection
+          title="Objection & Reframe"
+          expanded={expandedSection === "obj"}
+          onToggle={() => toggleSection("obj")}
+        >
           <DiagField label="Objection" value={card.objection} />
           <DiagField label="Reframe" value={card.reframe} />
+        </ExpandableSection>
 
-          {/* Persona chips */}
-          <div className="mt-4 border-t border-[var(--border)] pt-3">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
-              Persona Shift
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              {(["CTO", "VPE", "CFO", "CRO"] as const).map((persona) => (
-                <div
-                  key={persona}
-                  className="rounded-xl border border-[var(--border)] bg-[var(--card)] px-3 py-2"
-                >
-                  <span className="text-xs font-bold text-[var(--accent-ink)]">
-                    {persona}
-                  </span>
-                  <p className="mt-0.5 text-xs text-[var(--text-dim)]">
-                    {card.personaShift[persona]}
-                  </p>
-                </div>
-              ))}
-            </div>
+        <ExpandableSection
+          title="Persona Shifts"
+          expanded={expandedSection === "persona"}
+          onToggle={() => toggleSection("persona")}
+        >
+          <div className="grid grid-cols-2 gap-2">
+            {(["CTO", "VPE", "CFO", "CRO"] as const).map((persona) => (
+              <div
+                key={persona}
+                className="rounded-xl border border-[var(--border)] bg-[var(--card)] px-3 py-2"
+              >
+                <span className="text-xs font-bold text-[var(--accent-ink)]">
+                  {persona}
+                </span>
+                <p className="mt-0.5 text-xs text-[var(--text-dim)]">
+                  {card.personaShift[persona]}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
+        </ExpandableSection>
       </div>
 
       {/* Next button */}
@@ -132,10 +157,49 @@ export function Reveal({
         type="button"
         onClick={onNext}
         className="w-full rounded-2xl bg-[var(--ink)] py-4 text-center font-bold text-white transition-all hover:opacity-90 active:scale-[0.98] min-h-[44px] animate-section-enter"
-        style={{ animationDelay: "200ms", transitionTimingFunction: "var(--ease-standard)" }}
+        style={{ animationDelay: "300ms", transitionTimingFunction: "var(--ease-standard)" }}
       >
         {isLastRound ? "View Scorecard" : "Next Deal"}
       </button>
+    </div>
+  );
+}
+
+function ExpandableSection({
+  title,
+  expanded,
+  onToggle,
+  children,
+}: {
+  title: string;
+  expanded: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-[var(--card-2)] min-h-[44px]"
+        aria-expanded={expanded}
+      >
+        <span className="text-sm font-semibold text-[var(--ink)]">{title}</span>
+        <svg
+          className={`h-4 w-4 text-[var(--text-faint)] transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {expanded && (
+        <div className="space-y-3 border-t border-[var(--border)] px-4 py-3 animate-card-deal">
+          {children}
+        </div>
+      )}
     </div>
   );
 }

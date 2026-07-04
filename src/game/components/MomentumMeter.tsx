@@ -1,31 +1,40 @@
 interface MomentumMeterProps {
   momentum: number;
+  streak: number;
 }
 
-export function MomentumMeter({ momentum }: MomentumMeterProps) {
-  const rounded = Math.round(momentum);
+function momentumLabel(momentum: number): string {
+  if (momentum >= 75) return "On fire";
+  if (momentum >= 50) return "Warm";
+  if (momentum >= 30) return "Building";
+  return "Cold";
+}
+
+export function MomentumMeter({ momentum, streak }: MomentumMeterProps) {
   const isHot = momentum >= 75;
-  const isCold = momentum < 40;
+  const isCold = momentum < 30;
+  const label = momentumLabel(momentum);
 
   const dotCount = 5;
   const filledDots = Math.round((momentum / 100) * dotCount);
 
   return (
     <div
-      className="mx-auto flex w-full max-w-md items-center justify-between px-2 py-1"
-      role="meter"
-      aria-label="Momentum"
-      aria-valuenow={rounded}
-      aria-valuemin={0}
-      aria-valuemax={100}
+      className="mx-auto flex w-full max-w-md items-center justify-end gap-3 px-2 py-1"
+      role="status"
+      aria-label={`Momentum: ${label}`}
     >
-      <span className="text-xs text-[var(--text-faint)]">Momentum</span>
-      <div className="flex items-center gap-2">
-        <div className="flex gap-1" aria-hidden="true">
+      {streak > 0 && (
+        <span className="text-xs text-[var(--text-faint)]">
+          {streak} in a row
+        </span>
+      )}
+      <div className="flex items-center gap-1.5">
+        <div className="flex gap-0.5" aria-hidden="true">
           {Array.from({ length: dotCount }, (_, i) => (
             <div
               key={i}
-              className={`h-2 w-2 rounded-full transition-all duration-300 ${
+              className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${
                 i < filledDots
                   ? isHot
                     ? "bg-[var(--accent)]"
@@ -37,10 +46,10 @@ export function MomentumMeter({ momentum }: MomentumMeterProps) {
             />
           ))}
         </div>
-        <span className={`font-telemetry text-xs font-bold ${
-          isHot ? "text-[var(--accent-ink)] animate-momentum-pulse" : isCold ? "text-[var(--danger)]" : "text-[var(--text-dim)]"
+        <span className={`text-xs font-medium ${
+          isHot ? "text-[var(--accent-ink)]" : isCold ? "text-[var(--danger)]" : "text-[var(--text-faint)]"
         }`}>
-          {rounded}%
+          {label}
         </span>
       </div>
     </div>
