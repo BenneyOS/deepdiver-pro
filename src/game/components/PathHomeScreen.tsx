@@ -7,6 +7,8 @@ import { useProgressStore } from "../store/useProgressStore";
 import { SessionHistory } from "./SessionHistory";
 import { Ada } from "./Ada";
 
+const UNLOCK_THRESHOLD = 4;
+
 interface PathHomeScreenProps {
   seed: Seed;
   cardsSeen?: number;
@@ -22,7 +24,6 @@ interface PathNode {
 }
 
 export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
-  const [showModes, setShowModes] = useState(false);
   const [showFamilyPicker, setShowFamilyPicker] = useState(false);
   const { progressMap } = useProgressStore();
   const { sessions } = useSessionHistory();
@@ -45,7 +46,6 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
     };
   });
 
-  // Find first non-cleared family as current
   const currentIdx = nodes.findIndex((n) => n.cleared < n.total);
   if (currentIdx >= 0) {
     nodes[currentIdx].isCurrent = true;
@@ -53,16 +53,19 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
 
   const totalCards = seed.cards.length;
   const totalCleared = nodes.reduce((sum, n) => sum + n.cleared, 0);
-
-  // Streak from recent sessions
+  const masteryPct = totalCards > 0 ? Math.round((totalCleared / totalCards) * 100) : 0;
   const recentStreak = sessions.length;
 
+  function handleQuickStart() {
+    onStart("quick-drill");
+  }
+
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
+    <div className="mx-auto w-full max-w-md space-y-5">
       {/* Header with Ada */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-[var(--text)]">
+          <h1 className="text-2xl font-extrabold tracking-tight text-[var(--ink)]">
             Read the Room
           </h1>
           <p className="text-sm text-[var(--text-dim)]">
@@ -72,29 +75,93 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
         <Ada expression={recentStreak >= 3 ? "pleased" : "neutral"} size={44} />
       </div>
 
-      {/* Streak + progress header */}
-      <div className="flex items-center justify-between rounded-2xl bg-[var(--card)] px-4 py-3 shadow-xl">
-        <div className="flex items-center gap-2">
-          <span className="text-lg" aria-hidden="true">&#x1F525;</span>
-          <span className="font-telemetry text-sm font-semibold text-[var(--accent)]">
-            {recentStreak} {recentStreak === 1 ? "session" : "sessions"}
-          </span>
+      {/* FIX 1: Primary CTA — above the fold, immediately visible */}
+      <button
+        type="button"
+        onClick={handleQuickStart}
+        className="w-full rounded-2xl bg-[var(--ink)] py-4 text-center font-bold text-white transition-all active:scale-[0.97] min-h-[44px] animate-card-deal"
+        style={{ transitionTimingFunction: "var(--ease-spring)" }}
+        aria-label="Continue — start Quick Drill"
+      >
+        Continue
+      </button>
+
+      {/* Streak + mastery header */}
+      <div className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] px-4 py-3">
+        {recentStreak > 0 && (
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--accent-bg)] px-2.5 py-1 text-xs font-bold text-[var(--accent-ink)]">
+              <span aria-hidden="true">&#x1F525;</span>
+              {recentStreak}
+            </span>
+          </div>
+        )}
+        {/* FIX 2: Mastery bar — lifetime progress, separate from session/momentum */}
+        <div className="flex-1 ml-3">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-[var(--text-dim)]">Mastery</span>
+            <span className="font-telemetry font-semibold text-[var(--ink)]">{totalCleared} of {totalCards}</span>
+          </div>
+          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[var(--border)]">
+            <div
+              className="h-full rounded-full bg-[var(--accent)] transition-all duration-500"
+              style={{ width: `${masteryPct}%` }}
+            />
+          </div>
         </div>
-        <span className="font-telemetry text-sm text-[var(--text-dim)]">
-          {totalCleared} of {totalCards} mastered
-        </span>
       </div>
+
+      {/* Mode shortcuts */}
+      <div className="flex gap-2">
+        <ModeChip label="Quick Drill" active onClick={() => onStart("quick-drill")} />
+        <ModeChip label="Boss Deals" onClick={() => onStart("boss-deals")} />
+        <ModeChip label="Family Focus" onClick={() => setShowFamilyPicker(true)} />
+      </div>
+
+      {/* Family picker */}
+      {showFamilyPicker && (
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 animate-card-deal">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
+            Choose a family
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {families.map((fam) => (
+              <button
+                key={fam}
+                type="button"
+                onClick={() => {
+                  setShowFamilyPicker(false);
+                  onStart("family-focus", fam);
+                }}
+                className="rounded-xl border border-[var(--border)] bg-[var(--card-2)] px-3 py-3 text-left transition-all hover:border-[var(--accent)] active:scale-[0.97] min-h-[44px]"
+                style={{ transitionTimingFunction: "var(--ease-standard)" }}
+              >
+                <span className="text-xs font-bold text-[var(--accent-ink)]">{fam}.</span>{" "}
+                <span className="text-xs text-[var(--text-dim)]">
+                  {FAMILY_LABELS[fam]}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Winding path */}
       <div className="relative px-2">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
+          Your path
+        </p>
         {nodes.map((node, i) => {
           const isCleared = node.cleared >= node.total;
           const isCurrent = node.isCurrent;
           const isLocked = !isCleared && !isCurrent && i > (currentIdx >= 0 ? currentIdx : 0);
           const pct = node.total > 0 ? Math.round((node.cleared / node.total) * 100) : 0;
 
-          // Alternate left/right positioning
-          const isLeft = i % 2 === 0;
+          // FIX 4: Determine unlock condition for locked nodes
+          const prevNode = i > 0 ? nodes[i - 1] : null;
+          const unlockText = isLocked && prevNode
+            ? `Clear ${UNLOCK_THRESHOLD} in ${prevNode.label} to unlock`
+            : null;
 
           return (
             <div key={node.family} className="relative flex items-center gap-4 py-2">
@@ -105,32 +172,32 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
                   style={{
                     backgroundColor: isCleared || isCurrent
                       ? "var(--accent)"
-                      : "var(--card-2)",
+                      : "var(--border)",
                   }}
                   aria-hidden="true"
                 />
               )}
 
-              {/* Node circle */}
+              {/* FIX 1: Node circle — current node is tappable and launches round */}
               <button
                 type="button"
                 disabled={isLocked}
                 onClick={() => {
                   if (isCurrent) {
-                    setShowModes(true);
+                    onStart("quick-drill");
                   } else if (isCleared) {
                     onStart("family-focus", node.family);
                   }
                 }}
-                className={`relative flex h-[56px] w-[56px] flex-shrink-0 items-center justify-center rounded-full border-2 transition-all
+                className={`relative flex h-[58px] w-[58px] flex-shrink-0 items-center justify-center rounded-full border-2 transition-all
                   ${isCurrent
-                    ? "animate-node-bob border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)] shadow-lg shadow-[var(--accent)]/20"
+                    ? "animate-node-bob border-[var(--accent)] bg-[var(--accent)] text-[var(--ink)] shadow-md active:scale-[0.93] cursor-pointer"
                     : isCleared
-                      ? "border-[var(--success)] bg-[var(--success)]/20 text-[var(--success)]"
-                      : "border-[var(--card-2)] bg-[var(--card)] text-[var(--text-faint)] cursor-not-allowed"
+                      ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)] cursor-pointer active:scale-[0.95]"
+                      : "border-[var(--border)] bg-[var(--card)] text-[var(--text-faint)] cursor-not-allowed opacity-60"
                   }
                   min-h-[44px]`}
-                aria-label={`${node.label}: ${isCleared ? "cleared" : isCurrent ? "current" : "locked"}, ${pct}% mastered`}
+                aria-label={`${node.label}: ${isCleared ? "cleared" : isCurrent ? "current — tap to start" : "locked"}, ${pct}% mastered`}
               >
                 {isCleared ? (
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
@@ -146,20 +213,29 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
                 )}
               </button>
 
-              {/* Label */}
-              <div className={isLeft ? "" : ""}>
+              {/* Label + progress / unlock condition */}
+              <div className="flex-1 min-w-0">
                 <p className={`text-sm font-semibold ${
-                  isCurrent ? "text-[var(--accent)]" : isCleared ? "text-[var(--text)]" : "text-[var(--text-faint)]"
+                  isCurrent ? "text-[var(--ink)]" : isCleared ? "text-[var(--ink)]" : "text-[var(--text-faint)]"
                 }`}>
                   {node.label}
                 </p>
-                <p className="font-telemetry text-xs text-[var(--text-faint)]">
-                  {node.cleared}/{node.total} &middot; {pct}%
-                </p>
+                {/* FIX 4: Current unit shows progress toward threshold */}
                 {isCurrent && (
-                  <span className="mt-1 inline-block rounded-full bg-[var(--accent)] px-2 py-0.5 text-xs font-bold text-[var(--accent-ink)]">
-                    Start here
-                  </span>
+                  <p className="font-telemetry text-xs text-[var(--text-dim)]">
+                    {node.cleared} of {node.total} cleared &middot; {pct}%
+                  </p>
+                )}
+                {isCleared && (
+                  <p className="font-telemetry text-xs text-[var(--success)]">
+                    Cleared
+                  </p>
+                )}
+                {/* FIX 4: Locked unit states unlock condition in plain language */}
+                {isLocked && unlockText && (
+                  <p className="text-xs text-[var(--text-faint)]">
+                    {unlockText}
+                  </p>
                 )}
               </div>
             </div>
@@ -167,74 +243,25 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
         })}
       </div>
 
-      {/* Mode selector overlay */}
-      {showModes && (
-        <div className="rounded-2xl bg-[var(--card)] p-4 shadow-xl animate-card-deal space-y-2">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
-            Choose your drill
-          </p>
-          <ModeButton
-            title="Quick Drill"
-            description="7 cards \u2014 spaced repetition targets your weak spots"
-            onClick={() => { setShowModes(false); onStart("quick-drill"); }}
-          />
-          <ModeButton
-            title="Boss Deals"
-            description="12 cards \u2014 weighted to tiers 3\u20134 (diagnostics & objections)"
-            onClick={() => { setShowModes(false); onStart("boss-deals"); }}
-          />
-          <ModeButton
-            title="Family Focus"
-            description="7 cards \u2014 drill a single situation family"
-            onClick={() => { setShowModes(false); setShowFamilyPicker(true); }}
-          />
-        </div>
-      )}
-
-      {/* Family picker */}
-      {showFamilyPicker && (
-        <div className="rounded-2xl bg-[var(--card)] p-4 shadow-xl animate-card-deal">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
-            Choose a family
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            {families.map((fam) => (
-              <button
-                key={fam}
-                type="button"
-                onClick={() => {
-                  setShowFamilyPicker(false);
-                  onStart("family-focus", fam);
-                }}
-                className="rounded-xl bg-[var(--card-2)] px-3 py-3 text-left transition-all hover:bg-[var(--card-2)]/80 min-h-[44px]"
-                style={{ transitionTimingFunction: "var(--ease-standard)" }}
-              >
-                <span className="text-xs font-bold text-[var(--accent)]">{fam}.</span>{" "}
-                <span className="text-xs text-[var(--text-dim)]">
-                  {FAMILY_LABELS[fam]}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Session history */}
       <SessionHistory sessions={sessions} />
     </div>
   );
 }
 
-function ModeButton({ title, description, onClick }: { title: string; description: string; onClick: () => void }) {
+function ModeChip({ label, active, onClick }: { label: string; active?: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="w-full rounded-xl bg-[var(--card-2)] p-4 text-left transition-all hover:bg-[var(--card-2)]/80 min-h-[44px]"
+      className={`flex-1 rounded-full border px-3 py-2 text-xs font-semibold transition-all active:scale-[0.95] min-h-[44px]
+        ${active
+          ? "border-[var(--ink)] bg-[var(--ink)] text-white"
+          : "border-[var(--border)] bg-[var(--page)] text-[var(--text-dim)] hover:border-[var(--text-dim)]"
+        }`}
       style={{ transitionTimingFunction: "var(--ease-standard)" }}
     >
-      <span className="font-bold text-[var(--text)]">{title}</span>
-      <p className="mt-1 text-xs text-[var(--text-faint)]">{description}</p>
+      {label}
     </button>
   );
 }

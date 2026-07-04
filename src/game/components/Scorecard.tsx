@@ -40,7 +40,6 @@ export function Scorecard({
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
-  // Per-family mastery
   const familyStats = new Map<Family, { seen: number; hit: number }>();
   for (let i = 0; i < rounds.length; i++) {
     const card = queue[i];
@@ -103,22 +102,21 @@ export function Scorecard({
 
   return (
     <div className="mx-auto w-full max-w-md space-y-5" aria-label="Session scorecard">
-      {/* Rank-up header — Signature moment 3 */}
-      <div className="relative rounded-2xl bg-[var(--card)] p-6 text-center shadow-xl">
+      {/* Rank-up header */}
+      <div className="relative rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 text-center">
         <div className="relative inline-block animate-rank-spring">
-          <div className="font-telemetry text-6xl font-black text-[var(--accent)]" aria-label={`Grade: ${grade}`}>
+          <div className="font-telemetry text-6xl font-black text-[var(--ink)]" aria-label={`Grade: ${grade}`}>
             {grade}
           </div>
           <ParticleBurst active={showBurst} color="var(--accent)" count={10} />
         </div>
-        <div className="mt-2 text-xl font-bold text-[var(--text)]">
+        <div className="mt-2 text-xl font-bold text-[var(--ink)]">
           {rank}
         </div>
         <div className="font-telemetry mt-1 text-sm text-[var(--text-faint)]">
           {Math.round(accuracy)}% accuracy
         </div>
 
-        {/* Ada celebration */}
         <div className="mt-4 flex items-center justify-center gap-2">
           <Ada expression={adaExpression as "neutral" | "pleased" | "thinking" | "impressed" | "unbothered"} size={32} />
           <p className="text-sm text-[var(--text-dim)] italic">&ldquo;{adaComment}&rdquo;</p>
@@ -132,9 +130,9 @@ export function Scorecard({
         <StatBox label="Correct" value={`${hits}/${total}`} />
       </div>
 
-      {/* Family mastery bars with animated fill */}
+      {/* Family mastery bars */}
       {familyStats.size > 0 && (
-        <div className="rounded-2xl bg-[var(--card)] p-4 shadow-xl animate-section-enter" style={{ animationDelay: "400ms" }}>
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 animate-section-enter" style={{ animationDelay: "400ms" }}>
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
             Family Mastery
           </p>
@@ -151,11 +149,11 @@ export function Scorecard({
                       <span className="text-[var(--text-dim)]">
                         {FAMILY_LABELS[family]}
                       </span>
-                      <span className="font-telemetry font-bold text-[var(--text)]">
+                      <span className="font-telemetry font-bold text-[var(--ink)]">
                         {pct}%
                       </span>
                     </div>
-                    <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-[var(--card-2)]">
+                    <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-[var(--border)]">
                       <div
                         className="h-full rounded-full bg-[var(--accent)] transition-all"
                         style={{
@@ -179,7 +177,7 @@ export function Scorecard({
         type="button"
         onClick={handleShare}
         aria-label="Copy scorecard to clipboard or share"
-        className="w-full rounded-2xl bg-[var(--card-2)] py-3 font-bold text-[var(--text)] transition-all hover:bg-[var(--card-2)]/80 active:scale-[0.98] min-h-[44px]"
+        className="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] py-3 font-bold text-[var(--ink)] transition-all hover:bg-[var(--card-2)] active:scale-[0.98] min-h-[44px]"
         style={{ transitionTimingFunction: "var(--ease-standard)" }}
       >
         {shareStatus === "copied"
@@ -195,7 +193,7 @@ export function Scorecard({
           type="button"
           onClick={onHome}
           aria-label="Return to home screen"
-          className="flex-1 rounded-2xl bg-[var(--card)] py-4 font-bold text-[var(--text)] transition-all hover:bg-[var(--card-2)] active:scale-[0.98] min-h-[44px]"
+          className="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] py-4 font-bold text-[var(--ink)] transition-all hover:bg-[var(--card-2)] active:scale-[0.98] min-h-[44px]"
           style={{ transitionTimingFunction: "var(--ease-standard)" }}
         >
           Home
@@ -204,7 +202,7 @@ export function Scorecard({
           type="button"
           onClick={onReplay}
           aria-label="Play another session"
-          className="flex-1 rounded-2xl bg-[var(--accent)] py-4 font-bold text-[var(--accent-ink)] transition-all hover:brightness-110 active:scale-[0.98] min-h-[44px]"
+          className="flex-1 rounded-2xl bg-[var(--ink)] py-4 font-bold text-white transition-all hover:opacity-90 active:scale-[0.98] min-h-[44px]"
           style={{ transitionTimingFunction: "var(--ease-standard)" }}
         >
           Play Again
@@ -216,8 +214,8 @@ export function Scorecard({
 
 function StatBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-[var(--card)] p-3 text-center shadow" aria-label={`${label}: ${value}`}>
-      <div className="font-telemetry text-xl font-bold text-[var(--accent)]">{value}</div>
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 text-center" aria-label={`${label}: ${value}`}>
+      <div className="font-telemetry text-xl font-bold text-[var(--ink)]">{value}</div>
       <div className="text-xs text-[var(--text-faint)]">{label}</div>
     </div>
   );

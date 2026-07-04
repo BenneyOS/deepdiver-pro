@@ -1,23 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  /* Design PRD v2 — deep ink + gold palette */
-  --page: #14161C;
-  --card: #1E212A;
-  --card-2: #262A34;
-  --accent: #E8B84B;
-  --accent-ink: #3A2A05;
-  --success: #35C48A;
-  --reward: #FFE08A;
-  --danger: #E5637A;
-  --text: #F0EDE6;
-  --text-dim: #9AA0AC;
-  --text-faint: #5A616E;
+  /* UX Fix Spec — Light theme */
+  --page: #FFFFFF;
+  --card: #F7F5F0;
+  --card-2: #F5F3EE;
+  --ink: #141414;
+  --text: #141414;
+  --text-dim: #8A8A82;
+  --text-faint: #B8B4A8;
+  --border: #E4E1DA;
+  --accent: #F5C542;
+  --accent-ink: #8A6A0A;
+  --accent-bg: #FBF2D6;
+  --success: #1E9E62;
+  --danger: #C0392B;
+  --reward: #F5C542;
 
-  /* Legacy aliases for gradual migration */
-  --ink: var(--page);
+  /* Legacy aliases */
   --ink-light: var(--card);
-  --accent-hover: #D4A43A;
+  --accent-hover: #E0B030;
   --text-primary: var(--text);
   --text-secondary: var(--text-dim);
   --text-muted: var(--text-faint);
@@ -118,7 +120,7 @@ body {
 /* Points count-up shimmer */
 @keyframes points-glow {
   0% { text-shadow: 0 0 0 transparent; }
-  50% { text-shadow: 0 0 12px var(--reward); }
+  50% { text-shadow: 0 0 12px var(--accent); }
   100% { text-shadow: 0 0 0 transparent; }
 }
 

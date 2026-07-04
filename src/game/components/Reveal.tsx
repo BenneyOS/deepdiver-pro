@@ -40,10 +40,10 @@ export function Reveal({
     <div className="mx-auto w-full max-w-md space-y-4">
       {/* Result banner with Ada */}
       <div
-        className={`relative rounded-2xl p-4 ${
+        className={`relative rounded-2xl border p-4 ${
           correct
-            ? "bg-[var(--success)]/15 border border-[var(--success)]/30"
-            : "bg-[var(--danger)]/15 border border-[var(--danger)]/30"
+            ? "bg-[var(--success)]/10 border-[var(--success)]/30"
+            : "bg-[var(--danger)]/10 border-[var(--danger)]/30"
         } animate-card-deal`}
       >
         <div className="flex items-center gap-3">
@@ -58,20 +58,20 @@ export function Reveal({
           </div>
           {correct && (
             <div className="relative">
-              <span className="font-telemetry text-lg font-bold text-[var(--accent)] animate-points-glow">
+              <span className="font-telemetry text-lg font-bold text-[var(--accent-ink)] animate-points-glow">
                 +{points}
               </span>
-              <ParticleBurst active={correct} color="var(--reward)" count={6} />
+              <ParticleBurst active={correct} color="var(--accent)" count={6} />
             </div>
           )}
         </div>
       </div>
 
       {/* Card anatomy */}
-      <div className="rounded-2xl bg-[var(--card)] p-5 shadow-xl animate-section-enter" style={{ animationDelay: "100ms" }}>
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm animate-section-enter" style={{ animationDelay: "100ms" }}>
         {/* Header badges */}
         <div className="mb-3 flex items-center justify-between">
-          <span className="rounded-full bg-[var(--card-2)] px-3 py-1 text-xs font-medium text-[var(--text-dim)]">
+          <span className="rounded-full border border-[var(--border)] bg-[var(--card-2)] px-3 py-1 text-xs font-medium text-[var(--text-dim)]">
             {FAMILY_LABELS[card.family]}
           </span>
           <span
@@ -82,20 +82,20 @@ export function Reveal({
         </div>
 
         {/* Quote — serif italic */}
-        <blockquote className="mb-4 border-l-2 border-[var(--accent)] pl-4 text-base leading-relaxed text-[var(--text)] font-buyer-quote">
+        <blockquote className="mb-4 border-l-2 border-[var(--accent)] pl-4 text-base leading-relaxed text-[var(--ink)] font-buyer-quote">
           &ldquo;{card.prompt}&rdquo;
         </blockquote>
 
         {/* Pattern */}
         <p className="mb-3 text-sm text-[var(--text-dim)]">
-          <span className="font-semibold text-[var(--text)]">
+          <span className="font-semibold text-[var(--ink)]">
             Pattern:
           </span>{" "}
           {card.pattern}
         </p>
 
         {/* Diagnostic fields */}
-        <div className="space-y-3 rounded-xl bg-[var(--card-2)]/50 p-4">
+        <div className="space-y-3 rounded-xl border border-[var(--border)] bg-[var(--card-2)] p-4">
           <DiagField label="Root Cause" value={card.rootCause} />
           <DiagField label="Consequence" value={card.consequence} />
           <DiagField label="Diagnostic" value={card.diagnostic} />
@@ -104,7 +104,7 @@ export function Reveal({
           <DiagField label="Reframe" value={card.reframe} />
 
           {/* Persona chips */}
-          <div className="mt-4 border-t border-[var(--card-2)] pt-3">
+          <div className="mt-4 border-t border-[var(--border)] pt-3">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
               Persona Shift
             </p>
@@ -112,9 +112,9 @@ export function Reveal({
               {(["CTO", "VPE", "CFO", "CRO"] as const).map((persona) => (
                 <div
                   key={persona}
-                  className="rounded-xl bg-[var(--card)]/60 px-3 py-2"
+                  className="rounded-xl border border-[var(--border)] bg-[var(--card)] px-3 py-2"
                 >
-                  <span className="text-xs font-bold text-[var(--accent)]">
+                  <span className="text-xs font-bold text-[var(--accent-ink)]">
                     {persona}
                   </span>
                   <p className="mt-0.5 text-xs text-[var(--text-dim)]">
@@ -131,7 +131,7 @@ export function Reveal({
       <button
         type="button"
         onClick={onNext}
-        className="w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-[var(--accent-ink)] transition-all hover:brightness-110 active:scale-[0.98] min-h-[44px] animate-section-enter"
+        className="w-full rounded-2xl bg-[var(--ink)] py-4 text-center font-bold text-white transition-all hover:opacity-90 active:scale-[0.98] min-h-[44px] animate-section-enter"
         style={{ animationDelay: "200ms", transitionTimingFunction: "var(--ease-standard)" }}
       >
         {isLastRound ? "View Scorecard" : "Next Deal"}

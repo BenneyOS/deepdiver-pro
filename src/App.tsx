@@ -5,6 +5,7 @@ import { useGameStore } from "./game/store/useGameStore";
 import { useProgressStore } from "./game/store/useProgressStore";
 import { PathHomeScreen } from "./game/components/PathHomeScreen";
 import { Hud } from "./game/components/Hud";
+import { SessionProgress } from "./game/components/SessionProgress";
 import { MomentumMeter } from "./game/components/MomentumMeter";
 import { OptionList } from "./game/components/OptionList";
 import { Wager } from "./game/components/Wager";
@@ -25,7 +26,6 @@ function App() {
     hydrate();
   }, [hydrate]);
 
-  // Show agentic log between rounds (not on first or last)
   const handleNextRound = useCallback(() => {
     const isLast = game.currentIndex === game.queue.length - 1;
     if (!isLast && game.currentIndex > 0 && game.currentIndex % 3 === 0) {
@@ -51,12 +51,10 @@ function App() {
   }
 
   if (game.phase === "home") {
-    const cardsSeen = [...useProgressStore.getState().progressMap.values()].filter((p) => p.seen > 0).length;
     return (
       <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8">
         <PathHomeScreen
           seed={seed}
-          cardsSeen={cardsSeen}
           onStart={(mode, focusFamily) => game.startSession(seed, mode, focusFamily)}
         />
       </main>
@@ -82,7 +80,6 @@ function App() {
   const round = game.currentRound;
   if (!round) return null;
 
-  // Agentic Log transition between rounds
   if (showLog) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-[var(--page)] px-4 py-4">
@@ -106,6 +103,12 @@ function App() {
         streak={game.streak}
         score={game.score}
       />
+      {/* FIX 2: Segmented session progress (discrete pips) */}
+      <SessionProgress
+        current={game.currentIndex + 1}
+        total={game.queue.length}
+      />
+      {/* FIX 2: Momentum as separate, visually distinct element */}
       <MomentumMeter momentum={game.momentum} />
 
       <div className="mt-4 w-full space-y-4">
@@ -120,9 +123,8 @@ function App() {
           />
         ) : (
           <>
-            {/* Scenario card */}
-            <div className="mx-auto w-full max-w-md rounded-2xl bg-[var(--card)] p-5 shadow-xl animate-card-deal" key={game.currentIndex}>
-              <blockquote className="border-l-2 border-[var(--accent)] pl-4 text-lg leading-relaxed text-[var(--text)] font-buyer-quote">
+            <div className="mx-auto w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm animate-card-deal" key={game.currentIndex}>
+              <blockquote className="border-l-2 border-[var(--accent)] pl-4 text-lg leading-relaxed text-[var(--ink)] font-buyer-quote">
                 &ldquo;{round.card.prompt}&rdquo;
               </blockquote>
             </div>

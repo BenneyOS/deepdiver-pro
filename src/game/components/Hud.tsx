@@ -41,21 +41,23 @@ export function Hud({ dealNumber, totalDeals, streak, score }: HudProps) {
     <div className="mx-auto flex w-full max-w-md items-center justify-between px-2 py-3">
       <div className="font-telemetry text-sm text-[var(--text-dim)]">
         Deal{" "}
-        <span className="font-bold text-[var(--text)]">
+        <span className="font-bold text-[var(--ink)]">
           {dealNumber}
         </span>
         /{totalDeals}
       </div>
       <div className="flex items-center gap-4">
         {streak > 0 && (
-          <div className={`relative text-sm text-[var(--text-dim)] ${streakAnim ? "animate-streak-pop" : ""}`}>
-            <span className="mr-1" aria-hidden="true">&#x1F525;</span>
-            <span className="font-telemetry font-bold text-[var(--reward)]">{streak}</span>
-            <ParticleBurst active={showBurst} color="var(--reward)" count={6} />
+          <div className={`relative ${streakAnim ? "animate-streak-pop" : ""}`}>
+            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--accent-bg)] px-2.5 py-1 text-xs font-bold text-[var(--accent-ink)]">
+              <span aria-hidden="true">&#x1F525;</span>
+              {streak}
+            </span>
+            <ParticleBurst active={showBurst} color="var(--accent)" count={6} />
           </div>
         )}
         <div className={`font-telemetry text-sm ${scoreAnim ? "animate-points-glow" : ""}`}>
-          <span className="font-bold text-[var(--accent)]">{score}</span>
+          <span className="font-bold text-[var(--ink)]">{score}</span>
           <span className="text-[var(--text-faint)]"> pts</span>
         </div>
       </div>

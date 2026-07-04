@@ -15,10 +15,10 @@ export function Wager({ onWager }: WagerProps) {
           type="button"
           onClick={() => onWager("hunch")}
           aria-label="Hunch — 1 times points multiplier"
-          className="flex-1 rounded-2xl bg-[var(--card)] px-4 py-4 text-center transition-all hover:bg-[var(--card-2)] active:scale-[0.97] min-h-[44px]"
+          className="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] px-4 py-4 text-center transition-all hover:border-[var(--text-dim)] active:scale-[0.97] min-h-[44px]"
           style={{ transitionTimingFunction: "var(--ease-standard)" }}
         >
-          <div className="text-lg font-bold text-[var(--text)]">
+          <div className="text-lg font-bold text-[var(--ink)]">
             Hunch
           </div>
           <div className="font-telemetry text-xs text-[var(--text-faint)]">&times;1 points</div>
@@ -27,11 +27,11 @@ export function Wager({ onWager }: WagerProps) {
           type="button"
           onClick={() => onWager("read-the-room")}
           aria-label="Read the Room — 2 times points multiplier"
-          className="flex-1 rounded-2xl bg-[var(--accent)] px-4 py-4 text-center transition-all hover:brightness-110 active:scale-[0.97] min-h-[44px]"
+          className="flex-1 rounded-2xl bg-[var(--ink)] px-4 py-4 text-center transition-all hover:opacity-90 active:scale-[0.97] min-h-[44px]"
           style={{ transitionTimingFunction: "var(--ease-standard)" }}
         >
-          <div className="text-lg font-bold text-[var(--accent-ink)]">Read the Room</div>
-          <div className="font-telemetry text-xs text-[var(--accent-ink)]/70">&times;2 points</div>
+          <div className="text-lg font-bold text-white">Read the Room</div>
+          <div className="font-telemetry text-xs text-white/60">&times;2 points</div>
         </button>
       </div>
     </div>
