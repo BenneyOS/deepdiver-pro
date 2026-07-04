@@ -6,7 +6,6 @@ import { useProgressStore } from "./game/store/useProgressStore";
 import { PathHomeScreen } from "./game/components/PathHomeScreen";
 import { Hud } from "./game/components/Hud";
 import { SessionProgress } from "./game/components/SessionProgress";
-import { MomentumMeter } from "./game/components/MomentumMeter";
 import { OptionList } from "./game/components/OptionList";
 import { Wager } from "./game/components/Wager";
 import { Reveal } from "./game/components/Reveal";
@@ -88,7 +87,6 @@ function App() {
           hits={game.hits}
           total={game.currentIndex + 1}
           streak={game.streak}
-          momentum={game.momentum}
           onComplete={handleLogComplete}
         />
       </main>
@@ -108,8 +106,6 @@ function App() {
         current={game.currentIndex + 1}
         total={game.queue.length}
       />
-      {/* FIX 2: Momentum as separate, visually distinct element */}
-      <MomentumMeter momentum={game.momentum} streak={game.streak} />
 
       <div className="mt-4 w-full space-y-4">
         {game.phase === "reveal" && game.isCorrect !== null && game.selectedWager ? (
@@ -118,6 +114,8 @@ function App() {
             correct={game.isCorrect}
             wager={game.selectedWager}
             streak={game.streak}
+            options={round.options}
+            selectedIndex={game.selectedAnswer!}
             onNext={handleNextRound}
             isLastRound={game.currentIndex === game.queue.length - 1}
           />
