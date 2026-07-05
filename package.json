@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "validate": "tsx scripts/validate-content.ts"
+    "generate": "node scripts/generate-seed.mjs",
+    "validate": "node scripts/generate-seed.mjs && tsx scripts/validate-content.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",

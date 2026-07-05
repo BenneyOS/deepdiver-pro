@@ -9,6 +9,10 @@ import { Hud } from "./game/components/Hud";
 import { SessionProgress } from "./game/components/SessionProgress";
 import { OptionList } from "./game/components/OptionList";
 import { Wager } from "./game/components/Wager";
+import { BuildReframe } from "./game/components/BuildReframe";
+import { SpeedRound } from "./game/components/SpeedRound";
+import { ObjectionVolley } from "./game/components/ObjectionVolley";
+import { MatchPairs } from "./game/components/MatchPairs";
 import { Reveal } from "./game/components/Reveal";
 import { Scorecard } from "./game/components/Scorecard";
 import { AgenticLog } from "./game/components/AgenticLog";
@@ -70,6 +74,30 @@ function App() {
           onStart={() => game.startSession(seed, game.pendingMode, game.pendingFamily ?? undefined)}
           onCancel={() => game.goHome()}
         />
+      </main>
+    );
+  }
+
+  if (game.phase === "speed") {
+    return (
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6" aria-label="Speed Round">
+        <SpeedRound onHome={() => game.goHome()} />
+      </main>
+    );
+  }
+
+  if (game.phase === "volley") {
+    return (
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6" aria-label="Objection Volley">
+        <ObjectionVolley onHome={() => game.goHome()} />
+      </main>
+    );
+  }
+
+  if (game.phase === "match") {
+    return (
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6" aria-label="Match Pairs">
+        <MatchPairs onHome={() => game.goHome()} />
       </main>
     );
   }
@@ -136,16 +164,39 @@ function App() {
           />
         ) : (
           <>
-            <div className="mx-auto w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm animate-card-deal" key={game.currentIndex}>
-              <blockquote className="border-l-2 border-[var(--accent)] pl-4 text-lg leading-relaxed text-[var(--ink)] font-buyer-quote">
-                &ldquo;{round.card.prompt}&rdquo;
-              </blockquote>
-            </div>
+            {round.showQuote && (
+              <div className="mx-auto w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm animate-card-deal" key={game.currentIndex}>
+                <blockquote className="border-l-2 border-[var(--accent)] pl-4 text-lg leading-relaxed text-[var(--ink)] font-buyer-quote">
+                  &ldquo;{round.card.prompt}&rdquo;
+                </blockquote>
+              </div>
+            )}
 
-            {game.phase === "answer" && (
+            {round.promptOverride && (
+              <div className="mx-auto w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm animate-card-deal" key={`p-${game.currentIndex}`}>
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
+                  The pitch says&hellip;
+                </p>
+                <p className="mt-1.5 text-base leading-relaxed text-[var(--ink)]">
+                  &ldquo;{round.promptOverride}&rdquo;
+                </p>
+              </div>
+            )}
+
+            {game.phase === "answer" && round.format === "build-reframe" && (
+              <BuildReframe
+                key={game.currentIndex}
+                tokens={round.reframeTokens ?? []}
+                correctOrder={round.reframeOrder ?? []}
+                instruction={round.instruction}
+                onSubmit={(correct) => game.submitAssembly(correct)}
+              />
+            )}
+
+            {game.phase === "answer" && round.format !== "build-reframe" && (
               <OptionList
                 options={round.options}
-                tierLabel={round.tierLabel}
+                tierLabel={round.instruction}
                 selectedIndex={game.selectedAnswer}
                 onSelect={(i) => game.selectAnswer(i)}
                 disabled={game.selectedAnswer !== null}

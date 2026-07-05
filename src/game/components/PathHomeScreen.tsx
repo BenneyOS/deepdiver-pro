@@ -130,9 +130,12 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
       </div>
 
       {/* Mode shortcuts */}
-      <div className="flex gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <ModeChip label="Quick Drill" active onClick={() => onStart("quick-drill")} />
+        <ModeChip label="Speed Round" onClick={() => onStart("speed-round")} />
         <ModeChip label="Boss Deals" onClick={() => onStart("boss-deals")} />
+        <ModeChip label="Objection Volley" onClick={() => onStart("objection-volley")} />
+        <ModeChip label="Match Pairs" onClick={() => onStart("match-pairs")} />
         <ModeChip label="Family Focus" onClick={() => setShowFamilyPicker(true)} />
       </div>
 
