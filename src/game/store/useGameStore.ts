@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { Card, Family, Seed } from "../../data/schema";
+import { FAMILY_LABELS } from "../../data/schema";
 import type { Wager, RoundResult } from "../engine/scoring";
 import type { Round, SessionMode } from "../engine/session";
 import {
@@ -9,6 +10,7 @@ import {
 } from "../engine/scoring";
 import { selectSessionQueue, selectBossDealsQueue, selectFamilyFocusQueue } from "../engine/leitner";
 import { updateProgress } from "../engine/leitner";
+import { isCleared, clearedInFamily, unlockThresholdFor } from "../engine/progress";
 import { buildRound } from "../engine/session";
 import { useProgressStore } from "./useProgressStore";
 import { useSessionHistory } from "./useSessionHistory";
@@ -16,10 +18,19 @@ import { trackEvent } from "../analytics";
 
 export type GamePhase =
   | "home"
+  | "intro"
   | "answer"
   | "wager"
   | "reveal"
   | "scorecard";
+
+export interface ClearEvent {
+  family: Family;
+  familyLabel: string;
+  clearedCount: number;
+  familyTotal: number;
+  didUnlock: boolean;
+}
 
 interface GameState {
   phase: GamePhase;
@@ -37,9 +48,13 @@ interface GameState {
   hits: number;
   rounds: RoundResult[];
   allCards: Card[];
+  clearEvent: ClearEvent | null;
 
   focusFamily: Family | null;
+  pendingMode: SessionMode;
+  pendingFamily: Family | null;
 
+  prepareSession: (mode: SessionMode, focusFamily?: Family) => void;
   startSession: (seed: Seed, mode: SessionMode, focusFamily?: Family) => void;
   selectAnswer: (optionIndex: number) => void;
   placeWager: (wager: Wager) => void;
@@ -63,7 +78,18 @@ export const useGameStore = create<GameState>((set, get) => ({
   hits: 0,
   rounds: [],
   allCards: [],
+  clearEvent: null,
   focusFamily: null,
+  pendingMode: "quick-drill",
+  pendingFamily: null,
+
+  prepareSession: (mode: SessionMode, focusFamily?: Family) => {
+    set({
+      phase: "intro",
+      pendingMode: mode,
+      pendingFamily: focusFamily ?? null,
+    });
+  },
 
   startSession: (seed: Seed, mode: SessionMode, focusFamily?: Family) => {
     const progressMap = useProgressStore.getState().progressMap;
@@ -110,6 +136,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       hits: 0,
       rounds: [],
       allCards,
+      clearEvent: null,
     });
   },
 
@@ -147,11 +174,33 @@ export const useGameStore = create<GameState>((set, get) => ({
       },
     });
 
-    // Update Leitner progress
+    // Update the one progress ledger. The first correct answer to a card
+    // clears it permanently in ANY mode and moves the path.
     const progressStore = useProgressStore.getState();
     const currentProgress = progressStore.getProgress(round.card.id);
+    const wasCleared = isCleared(currentProgress);
     const newProgress = updateProgress(currentProgress, round.card.id, correct);
     progressStore.updateCard(newProgress);
+
+    let clearEvent: ClearEvent | null = null;
+    if (correct && !wasCleared) {
+      const family = round.card.family;
+      const updatedMap = useProgressStore.getState().progressMap;
+      const familyTotal = state.allCards.filter((c) => c.family === family).length;
+      const clearedCount = clearedInFamily(state.allCards, updatedMap, family);
+      const didUnlock = clearedCount === unlockThresholdFor(familyTotal);
+      clearEvent = {
+        family,
+        familyLabel: FAMILY_LABELS[family],
+        clearedCount,
+        familyTotal,
+        didUnlock,
+      };
+      trackEvent({
+        event: "card_cleared",
+        properties: { cardId: round.card.id, family, clearedCount, didUnlock },
+      });
+    }
 
     set({
       phase: "reveal",
@@ -163,6 +212,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       momentum: newMomentum,
       hits: state.hits + (correct ? 1 : 0),
       rounds: [...state.rounds, result],
+      clearEvent,
     });
   },
 

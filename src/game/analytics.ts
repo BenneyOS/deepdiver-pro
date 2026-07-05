@@ -6,6 +6,7 @@ type AnalyticsEvent =
   | { event: "session_started"; properties: { mode: SessionMode; focusFamily?: string } }
   | { event: "round_completed"; properties: { cardId: string; family: Family; tier: Tier; correct: boolean; wager: Wager; points: number } }
   | { event: "session_completed"; properties: { mode: SessionMode; score: number; hits: number; total: number; maxStreak: number; accuracy: number } }
+  | { event: "card_cleared"; properties: { cardId: string; family: Family; clearedCount: number; didUnlock: boolean } }
   | { event: "card_shared"; properties: { grade: string; accuracy: number } }
   | { event: "family_focus_selected"; properties: { family: Family } }
   | { event: "pwa_installed"; properties: Record<string, never> };

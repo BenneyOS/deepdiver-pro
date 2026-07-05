@@ -202,7 +202,7 @@ export function Scorecard({
           type="button"
           onClick={onReplay}
           aria-label="Play another session"
-          className="flex-1 rounded-2xl bg-[var(--ink)] py-4 font-bold text-white transition-all hover:opacity-90 active:scale-[0.98] min-h-[44px]"
+          className="flex-1 rounded-2xl bg-[var(--accent)] py-4 font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.98] min-h-[44px]"
           style={{ transitionTimingFunction: "var(--ease-standard)" }}
         >
           Play Again

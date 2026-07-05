@@ -2,12 +2,16 @@ import { useState } from "react";
 import type { Seed, Family } from "../../data/schema";
 import { FAMILY_LABELS } from "../../data/schema";
 import type { SessionMode } from "../engine/session";
+import {
+  isMastered,
+  clearedInFamily,
+  totalMastered,
+  unlockThresholdFor,
+} from "../engine/progress";
 import { useSessionHistory } from "../store/useSessionHistory";
 import { useProgressStore } from "../store/useProgressStore";
 import { SessionHistory } from "./SessionHistory";
 import { Ada } from "./Ada";
-
-const UNLOCK_THRESHOLD = 4;
 
 interface PathHomeScreenProps {
   seed: Seed;
@@ -19,8 +23,11 @@ interface PathNode {
   family: Family;
   label: string;
   cleared: number;
+  mastered: number;
   total: number;
+  threshold: number;
   isCurrent: boolean;
+  isUnlocked: boolean;
 }
 
 export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
@@ -30,30 +37,41 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
 
   const families = Object.keys(seed.families) as Family[];
 
-  const nodes: PathNode[] = families.map((fam) => {
+  const nodes: PathNode[] = families.map((fam, i) => {
     const familyCards = seed.cards.filter((c) => c.family === fam);
-    const cleared = familyCards.filter((c) => {
-      const p = progressMap.get(c.id);
-      return p && p.box >= 3;
-    }).length;
+    const cleared = clearedInFamily(seed.cards, progressMap, fam);
+    const mastered = familyCards.filter((c) => isMastered(progressMap.get(c.id))).length;
+    const total = familyCards.length;
+
+    // Unit unlocks when the previous unit has cleared its threshold.
+    let isUnlocked = true;
+    if (i > 0) {
+      const prev = families[i - 1];
+      const prevTotal = seed.cards.filter((c) => c.family === prev).length;
+      isUnlocked = clearedInFamily(seed.cards, progressMap, prev) >= unlockThresholdFor(prevTotal);
+    }
 
     return {
       family: fam,
       label: FAMILY_LABELS[fam],
       cleared,
-      total: familyCards.length,
+      mastered,
+      total,
+      threshold: unlockThresholdFor(total),
       isCurrent: false,
+      isUnlocked,
     };
   });
 
-  const currentIdx = nodes.findIndex((n) => n.cleared < n.total);
+  // Current = first unlocked, not-yet-fully-cleared unit.
+  const currentIdx = nodes.findIndex((n) => n.isUnlocked && n.cleared < n.total);
   if (currentIdx >= 0) {
     nodes[currentIdx].isCurrent = true;
   }
 
   const totalCards = seed.cards.length;
-  const totalCleared = nodes.reduce((sum, n) => sum + n.cleared, 0);
-  const masteryPct = totalCards > 0 ? Math.round((totalCleared / totalCards) * 100) : 0;
+  const totalMasteredCount = totalMastered(seed.cards, progressMap);
+  const masteryPct = totalCards > 0 ? Math.round((totalMasteredCount / totalCards) * 100) : 0;
   const recentStreak = sessions.length;
 
   function handleQuickStart() {
@@ -79,7 +97,7 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
       <button
         type="button"
         onClick={handleQuickStart}
-        className="w-full rounded-2xl bg-[var(--ink)] py-4 text-center font-bold text-white transition-all active:scale-[0.97] min-h-[44px] animate-card-deal"
+        className="w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.97] min-h-[44px] animate-card-deal"
         style={{ transitionTimingFunction: "var(--ease-spring)" }}
         aria-label="Continue — start Quick Drill"
       >
@@ -96,11 +114,11 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
             </span>
           </div>
         )}
-        {/* Mastery bar — lifetime progress */}
+        {/* Mastered bar — lifetime progress (Leitner box 5) */}
         <div className="flex-1 ml-3">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[var(--text-dim)]">Mastery</span>
-            <span className="font-telemetry font-semibold text-[var(--ink)]">{totalCleared} of {totalCards}</span>
+            <span className="text-[var(--text-dim)]">Mastered</span>
+            <span className="font-telemetry font-semibold text-[var(--ink)]">{totalMasteredCount} of {totalCards}</span>
           </div>
           <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[var(--border)]">
             <div
@@ -152,15 +170,14 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
           Your path
         </p>
         {nodes.map((node, i) => {
-          const isCleared = node.cleared >= node.total;
+          const isCleared = node.total > 0 && node.cleared >= node.total;
           const isCurrent = node.isCurrent;
-          const isLocked = !isCleared && !isCurrent && i > (currentIdx >= 0 ? currentIdx : 0);
-          const pct = node.total > 0 ? Math.round((node.cleared / node.total) * 100) : 0;
+          const isLocked = !node.isUnlocked;
 
           // FIX 4: Determine unlock condition for locked nodes
           const prevNode = i > 0 ? nodes[i - 1] : null;
           const unlockText = isLocked && prevNode
-            ? `Clear ${UNLOCK_THRESHOLD} in ${prevNode.label} to unlock`
+            ? `Clear ${prevNode.threshold} in ${prevNode.label} to unlock`
             : null;
 
           return (
@@ -183,21 +200,19 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
                 type="button"
                 disabled={isLocked}
                 onClick={() => {
-                  if (isCurrent) {
-                    onStart("quick-drill");
-                  } else if (isCleared) {
+                  if (isCurrent || isCleared) {
                     onStart("family-focus", node.family);
                   }
                 }}
                 className={`relative flex h-[58px] w-[58px] flex-shrink-0 items-center justify-center rounded-full border-2 transition-all
                   ${isCurrent
-                    ? "animate-node-bob border-[var(--accent)] bg-[var(--accent)] text-[var(--ink)] shadow-md active:scale-[0.93] cursor-pointer"
+                    ? "animate-node-bob border-[var(--accent-strong)] bg-[var(--accent-strong)] text-[var(--ink)] shadow-md active:scale-[0.93] cursor-pointer"
                     : isCleared
                       ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)] cursor-pointer active:scale-[0.95]"
                       : "border-[var(--border)] bg-[var(--card)] text-[var(--text-faint)] cursor-not-allowed opacity-60"
                   }
                   min-h-[44px]`}
-                aria-label={`${node.label}: ${isCleared ? "cleared" : isCurrent ? "current — tap to start" : "locked"}, ${pct}% mastered`}
+                aria-label={`${node.label}: ${isCleared ? "cleared" : isCurrent ? "current — tap to start" : "locked"}, ${node.cleared} of ${node.total} cleared`}
               >
                 {isCleared ? (
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
@@ -223,7 +238,8 @@ export function PathHomeScreen({ seed, onStart }: PathHomeScreenProps) {
                 {/* FIX 4: Current unit shows progress toward threshold */}
                 {isCurrent && (
                   <p className="font-telemetry text-xs text-[var(--text-dim)]">
-                    {node.cleared} of {node.total} cleared &middot; {pct}%
+                    {node.cleared} of {node.total} cleared
+                    {node.mastered > 0 && ` · ${node.mastered} mastered`}
                   </p>
                 )}
                 {isCleared && (
@@ -256,7 +272,7 @@ function ModeChip({ label, active, onClick }: { label: string; active?: boolean;
       onClick={onClick}
       className={`flex-1 rounded-full border px-3 py-2 text-xs font-semibold transition-all active:scale-[0.95] min-h-[44px]
         ${active
-          ? "border-[var(--ink)] bg-[var(--ink)] text-white"
+          ? "border-[var(--accent)] bg-[var(--accent)] text-white"
           : "border-[var(--border)] bg-[var(--page)] text-[var(--text-dim)] hover:border-[var(--text-dim)]"
         }`}
       style={{ transitionTimingFunction: "var(--ease-standard)" }}

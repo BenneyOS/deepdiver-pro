@@ -4,6 +4,7 @@ import seedData from "./data/seed.json";
 import { useGameStore } from "./game/store/useGameStore";
 import { useProgressStore } from "./game/store/useProgressStore";
 import { PathHomeScreen } from "./game/components/PathHomeScreen";
+import { ModeIntro } from "./game/components/ModeIntro";
 import { Hud } from "./game/components/Hud";
 import { SessionProgress } from "./game/components/SessionProgress";
 import { OptionList } from "./game/components/OptionList";
@@ -54,7 +55,20 @@ function App() {
       <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8">
         <PathHomeScreen
           seed={seed}
-          onStart={(mode, focusFamily) => game.startSession(seed, mode, focusFamily)}
+          onStart={(mode, focusFamily) => game.prepareSession(mode, focusFamily)}
+        />
+      </main>
+    );
+  }
+
+  if (game.phase === "intro") {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[var(--page)] px-4 py-8">
+        <ModeIntro
+          mode={game.pendingMode}
+          focusFamily={game.pendingFamily}
+          onStart={() => game.startSession(seed, game.pendingMode, game.pendingFamily ?? undefined)}
+          onCancel={() => game.goHome()}
         />
       </main>
     );
@@ -116,6 +130,7 @@ function App() {
             streak={game.streak}
             options={round.options}
             selectedIndex={game.selectedAnswer!}
+            clearEvent={game.clearEvent}
             onNext={handleNextRound}
             isLastRound={game.currentIndex === game.queue.length - 1}
           />
