@@ -1,25 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  /* UX Fix Spec — Light theme */
-  --page: #FFFFFF;
-  --card: #F7F5F0;
-  --card-2: #F5F3EE;
-  --ink: #141414;
-  --text: #141414;
-  --text-dim: #8A8A82;
-  --text-faint: #B8B4A8;
-  --border: #E4E1DA;
-  --accent: #F5C542;
-  --accent-ink: #8A6A0A;
-  --accent-bg: #FBF2D6;
+  /* Warm theme — cream + terracotta (MODE_INTROS_AND_THEME) */
+  --page: #FBF7F0;
+  --card: #F4ECDF;
+  --card-2: #EFE6D6;
+  --ink: #2A2320;
+  --text: #2A2320;
+  --text-dim: #9C9184;
+  --text-faint: #B3A794;
+  --border: #EBE3D6;
+  --accent: #C77D3A;
+  --accent-strong: #E8A24A;
+  --accent-ink: #9A5A22;
+  --accent-bg: #F7E9D0;
   --success: #1E9E62;
   --danger: #C0392B;
-  --reward: #F5C542;
+  --streak: #E07B3C;
+  --reward: #E8A24A;
 
   /* Legacy aliases */
   --ink-light: var(--card);
-  --accent-hover: #E0B030;
+  --accent-hover: #B36E2E;
   --text-primary: var(--text);
   --text-secondary: var(--text-dim);
   --text-muted: var(--text-faint);
@@ -173,6 +175,17 @@ body {
 /* Mastery bar fill */
 @keyframes bar-fill {
   from { width: 0; }
+}
+
+/* Clear tick — unit counter increment acknowledgment */
+@keyframes clear-tick {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.animate-clear-tick {
+  animation: clear-tick 450ms var(--ease-spring);
 }
 
 /* Progressive section enter */

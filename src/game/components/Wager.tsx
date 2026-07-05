@@ -27,7 +27,7 @@ export function Wager({ onWager }: WagerProps) {
           type="button"
           onClick={() => onWager("read-the-room")}
           aria-label="Read the Room — 2 times points multiplier"
-          className="flex-1 rounded-2xl bg-[var(--ink)] px-4 py-4 text-center transition-all hover:opacity-90 active:scale-[0.97] min-h-[44px]"
+          className="flex-1 rounded-2xl bg-[var(--accent)] px-4 py-4 text-center shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.97] min-h-[44px]"
           style={{ transitionTimingFunction: "var(--ease-standard)" }}
         >
           <div className="text-lg font-bold text-white">Read the Room</div>

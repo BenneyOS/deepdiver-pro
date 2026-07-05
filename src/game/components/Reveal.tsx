@@ -3,6 +3,7 @@ import type { Card, Tier } from "../../data/schema";
 import { FAMILY_LABELS, TIER_LABELS } from "../../data/schema";
 import type { Wager } from "../engine/scoring";
 import type { AnswerOption } from "../engine/session";
+import type { ClearEvent } from "../store/useGameStore";
 import { roundPoints } from "../engine/scoring";
 import { Ada } from "./Ada";
 import { getAdaMicrocopy } from "./adaMicrocopy";
@@ -15,6 +16,7 @@ interface RevealProps {
   streak: number;
   options: AnswerOption[];
   selectedIndex: number;
+  clearEvent: ClearEvent | null;
   onNext: () => void;
   isLastRound: boolean;
 }
@@ -42,6 +44,7 @@ export function Reveal({
   streak,
   options,
   selectedIndex,
+  clearEvent,
   onNext,
   isLastRound,
 }: RevealProps) {
@@ -83,6 +86,39 @@ export function Reveal({
           )}
         </div>
       </div>
+
+      {/* Clear event — unit progress ticks up in the moment */}
+      {clearEvent && (
+        <div
+          className={`rounded-2xl border p-3 animate-card-deal ${
+            clearEvent.didUnlock
+              ? "border-[var(--accent)] bg-[var(--accent-bg)]"
+              : "border-[var(--success)]/30 bg-[var(--success)]/10"
+          }`}
+          role="status"
+        >
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[var(--success)] text-white">
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </span>
+            <div className="flex-1 text-sm">
+              <span className="font-bold text-[var(--ink)]">Cleared &mdash; added to your path.</span>{" "}
+              <span className="text-[var(--text-dim)]">{clearEvent.familyLabel}:</span>{" "}
+              <span className="inline-block font-telemetry font-bold text-[var(--success)] animate-clear-tick">
+                {clearEvent.clearedCount} of {clearEvent.familyTotal}
+              </span>
+            </div>
+          </div>
+          {clearEvent.didUnlock && (
+            <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-[var(--accent-ink)]">
+              <span aria-hidden="true">&#128275;</span>
+              Next unit unlocked!
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Option verdict — always visible, no scroll needed */}
       <div className="space-y-1.5 animate-section-enter" style={{ animationDelay: "80ms" }}>
@@ -233,7 +269,7 @@ export function Reveal({
       <button
         type="button"
         onClick={onNext}
-        className="w-full rounded-2xl bg-[var(--ink)] py-4 text-center font-bold text-white transition-all hover:opacity-90 active:scale-[0.98] min-h-[44px] animate-section-enter"
+        className="w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.98] min-h-[44px] animate-section-enter"
         style={{ animationDelay: "240ms", transitionTimingFunction: "var(--ease-standard)" }}
       >
         {isLastRound ? "View Scorecard" : "Next Deal"}
