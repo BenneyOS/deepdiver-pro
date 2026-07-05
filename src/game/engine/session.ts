@@ -1,7 +1,20 @@
-import type { Card, Family, Tier } from "../../data/schema";
+import type { Card, Family, Persona, Tier } from "../../data/schema";
 import { FAMILY_LABELS } from "../../data/schema";
+import type { ExerciseFormat, ReframeToken } from "./formats";
+import {
+  buildWhosSpeaking,
+  buildSpotWeak,
+  buildReframeAssembly,
+  FORMAT_LABELS,
+} from "./formats";
 
-export type SessionMode = "quick-drill" | "boss-deals" | "family-focus";
+export type SessionMode =
+  | "quick-drill"
+  | "boss-deals"
+  | "family-focus"
+  | "speed-round"
+  | "objection-volley"
+  | "match-pairs";
 
 export interface AnswerOption {
   text: string;
@@ -10,8 +23,19 @@ export interface AnswerOption {
 
 export interface Round {
   card: Card;
+  format: ExerciseFormat;
   options: AnswerOption[];
   tierLabel: string;
+  // How the prompt is presented. Classic shows the buyer quote; who's-speaking
+  // shows a single persona framing and hides the quote.
+  showQuote: boolean;
+  promptOverride?: string;
+  instruction: string;
+  usesWager: boolean;
+  // build-reframe only
+  reframeTokens?: ReframeToken[];
+  reframeOrder?: string[];
+  correctPersona?: Persona;
 }
 
 export interface SessionConfig {
@@ -24,6 +48,9 @@ export const SESSION_CONFIGS: Record<SessionMode, Omit<SessionConfig, "focusFami
   "quick-drill": { mode: "quick-drill", cardCount: 7 },
   "boss-deals": { mode: "boss-deals", cardCount: 12 },
   "family-focus": { mode: "family-focus", cardCount: 7 },
+  "speed-round": { mode: "speed-round", cardCount: 40 },
+  "objection-volley": { mode: "objection-volley", cardCount: 3 },
+  "match-pairs": { mode: "match-pairs", cardCount: 4 },
 };
 
 const TIER_QUESTIONS: Record<Tier, string> = {
@@ -91,10 +118,61 @@ export function generateOptions(
   return shuffleArray(options);
 }
 
-export function buildRound(card: Card, allCards: Card[]): Round {
-  return {
+export function buildRound(
+  card: Card,
+  allCards: Card[],
+  format: ExerciseFormat = "classic",
+  rand: () => number = Math.random,
+): Round {
+  const base = {
     card,
-    options: generateOptions(card, allCards),
-    tierLabel: TIER_QUESTIONS[card.tier],
+    format,
+    tierLabel: FORMAT_LABELS[format],
   };
+
+  switch (format) {
+    case "whos-speaking": {
+      const r = buildWhosSpeaking(card, rand);
+      return {
+        ...base,
+        options: r.options,
+        showQuote: false,
+        promptOverride: r.line,
+        instruction: "Which stakeholder is this framing aimed at?",
+        usesWager: false,
+        correctPersona: r.correctPersona,
+      };
+    }
+    case "spot-weak": {
+      const r = buildSpotWeak(card, allCards, rand);
+      return {
+        ...base,
+        options: r.options,
+        showQuote: false,
+        instruction: "Three of these are solid. Which is the weak answer to avoid?",
+        usesWager: false,
+      };
+    }
+    case "build-reframe": {
+      const r = buildReframeAssembly(card, allCards, rand);
+      return {
+        ...base,
+        options: [],
+        showQuote: true,
+        instruction: "Assemble the strongest reframe, in order.",
+        usesWager: false,
+        reframeTokens: r.shuffled,
+        reframeOrder: r.correctOrder,
+      };
+    }
+    case "classic":
+    default:
+      return {
+        ...base,
+        options: generateOptions(card, allCards),
+        showQuote: true,
+        instruction: TIER_QUESTIONS[card.tier],
+        usesWager: true,
+      };
+  }
 }

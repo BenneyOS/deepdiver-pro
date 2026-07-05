@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const FAMILIES = ["A", "B", "C", "D", "E", "F", "G", "H"];
 const TIERS = [1, 2, 3, 4];
 const REQUIRED = [
   "id",
@@ -21,6 +20,7 @@ const PERSONAS = ["CTO", "VPE", "CFO", "CRO"];
 
 const seedPath = resolve(import.meta.dirname, "..", "data", "seed.json");
 const seed = JSON.parse(readFileSync(seedPath, "utf-8"));
+const FAMILIES = Object.keys(seed.families);
 
 const errors: string[] = [];
 const ids = new Set<string>();

@@ -28,6 +28,36 @@ function getCopy(mode: SessionMode, focusFamily: Family | null): ModeCopy {
           "Earn your rank — score 9+ to hit Senior Seller.",
         ],
       };
+    case "speed-round":
+      return {
+        name: "Speed Round",
+        desc: "60 seconds. Identify as many situation families as you can — fast reads only.",
+        points: [
+          "60-second timer — answer as many as you can.",
+          "No wager — chain correct reads for a rising combo multiplier.",
+          "Every correct first read still clears the card on your path.",
+        ],
+      };
+    case "objection-volley":
+      return {
+        name: "Objection Volley",
+        desc: "Three tough objections from one family, back to back. Fire back with the strongest reframe — one miss ends the volley.",
+        points: [
+          "3 objections in a row from a single family.",
+          "Pick the strongest reframe each time — a miss breaks the volley.",
+          "Clear all three for a rising streak payoff.",
+        ],
+      };
+    case "match-pairs":
+      return {
+        name: "Match Pairs",
+        desc: "Connect each symptom to the root cause beneath it — a fast review of the diagnostic logic.",
+        points: [
+          "Tap a symptom, then tap the root cause it maps to.",
+          "Match all four, then check them at once.",
+          "Correct matches clear those cards on your path.",
+        ],
+      };
     case "family-focus":
       return {
         name: "Family Focus",

@@ -1,10 +1,11 @@
 import type { Family, Tier } from "../data/schema";
 import type { Wager } from "./engine/scoring";
 import type { SessionMode } from "./engine/session";
+import type { ExerciseFormat } from "./engine/formats";
 
 type AnalyticsEvent =
   | { event: "session_started"; properties: { mode: SessionMode; focusFamily?: string } }
-  | { event: "round_completed"; properties: { cardId: string; family: Family; tier: Tier; correct: boolean; wager: Wager; points: number } }
+  | { event: "round_completed"; properties: { cardId: string; family: Family; tier: Tier; format?: ExerciseFormat; correct: boolean; wager: Wager; points: number } }
   | { event: "session_completed"; properties: { mode: SessionMode; score: number; hits: number; total: number; maxStreak: number; accuracy: number } }
   | { event: "card_cleared"; properties: { cardId: string; family: Family; clearedCount: number; didUnlock: boolean } }
   | { event: "card_shared"; properties: { grade: string; accuracy: number } }

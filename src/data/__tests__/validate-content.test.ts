@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import seedData from "../seed.json";
 
-const FAMILIES = ["A", "B", "C", "D", "E", "F", "G", "H"];
 const TIERS = [1, 2, 3, 4];
 const REQUIRED_FIELDS = [
   "id",
@@ -19,7 +18,11 @@ const REQUIRED_FIELDS = [
 ] as const;
 const PERSONAS = ["CTO", "VPE", "CFO", "CRO"] as const;
 
-const seed = seedData as { cards: Record<string, unknown>[] };
+const seed = seedData as {
+  families: Record<string, string>;
+  cards: Record<string, unknown>[];
+};
+const FAMILIES = Object.keys(seed.families);
 
 describe("seed.json content validation", () => {
   it("has at least one card", () => {
@@ -41,7 +44,7 @@ describe("seed.json content validation", () => {
     }
   });
 
-  it("every card has a valid family (A-H)", () => {
+  it("every card has a valid family", () => {
     for (const card of seed.cards) {
       expect(
         FAMILIES,

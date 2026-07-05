@@ -1,4 +1,6 @@
-export type Family = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H";
+export type Family =
+  | "A" | "B" | "C" | "D" | "E" | "F" | "G"
+  | "H" | "I" | "J" | "K" | "L" | "M" | "N";
 export type Tier = 1 | 2 | 3 | 4;
 export type Persona = "CTO" | "VPE" | "CFO" | "CRO";
 
@@ -46,6 +48,12 @@ export const FAMILY_LABELS: Record<Family, string> = {
   F: "Compliance-forced modernization",
   G: "Talent & hiring pressure",
   H: "Security & vulnerability exposure",
+  I: "Cloud cost & FinOps pressure",
+  J: "Data & analytics modernization",
+  K: "AI/ML adoption & readiness",
+  L: "Developer experience & tooling",
+  M: "Integration & API sprawl",
+  N: "Observability & reliability gaps",
 };
 
 export const TIER_LABELS: Record<Tier, string> = {
