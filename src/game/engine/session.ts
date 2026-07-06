@@ -9,6 +9,7 @@ import {
 } from "./formats";
 
 export type SessionMode =
+  | "lesson"
   | "quick-drill"
   | "boss-deals"
   | "family-focus"
@@ -45,6 +46,7 @@ export interface SessionConfig {
 }
 
 export const SESSION_CONFIGS: Record<SessionMode, Omit<SessionConfig, "focusFamily">> = {
+  "lesson": { mode: "lesson", cardCount: 5 },
   "quick-drill": { mode: "quick-drill", cardCount: 7 },
   "boss-deals": { mode: "boss-deals", cardCount: 12 },
   "family-focus": { mode: "family-focus", cardCount: 7 },

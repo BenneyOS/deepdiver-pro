@@ -2,14 +2,20 @@ import { useState } from "react";
 import type { Seed, Family } from "../../data/schema";
 import { FAMILY_LABELS } from "../../data/schema";
 import type { SessionMode } from "../engine/session";
+import { totalMastered } from "../engine/progress";
 import {
-  isMastered,
-  clearedInFamily,
-  totalMastered,
-  unlockThresholdFor,
-} from "../engine/progress";
+  allLessons,
+  unitState,
+  isUnitUnlocked,
+  currentUnitIndex,
+  nextLessonInUnit,
+  completedLessonCount,
+  type UnitState,
+  type LessonRef,
+} from "../engine/curriculum";
 import { useSessionHistory } from "../store/useSessionHistory";
 import { useProgressStore } from "../store/useProgressStore";
+import { useCurriculum } from "../store/useCurriculum";
 import { usePortfolio } from "../store/usePortfolio";
 import { useSettings } from "../store/useSettings";
 import { useStreak } from "../store/useStreak";
@@ -18,72 +24,68 @@ import { Ada } from "./Ada";
 
 interface PathHomeScreenProps {
   seed: Seed;
-  cardsSeen?: number;
   onStart: (mode: SessionMode, focusFamily?: Family) => void;
+  onStartLesson: (lessonId: string) => void;
   onOpenPortfolio: () => void;
 }
 
 interface PathNode {
-  family: Family;
+  unit: UnitState;
   label: string;
-  cleared: number;
-  mastered: number;
-  total: number;
-  threshold: number;
   isCurrent: boolean;
   isUnlocked: boolean;
+  nextLesson: LessonRef | null;
 }
 
-export function PathHomeScreen({ seed, onStart, onOpenPortfolio }: PathHomeScreenProps) {
+export function PathHomeScreen({
+  seed,
+  onStart,
+  onStartLesson,
+  onOpenPortfolio,
+}: PathHomeScreenProps) {
   const [showFamilyPicker, setShowFamilyPicker] = useState(false);
   const { progressMap } = useProgressStore();
   const { sessions } = useSessionHistory();
+  const completed = useCurriculum((s) => s.completed);
   const portfolioCount = usePortfolio((s) => s.pitches.length);
   const { haptics, sound, toggleHaptics, toggleSound } = useSettings();
+  const { count: dayStreak, atRisk, freezes } = useStreak();
 
   const families = Object.keys(seed.families) as Family[];
+  const currentIdx = currentUnitIndex(seed.cards, families, completed);
 
   const nodes: PathNode[] = families.map((fam, i) => {
-    const familyCards = seed.cards.filter((c) => c.family === fam);
-    const cleared = clearedInFamily(seed.cards, progressMap, fam);
-    const mastered = familyCards.filter((c) => isMastered(progressMap.get(c.id))).length;
-    const total = familyCards.length;
-
-    // Unit unlocks when the previous unit has cleared its threshold.
-    let isUnlocked = true;
-    if (i > 0) {
-      const prev = families[i - 1];
-      const prevTotal = seed.cards.filter((c) => c.family === prev).length;
-      isUnlocked = clearedInFamily(seed.cards, progressMap, prev) >= unlockThresholdFor(prevTotal);
-    }
-
+    const unit = unitState(seed.cards, fam, completed);
     return {
-      family: fam,
+      unit,
       label: FAMILY_LABELS[fam],
-      cleared,
-      mastered,
-      total,
-      threshold: unlockThresholdFor(total),
-      isCurrent: false,
-      isUnlocked,
+      isCurrent: i === currentIdx,
+      isUnlocked: isUnitUnlocked(seed.cards, families, i, completed),
+      nextLesson: nextLessonInUnit(seed.cards, fam, completed),
     };
   });
 
-  // Current = first unlocked, not-yet-fully-cleared unit.
-  const currentIdx = nodes.findIndex((n) => n.isUnlocked && n.cleared < n.total);
-  if (currentIdx >= 0) {
-    nodes[currentIdx].isCurrent = true;
-  }
+  // Headline progression — lessons completed. This moves every session.
+  const lessons = allLessons(seed.cards, families);
+  const totalLessons = lessons.length;
+  const lessonsDone = completedLessonCount(completed);
+  const lessonsPct = totalLessons > 0 ? Math.round((lessonsDone / totalLessons) * 100) : 0;
+  const unitsDone = nodes.filter((n) => n.unit.complete).length;
+  const masteredCount = totalMastered(seed.cards, progressMap);
 
-  const totalCards = seed.cards.length;
-  const totalMasteredCount = totalMastered(seed.cards, progressMap);
-  const masteryPct = totalCards > 0 ? Math.round((totalMasteredCount / totalCards) * 100) : 0;
-
-  const { count: dayStreak, atRisk, freezes } = useStreak();
   const currentNode = currentIdx >= 0 ? nodes[currentIdx] : null;
+  // What "Continue" plays: the next incomplete lesson, or a replay for mastery
+  // if the whole curriculum is complete.
+  const continueLesson = currentNode?.nextLesson ?? lessons[0] ?? null;
+  const continueNumber = continueLesson
+    ? continueLesson.index + 1
+    : 0;
+  const continueUnit = continueLesson
+    ? unitState(seed.cards, continueLesson.family, completed)
+    : null;
 
-  function handleQuickStart() {
-    onStart("quick-drill");
+  function handleContinue() {
+    if (continueLesson) onStartLesson(continueLesson.id);
   }
 
   return (
@@ -101,36 +103,26 @@ export function PathHomeScreen({ seed, onStart, onOpenPortfolio }: PathHomeScree
         <Ada expression={dayStreak >= 3 ? "pleased" : "neutral"} size={44} />
       </div>
 
-      {/* FIX 1: Primary CTA — above the fold, immediately visible */}
+      {/* Primary CTA — starts the next lesson in your path */}
       <button
         type="button"
-        onClick={handleQuickStart}
-        className="w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.97] min-h-[44px] animate-card-deal"
+        onClick={handleContinue}
+        disabled={!continueLesson}
+        className="w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.97] min-h-[44px] animate-card-deal disabled:opacity-50"
         style={{ transitionTimingFunction: "var(--ease-spring)" }}
-        aria-label="Continue — start Quick Drill"
+        aria-label={
+          continueLesson
+            ? `Continue — ${FAMILY_LABELS[continueLesson.family]}, lesson ${continueNumber}`
+            : "Continue"
+        }
       >
-        Continue
+        <span className="block text-lg leading-tight">Continue</span>
+        {continueLesson && continueUnit && (
+          <span className="block text-xs font-medium text-white/85">
+            {FAMILY_LABELS[continueLesson.family]} · Lesson {continueNumber} of {continueUnit.total}
+          </span>
+        )}
       </button>
-
-      {/* Contextual trigger — personalized to the unit you're mid-progress on */}
-      {currentNode && (
-        <button
-          type="button"
-          onClick={() => onStart("family-focus", currentNode.family)}
-          className="flex w-full items-center gap-3 rounded-2xl border border-[var(--accent)]/40 bg-[var(--accent-bg)] px-4 py-3 text-left transition-all hover:border-[var(--accent)] active:scale-[0.98] min-h-[44px]"
-          style={{ transitionTimingFunction: "var(--ease-standard)" }}
-        >
-          <Ada expression="thinking" size={32} />
-          <div className="flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--accent-ink)]">
-              Today&rsquo;s read
-            </p>
-            <p className="text-sm font-semibold leading-snug text-[var(--ink)]">
-              Ready to close the {currentNode.label} objection?
-            </p>
-          </div>
-        </button>
-      )}
 
       {/* Streak — with a protective freeze so one missed day doesn't reset it */}
       {dayStreak > 0 && (
@@ -151,30 +143,39 @@ export function PathHomeScreen({ seed, onStart, onOpenPortfolio }: PathHomeScree
         </div>
       )}
 
-      {/* Mastered header — lifetime progress (Leitner box 5) */}
-      <div className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] px-4 py-3">
-        <div className="flex-1">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[var(--text-dim)]">Mastered</span>
-            <span className="font-telemetry font-semibold text-[var(--ink)]">{totalMasteredCount} of {totalCards}</span>
-          </div>
-          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[var(--border)]">
-            <div
-              className="h-full rounded-full bg-[var(--accent)] transition-all duration-500"
-              style={{ width: `${masteryPct}%` }}
-            />
-          </div>
+      {/* Progression header — LESSONS completed (moves every session). */}
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] px-4 py-3">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-semibold text-[var(--ink)]">Your progress</span>
+          <span className="font-telemetry font-semibold text-[var(--ink)]">
+            {lessonsDone} of {totalLessons} lessons
+          </span>
+        </div>
+        <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-[var(--border)]">
+          <div
+            className="h-full rounded-full bg-[var(--accent)] transition-all duration-500"
+            style={{ width: `${lessonsPct}%` }}
+          />
+        </div>
+        <div className="mt-1.5 flex items-center justify-between text-xs text-[var(--text-dim)]">
+          <span>{unitsDone} of {families.length} units complete</span>
+          <span className="font-telemetry">{masteredCount} cards mastered</span>
         </div>
       </div>
 
-      {/* Mode shortcuts */}
-      <div className="grid grid-cols-2 gap-2">
-        <ModeChip label="Quick Drill" active onClick={() => onStart("quick-drill")} />
-        <ModeChip label="Speed Round" onClick={() => onStart("speed-round")} />
-        <ModeChip label="Boss Deals" onClick={() => onStart("boss-deals")} />
-        <ModeChip label="Objection Volley" onClick={() => onStart("objection-volley")} />
-        <ModeChip label="Match Pairs" onClick={() => onStart("match-pairs")} />
-        <ModeChip label="Family Focus" onClick={() => setShowFamilyPicker(true)} />
+      {/* Practice modes — extra reps outside the path */}
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
+          Practice (extra reps)
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          <ModeChip label="Quick Drill" onClick={() => onStart("quick-drill")} />
+          <ModeChip label="Speed Round" onClick={() => onStart("speed-round")} />
+          <ModeChip label="Boss Deals" onClick={() => onStart("boss-deals")} />
+          <ModeChip label="Objection Volley" onClick={() => onStart("objection-volley")} />
+          <ModeChip label="Match Pairs" onClick={() => onStart("match-pairs")} />
+          <ModeChip label="Family Focus" onClick={() => setShowFamilyPicker(true)} />
+        </div>
       </div>
 
       {/* Pitch Portfolio — the Investment loop */}
@@ -223,57 +224,56 @@ export function PathHomeScreen({ seed, onStart, onOpenPortfolio }: PathHomeScree
         </div>
       )}
 
-      {/* Winding path */}
+      {/* Winding path — units as an ordered ladder of lessons */}
       <div className="relative px-2">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
           Your path
         </p>
         {nodes.map((node, i) => {
-          const isCleared = node.total > 0 && node.cleared >= node.total;
+          const { unit } = node;
+          const isComplete = unit.complete;
           const isCurrent = node.isCurrent;
           const isLocked = !node.isUnlocked;
-
-          // FIX 4: Determine unlock condition for locked nodes
           const prevNode = i > 0 ? nodes[i - 1] : null;
-          const unlockText = isLocked && prevNode
-            ? `Clear ${prevNode.threshold} in ${prevNode.label} to unlock`
-            : null;
+          const unlockText =
+            isLocked && prevNode
+              ? `Complete ${prevNode.label} to unlock`
+              : null;
 
           return (
-            <div key={node.family} className="relative flex items-center gap-4 py-2">
-              {/* Connector line */}
+            <div key={unit.family} className="relative flex items-center gap-4 py-2">
               {i > 0 && (
                 <div
                   className="absolute left-[27px] -top-2 h-4 w-0.5"
                   style={{
-                    backgroundColor: isCleared || isCurrent
-                      ? "var(--accent)"
-                      : "var(--border)",
+                    backgroundColor:
+                      isComplete || isCurrent ? "var(--accent)" : "var(--border)",
                   }}
                   aria-hidden="true"
                 />
               )}
 
-              {/* FIX 1: Node circle — current node is tappable and launches round */}
               <button
                 type="button"
                 disabled={isLocked}
                 onClick={() => {
-                  if (isCurrent || isCleared) {
-                    onStart("family-focus", node.family);
-                  }
+                  if (node.nextLesson) onStartLesson(node.nextLesson.id);
+                  else if (unit.lessons[0]) onStartLesson(unit.lessons[0].id);
                 }}
                 className={`relative flex h-[58px] w-[58px] flex-shrink-0 items-center justify-center rounded-full border-2 transition-all
-                  ${isCurrent
-                    ? "animate-node-bob border-[var(--accent-strong)] bg-[var(--accent-strong)] text-[var(--ink)] shadow-md active:scale-[0.93] cursor-pointer"
-                    : isCleared
-                      ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)] cursor-pointer active:scale-[0.95]"
-                      : "border-[var(--border)] bg-[var(--card)] text-[var(--text-faint)] cursor-not-allowed opacity-60"
+                  ${
+                    isCurrent
+                      ? "animate-node-bob border-[var(--accent-strong)] bg-[var(--accent-strong)] text-[var(--ink)] shadow-md active:scale-[0.93] cursor-pointer"
+                      : isComplete
+                        ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)] cursor-pointer active:scale-[0.95]"
+                        : "border-[var(--border)] bg-[var(--card)] text-[var(--text-faint)] cursor-not-allowed opacity-60"
                   }
                   min-h-[44px]`}
-                aria-label={`${node.label}: ${isCleared ? "cleared" : isCurrent ? "current — tap to start" : "locked"}, ${node.cleared} of ${node.total} cleared`}
+                aria-label={`${node.label}: ${
+                  isComplete ? "complete" : isCurrent ? "current — tap to start next lesson" : "locked"
+                }, ${unit.done} of ${unit.total} lessons`}
               >
-                {isCleared ? (
+                {isComplete ? (
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
@@ -283,34 +283,31 @@ export function PathHomeScreen({ seed, onStart, onOpenPortfolio }: PathHomeScree
                     <path d="M9 11V7a3 3 0 016 0v4" />
                   </svg>
                 ) : (
-                  <span className="font-extrabold text-sm">{node.family}</span>
+                  <span className="font-extrabold text-sm">{unit.family}</span>
                 )}
               </button>
 
-              {/* Label + progress / unlock condition */}
               <div className="flex-1 min-w-0">
-                <p className={`text-sm font-semibold ${
-                  isCurrent ? "text-[var(--ink)]" : isCleared ? "text-[var(--ink)]" : "text-[var(--text-faint)]"
-                }`}>
+                <p
+                  className={`text-sm font-semibold ${
+                    isCurrent || isComplete ? "text-[var(--ink)]" : "text-[var(--text-faint)]"
+                  }`}
+                >
                   {node.label}
                 </p>
-                {/* FIX 4: Current unit shows progress toward threshold */}
                 {isCurrent && (
                   <p className="font-telemetry text-xs text-[var(--text-dim)]">
-                    {node.cleared} of {node.total} cleared
-                    {node.mastered > 0 && ` · ${node.mastered} mastered`}
+                    Lesson {unit.done + 1} of {unit.total}
+                    <StarRow stars={Math.round(unit.stars / Math.max(1, unit.done))} inline />
                   </p>
                 )}
-                {isCleared && (
+                {isComplete && (
                   <p className="font-telemetry text-xs text-[var(--success)]">
-                    Cleared
+                    Complete · {unit.stars}/{unit.maxStars} &#9733;
                   </p>
                 )}
-                {/* FIX 4: Locked unit states unlock condition in plain language */}
                 {isLocked && unlockText && (
-                  <p className="text-xs text-[var(--text-faint)]">
-                    {unlockText}
-                  </p>
+                  <p className="text-xs text-[var(--text-faint)]">{unlockText}</p>
                 )}
               </div>
             </div>
@@ -323,18 +320,20 @@ export function PathHomeScreen({ seed, onStart, onOpenPortfolio }: PathHomeScree
 
       {/* Feedback settings */}
       <div className="flex items-center justify-center gap-2 pt-1">
-        <SettingToggle
-          label="Haptics"
-          on={haptics}
-          onToggle={toggleHaptics}
-        />
-        <SettingToggle
-          label="Sound"
-          on={sound}
-          onToggle={toggleSound}
-        />
+        <SettingToggle label="Haptics" on={haptics} onToggle={toggleHaptics} />
+        <SettingToggle label="Sound" on={sound} onToggle={toggleSound} />
       </div>
     </div>
+  );
+}
+
+function StarRow({ stars, inline }: { stars: number; inline?: boolean }) {
+  const clamped = Math.max(0, Math.min(3, stars));
+  return (
+    <span className={inline ? "ml-1.5" : ""} aria-label={`${clamped} of 3 stars`}>
+      {"\u2605".repeat(clamped)}
+      <span className="text-[var(--text-faint)]">{"\u2606".repeat(3 - clamped)}</span>
+    </span>
   );
 }
 
@@ -366,9 +365,10 @@ function ModeChip({ label, active, onClick }: { label: string; active?: boolean;
       type="button"
       onClick={onClick}
       className={`flex-1 rounded-full border px-3 py-2 text-xs font-semibold transition-all active:scale-[0.95] min-h-[44px]
-        ${active
-          ? "border-[var(--accent)] bg-[var(--accent)] text-white"
-          : "border-[var(--border)] bg-[var(--page)] text-[var(--text-dim)] hover:border-[var(--text-dim)]"
+        ${
+          active
+            ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+            : "border-[var(--border)] bg-[var(--page)] text-[var(--text-dim)] hover:border-[var(--text-dim)]"
         }`}
       style={{ transitionTimingFunction: "var(--ease-standard)" }}
     >

@@ -4,7 +4,8 @@ import type { SessionMode } from "./engine/session";
 import type { ExerciseFormat } from "./engine/formats";
 
 type AnalyticsEvent =
-  | { event: "session_started"; properties: { mode: SessionMode; focusFamily?: string } }
+  | { event: "session_started"; properties: { mode: SessionMode; focusFamily?: string; lessonId?: string } }
+  | { event: "lesson_completed"; properties: { lessonId: string; stars: number; hits: number; total: number } }
   | { event: "round_completed"; properties: { cardId: string; family: Family; tier: Tier; format?: ExerciseFormat; correct: boolean; wager: Wager; points: number } }
   | { event: "session_completed"; properties: { mode: SessionMode; score: number; hits: number; total: number; maxStreak: number; accuracy: number } }
   | { event: "card_cleared"; properties: { cardId: string; family: Family; clearedCount: number; didUnlock: boolean } }

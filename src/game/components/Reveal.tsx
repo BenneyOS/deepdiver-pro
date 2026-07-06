@@ -160,14 +160,12 @@ export function Reveal({
         </div>
       )}
 
-      {/* Clear event — unit progress ticks up in the moment */}
+      {/* Clear event — a first-time correct read on this card. Lesson/unit
+          progress is shown on the scorecard and path, not with a raw
+          "X of 49" denominator. */}
       {clearEvent && (
         <div
-          className={`rounded-2xl border p-3 animate-card-deal ${
-            clearEvent.didUnlock
-              ? "border-[var(--accent)] bg-[var(--accent-bg)]"
-              : "border-[var(--success)]/30 bg-[var(--success)]/10"
-          }`}
+          className="rounded-2xl border border-[var(--success)]/30 bg-[var(--success)]/10 p-3 animate-card-deal"
           role="status"
         >
           <div className="flex items-center gap-2">
@@ -177,19 +175,10 @@ export function Reveal({
               </svg>
             </span>
             <div className="flex-1 text-sm">
-              <span className="font-bold text-[var(--ink)]">Cleared &mdash; added to your path.</span>{" "}
-              <span className="text-[var(--text-dim)]">{clearEvent.familyLabel}:</span>{" "}
-              <span className="inline-block font-telemetry font-bold text-[var(--success)] animate-clear-tick">
-                {clearEvent.clearedCount} of {clearEvent.familyTotal}
-              </span>
+              <span className="font-bold text-[var(--ink)]">New read cleared</span>{" "}
+              <span className="text-[var(--text-dim)]">&mdash; a first for this {clearEvent.familyLabel} card.</span>
             </div>
           </div>
-          {clearEvent.didUnlock && (
-            <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-[var(--accent-ink)]">
-              <span aria-hidden="true">&#128275;</span>
-              Next unit unlocked!
-            </p>
-          )}
         </div>
       )}
 

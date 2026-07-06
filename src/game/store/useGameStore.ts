@@ -16,6 +16,8 @@ import type { ExerciseFormat } from "../engine/formats";
 import { rotateFormats, formatPoolForMode } from "../engine/formats";
 import { useProgressStore } from "./useProgressStore";
 import { usePortfolio } from "./usePortfolio";
+import { useCurriculum } from "./useCurriculum";
+import { findLesson } from "../engine/curriculum";
 import { feedbackCorrect, feedbackWrong, feedbackReward } from "../feedback";
 import { useSessionHistory } from "./useSessionHistory";
 import { useStreak } from "./useStreak";
@@ -59,6 +61,7 @@ interface GameState {
   rounds: RoundResult[];
   allCards: Card[];
   clearEvent: ClearEvent | null;
+  activeLessonId: string | null;
 
   focusFamily: Family | null;
   pendingMode: SessionMode;
@@ -66,6 +69,7 @@ interface GameState {
 
   prepareSession: (mode: SessionMode, focusFamily?: Family) => void;
   startSession: (seed: Seed, mode: SessionMode, focusFamily?: Family) => void;
+  startLesson: (seed: Seed, lessonId: string) => void;
   selectAnswer: (optionIndex: number) => void;
   placeWager: (wager: Wager) => void;
   submitAssembly: (correct: boolean) => void;
@@ -94,6 +98,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   rounds: [],
   allCards: [],
   clearEvent: null,
+  activeLessonId: null,
   focusFamily: null,
   pendingMode: "quick-drill",
   pendingFamily: null,
@@ -103,6 +108,39 @@ export const useGameStore = create<GameState>((set, get) => ({
       phase: "intro",
       pendingMode: mode,
       pendingFamily: focusFamily ?? null,
+    });
+  },
+
+  // A curriculum lesson: a fixed, ordered slice of a unit's cards. Playing it
+  // to the end completes the lesson (guaranteed path advancement). Skips the
+  // mode intro so "Continue" is one tap into the round.
+  startLesson: (seed: Seed, lessonId: string) => {
+    const families = Object.keys(seed.families) as Family[];
+    const lesson = findLesson(seed.cards, families, lessonId);
+    if (!lesson) return;
+    const byId = new Map(seed.cards.map((c) => [c.id, c] as const));
+    const queue = lesson.cardIds
+      .map((id) => byId.get(id))
+      .filter((c): c is Card => Boolean(c));
+    const formats = rotateFormats(queue.length, formatPoolForMode("quick-drill"));
+    const firstRound =
+      queue.length > 0 ? buildRound(queue[0], seed.cards, formats[0]) : null;
+
+    trackEvent({
+      event: "session_started",
+      properties: { mode: "lesson", lessonId },
+    });
+
+    set({
+      ...freshSessionState(),
+      phase: "answer",
+      mode: "lesson",
+      queue,
+      formats,
+      currentRound: firstRound,
+      allCards: seed.cards,
+      focusFamily: lesson.family,
+      activeLessonId: lessonId,
     });
   },
 
@@ -180,6 +218,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       rounds: [],
       allCards,
       clearEvent: null,
+      activeLessonId: null,
     });
   },
 
@@ -285,6 +324,22 @@ export const useGameStore = create<GameState>((set, get) => ({
       });
       useStreak.getState().recordPlay();
       const accuracy = state.queue.length > 0 ? (state.hits / state.queue.length) * 100 : 0;
+      // Curriculum: finishing a lesson completes it (guaranteed advancement);
+      // accuracy sets the star rating (best kept on replay).
+      if (state.mode === "lesson" && state.activeLessonId) {
+        const stars = useCurriculum
+          .getState()
+          .completeLesson(state.activeLessonId, state.hits, state.queue.length);
+        trackEvent({
+          event: "lesson_completed",
+          properties: {
+            lessonId: state.activeLessonId,
+            stars,
+            hits: state.hits,
+            total: state.queue.length,
+          },
+        });
+      }
       trackEvent({
         event: "session_completed",
         properties: {
@@ -328,6 +383,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       momentum: 50,
       hits: 0,
       rounds: [],
+      activeLessonId: null,
     });
   },
 
@@ -353,6 +409,7 @@ function freshSessionState(): Partial<GameState> {
     hits: 0,
     rounds: [],
     clearEvent: null,
+    activeLessonId: null,
   };
 }
 

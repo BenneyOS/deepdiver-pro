@@ -18,6 +18,7 @@ import { Scorecard } from "./game/components/Scorecard";
 import { PitchPortfolio } from "./game/components/PitchPortfolio";
 import { AgenticLog } from "./game/components/AgenticLog";
 import { Ada } from "./game/components/Ada";
+import { starsForAccuracy } from "./game/engine/curriculum";
 
 const seed = seedData as Seed;
 
@@ -61,6 +62,7 @@ function App() {
         <PathHomeScreen
           seed={seed}
           onStart={(mode, focusFamily) => game.prepareSession(mode, focusFamily)}
+          onStartLesson={(lessonId) => game.startLesson(seed, lessonId)}
           onOpenPortfolio={() => game.openPortfolio()}
         />
       </main>
@@ -122,7 +124,16 @@ function App() {
           rounds={game.rounds}
           queue={game.queue}
           onHome={() => game.goHome()}
-          onReplay={() => game.startSession(seed, game.mode)}
+          onReplay={() =>
+            game.mode === "lesson" && game.activeLessonId
+              ? game.startLesson(seed, game.activeLessonId)
+              : game.startSession(seed, game.mode)
+          }
+          lessonStars={
+            game.mode === "lesson"
+              ? starsForAccuracy(game.hits, game.queue.length)
+              : null
+          }
         />
       </main>
     );

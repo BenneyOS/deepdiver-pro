@@ -14,6 +14,8 @@ interface ScorecardProps {
   queue: Card[];
   onHome: () => void;
   onReplay: () => void;
+  /** When set, this was a curriculum lesson: show the completion + star banner. */
+  lessonStars?: number | null;
 }
 
 export function Scorecard({
@@ -24,6 +26,7 @@ export function Scorecard({
   queue,
   onHome,
   onReplay,
+  lessonStars = null,
 }: ScorecardProps) {
   const total = rounds.length;
   const accuracy = total > 0 ? (hits / total) * 100 : 0;
@@ -102,6 +105,25 @@ export function Scorecard({
 
   return (
     <div className="mx-auto w-full max-w-md space-y-5" aria-label="Session scorecard">
+      {/* Lesson-complete banner — the path just advanced by one lesson */}
+      {lessonStars !== null && (
+        <div
+          className="rounded-2xl border border-[var(--accent)]/40 bg-[var(--accent-bg)] p-4 text-center animate-rank-spring"
+          role="status"
+        >
+          <p className="text-sm font-bold text-[var(--accent-ink)]">Lesson complete</p>
+          <p className="mt-1 text-2xl" aria-label={`${lessonStars} of 3 stars`}>
+            <span className="text-[var(--accent)]">{"\u2605".repeat(Math.max(0, Math.min(3, lessonStars)))}</span>
+            <span className="text-[var(--text-faint)]">{"\u2606".repeat(3 - Math.max(0, Math.min(3, lessonStars)))}</span>
+          </p>
+          <p className="mt-1 text-xs text-[var(--text-dim)]">
+            {lessonStars >= 3
+              ? "Flawless — that read is now second nature."
+              : "Path advanced. Replay for 3 stars to lock it in."}
+          </p>
+        </div>
+      )}
+
       {/* Rank-up header */}
       <div className="relative rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 text-center">
         <div className="relative inline-block animate-rank-spring">
