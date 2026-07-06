@@ -10,12 +10,15 @@ import {
 } from "../engine/scoring";
 import { selectSessionQueue, selectBossDealsQueue, selectFamilyFocusQueue } from "../engine/leitner";
 import { updateProgress } from "../engine/leitner";
-import { isCleared, clearedInFamily, unlockThresholdFor } from "../engine/progress";
+import { isCleared, isMastered, clearedInFamily, unlockThresholdFor } from "../engine/progress";
 import { buildRound } from "../engine/session";
 import type { ExerciseFormat } from "../engine/formats";
 import { rotateFormats, formatPoolForMode } from "../engine/formats";
 import { useProgressStore } from "./useProgressStore";
+import { usePortfolio } from "./usePortfolio";
+import { feedbackCorrect, feedbackWrong, feedbackReward } from "../feedback";
 import { useSessionHistory } from "./useSessionHistory";
+import { useStreak } from "./useStreak";
 import { trackEvent } from "../analytics";
 
 export type GamePhase =
@@ -27,6 +30,7 @@ export type GamePhase =
   | "speed"
   | "volley"
   | "match"
+  | "portfolio"
   | "scorecard";
 
 export interface ClearEvent {
@@ -69,6 +73,7 @@ interface GameState {
   finishSpeed: (summary: { mode: SessionMode; score: number; hits: number; total: number; maxStreak: number }) => void;
   nextRound: () => void;
   goHome: () => void;
+  openPortfolio: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -223,7 +228,16 @@ export const useGameStore = create<GameState>((set, get) => ({
     const progressStore = useProgressStore.getState();
     const currentProgress = progressStore.getProgress(card.id);
     const wasCleared = isCleared(currentProgress);
-    progressStore.updateCard(updateProgress(currentProgress, card.id, correct));
+    const wasMastered = isMastered(currentProgress);
+    const nextProgress = updateProgress(currentProgress, card.id, correct);
+    progressStore.updateCard(nextProgress);
+    const newlyMastered = !wasMastered && isMastered(nextProgress);
+    if (newlyMastered) {
+      usePortfolio.getState().capture(card, FAMILY_LABELS[card.family]);
+    }
+    if (newlyMastered) feedbackReward();
+    else if (correct) feedbackCorrect();
+    else feedbackWrong();
     if (correct && !wasCleared) {
       const updatedMap = useProgressStore.getState().progressMap;
       const familyTotal = get().allCards.filter((c) => c.family === card.family).length;
@@ -242,6 +256,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   finishSpeed: ({ mode, score, hits, total, maxStreak }) => {
     useSessionHistory.getState().addSession({ mode, score, hits, total, maxStreak });
+    useStreak.getState().recordPlay();
     trackEvent({
       event: "session_completed",
       properties: {
@@ -268,6 +283,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         total: state.queue.length,
         maxStreak: state.maxStreak,
       });
+      useStreak.getState().recordPlay();
       const accuracy = state.queue.length > 0 ? (state.hits / state.queue.length) * 100 : 0;
       trackEvent({
         event: "session_completed",
@@ -313,6 +329,10 @@ export const useGameStore = create<GameState>((set, get) => ({
       hits: 0,
       rounds: [],
     });
+  },
+
+  openPortfolio: () => {
+    set({ phase: "portfolio" });
   },
 }));
 
@@ -378,8 +398,13 @@ function resolveRound(
   const progressStore = useProgressStore.getState();
   const currentProgress = progressStore.getProgress(round.card.id);
   const wasCleared = isCleared(currentProgress);
+  const wasMastered = isMastered(currentProgress);
   const newProgress = updateProgress(currentProgress, round.card.id, correct);
   progressStore.updateCard(newProgress);
+
+  if (!wasMastered && isMastered(newProgress)) {
+    usePortfolio.getState().capture(round.card, FAMILY_LABELS[round.card.family]);
+  }
 
   let clearEvent: ClearEvent | null = null;
   if (correct && !wasCleared) {

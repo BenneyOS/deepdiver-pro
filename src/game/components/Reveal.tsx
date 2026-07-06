@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Card, Tier } from "../../data/schema";
 import { FAMILY_LABELS, TIER_LABELS } from "../../data/schema";
 import type { Wager } from "../engine/scoring";
 import type { AnswerOption } from "../engine/session";
 import type { ClearEvent } from "../store/useGameStore";
 import { roundPoints } from "../engine/scoring";
+import { feedbackCorrect, feedbackWrong, feedbackReward } from "../feedback";
+import { shouldShowMasteryMoment, buildMasteryMoment, masteryShareText } from "../engine/masteryMoment";
 import { Ada } from "./Ada";
 import { getAdaMicrocopy } from "./adaMicrocopy";
 import { ParticleBurst } from "./ParticleBurst";
@@ -55,6 +57,45 @@ export function Reveal({
     : "unbothered";
 
   const [activeTab, setActiveTab] = useState<TabKey>("read");
+  const [momentCopied, setMomentCopied] = useState(false);
+
+  // Variable reward — compute once per reveal instance so it doesn't flicker.
+  const [moment] = useState(() =>
+    shouldShowMasteryMoment(correct, streak) ? buildMasteryMoment(card, streak) : null,
+  );
+
+  async function shareMoment() {
+    const text = masteryShareText(card);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: card.pattern, text });
+        return;
+      }
+    } catch {
+      // dismissed; fall through to clipboard
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      setMomentCopied(true);
+      setTimeout(() => setMomentCopied(false), 1800);
+    } catch {
+      // clipboard unavailable
+    }
+  }
+
+  // Visceral micro-feedback: fire once per reveal. A unit unlock escalates to
+  // the reward cue; otherwise correct/wrong each get a distinct tick + haptic.
+  useEffect(() => {
+    if (clearEvent?.didUnlock) {
+      feedbackReward();
+    } else if (correct) {
+      feedbackCorrect();
+    } else {
+      feedbackWrong();
+    }
+    // Only on mount for this reveal instance.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md space-y-3">
@@ -62,9 +103,9 @@ export function Reveal({
       <div
         className={`relative rounded-2xl border p-4 ${
           correct
-            ? "bg-[var(--success)]/10 border-[var(--success)]/30"
-            : "bg-[var(--danger)]/10 border-[var(--danger)]/30"
-        } animate-card-deal`}
+            ? "bg-[var(--success)]/10 border-[var(--success)]/30 animate-correct-pop"
+            : "bg-[var(--danger)]/10 border-[var(--danger)]/30 animate-card-tremor"
+        }`}
       >
         <div className="flex items-center gap-3">
           <Ada expression={adaExpression as "neutral" | "pleased" | "thinking" | "impressed" | "unbothered"} size={40} />
@@ -86,6 +127,38 @@ export function Reveal({
           )}
         </div>
       </div>
+
+      {/* Mastery Moment — variable, shareable reward (not shown every time) */}
+      {moment && (
+        <div
+          className={`rounded-2xl border p-4 animate-section-enter ${
+            moment.flourish
+              ? "border-[var(--accent)] bg-[var(--accent-bg)]"
+              : "border-[var(--accent)]/40 bg-[var(--card)]"
+          }`}
+          style={{ animationDelay: "60ms" }}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[var(--accent-ink)]">
+                {moment.flourish && <span aria-hidden="true">&#9889;</span>}
+                {moment.headline}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--ink)]">
+                &ldquo;{moment.nugget}&rdquo;
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={shareMoment}
+              className="shrink-0 rounded-full bg-[var(--accent)] px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-[var(--accent-hover)] min-h-[36px]"
+              aria-label="Share this mastery moment"
+            >
+              {momentCopied ? "Copied" : "Share"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Clear event — unit progress ticks up in the moment */}
       {clearEvent && (

@@ -204,6 +204,51 @@ body {
   animation: section-enter 300ms var(--ease-standard) both;
 }
 
+/* Screen-level transition — smooth entry on every phase change */
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-screen-in {
+  animation: screen-in 260ms var(--ease-standard) both;
+}
+
+/* Ada "thinking" pulse for brief between-card loads (no dead frames) */
+@keyframes think-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.animate-think-pulse {
+  animation: think-pulse 900ms ease-in-out infinite;
+}
+
+/* Wrong-answer tremor — subtle, never harsh (respects reduced-motion) */
+@keyframes card-tremor {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-6px); }
+  30% { transform: translateX(5px); }
+  45% { transform: translateX(-4px); }
+  60% { transform: translateX(3px); }
+  75% { transform: translateX(-2px); }
+}
+
+.animate-card-tremor {
+  animation: card-tremor 380ms var(--ease-standard);
+}
+
+/* Correct-answer soft pop */
+@keyframes correct-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.animate-correct-pop {
+  animation: correct-pop 320ms var(--ease-spring);
+}
+
 /* Serif italic for buyer quotes */
 .font-buyer-quote {
   font-family: var(--font-serif);
