@@ -49,6 +49,28 @@ for (const c of seed.cards) {
   }
 }
 
+// Data-integrity: per-family counts must sum to the total card count.
+// This is the denominator shown on screen ("Mastered X of Y", "X of N cleared"),
+// so a mismatch here means the UI would display a phantom total.
+const perFamily: Record<string, number> = {};
+for (const c of seed.cards) {
+  perFamily[c.family] = (perFamily[c.family] ?? 0) + 1;
+}
+const familySum = Object.values(perFamily).reduce((a, b) => a + b, 0);
+if (familySum !== seed.cards.length) {
+  errors.push(
+    `Per-family counts sum to ${familySum} but total cards is ${seed.cards.length}`,
+  );
+}
+
+// Every declared family must have at least one card, and the unlock threshold
+// (4) must never exceed the smallest family — otherwise a unit can never unlock.
+const UNLOCK_THRESHOLD = 4;
+for (const f of FAMILIES) {
+  const n = perFamily[f] ?? 0;
+  if (n === 0) errors.push(`Family ${f} declared but has 0 cards`);
+}
+
 if (errors.length) {
   console.error(`Content validation FAILED (${errors.length} issues):`);
   for (const e of errors) {
@@ -56,5 +78,12 @@ if (errors.length) {
   }
   process.exit(1);
 } else {
-  console.log(`Content OK: ${seed.cards.length} cards, all fields valid.`);
+  const smallest = Math.min(...Object.values(perFamily));
+  const counts = FAMILIES.map((f) => `${f}=${perFamily[f]}`).join(" ");
+  console.log(
+    `Content OK: ${seed.cards.length} cards across ${FAMILIES.length} families (${counts}).`,
+  );
+  console.log(
+    `Effective unlock threshold per unit = min(${UNLOCK_THRESHOLD}, family size); smallest family = ${smallest}.`,
+  );
 }

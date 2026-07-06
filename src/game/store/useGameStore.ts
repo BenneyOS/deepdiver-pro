@@ -10,12 +10,17 @@ import {
 } from "../engine/scoring";
 import { selectSessionQueue, selectBossDealsQueue, selectFamilyFocusQueue } from "../engine/leitner";
 import { updateProgress } from "../engine/leitner";
-import { isCleared, clearedInFamily, unlockThresholdFor } from "../engine/progress";
+import { isCleared, isMastered, clearedInFamily, unlockThresholdFor } from "../engine/progress";
 import { buildRound } from "../engine/session";
 import type { ExerciseFormat } from "../engine/formats";
 import { rotateFormats, formatPoolForMode } from "../engine/formats";
 import { useProgressStore } from "./useProgressStore";
+import { usePortfolio } from "./usePortfolio";
+import { useCurriculum } from "./useCurriculum";
+import { findLesson } from "../engine/curriculum";
+import { feedbackCorrect, feedbackWrong, feedbackReward } from "../feedback";
 import { useSessionHistory } from "./useSessionHistory";
+import { useStreak } from "./useStreak";
 import { trackEvent } from "../analytics";
 
 export type GamePhase =
@@ -27,6 +32,7 @@ export type GamePhase =
   | "speed"
   | "volley"
   | "match"
+  | "portfolio"
   | "scorecard";
 
 export interface ClearEvent {
@@ -55,6 +61,7 @@ interface GameState {
   rounds: RoundResult[];
   allCards: Card[];
   clearEvent: ClearEvent | null;
+  activeLessonId: string | null;
 
   focusFamily: Family | null;
   pendingMode: SessionMode;
@@ -62,6 +69,7 @@ interface GameState {
 
   prepareSession: (mode: SessionMode, focusFamily?: Family) => void;
   startSession: (seed: Seed, mode: SessionMode, focusFamily?: Family) => void;
+  startLesson: (seed: Seed, lessonId: string) => void;
   selectAnswer: (optionIndex: number) => void;
   placeWager: (wager: Wager) => void;
   submitAssembly: (correct: boolean) => void;
@@ -69,6 +77,7 @@ interface GameState {
   finishSpeed: (summary: { mode: SessionMode; score: number; hits: number; total: number; maxStreak: number }) => void;
   nextRound: () => void;
   goHome: () => void;
+  openPortfolio: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -89,6 +98,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   rounds: [],
   allCards: [],
   clearEvent: null,
+  activeLessonId: null,
   focusFamily: null,
   pendingMode: "quick-drill",
   pendingFamily: null,
@@ -98,6 +108,39 @@ export const useGameStore = create<GameState>((set, get) => ({
       phase: "intro",
       pendingMode: mode,
       pendingFamily: focusFamily ?? null,
+    });
+  },
+
+  // A curriculum lesson: a fixed, ordered slice of a unit's cards. Playing it
+  // to the end completes the lesson (guaranteed path advancement). Skips the
+  // mode intro so "Continue" is one tap into the round.
+  startLesson: (seed: Seed, lessonId: string) => {
+    const families = Object.keys(seed.families) as Family[];
+    const lesson = findLesson(seed.cards, families, lessonId);
+    if (!lesson) return;
+    const byId = new Map(seed.cards.map((c) => [c.id, c] as const));
+    const queue = lesson.cardIds
+      .map((id) => byId.get(id))
+      .filter((c): c is Card => Boolean(c));
+    const formats = rotateFormats(queue.length, formatPoolForMode("quick-drill"));
+    const firstRound =
+      queue.length > 0 ? buildRound(queue[0], seed.cards, formats[0]) : null;
+
+    trackEvent({
+      event: "session_started",
+      properties: { mode: "lesson", lessonId },
+    });
+
+    set({
+      ...freshSessionState(),
+      phase: "answer",
+      mode: "lesson",
+      queue,
+      formats,
+      currentRound: firstRound,
+      allCards: seed.cards,
+      focusFamily: lesson.family,
+      activeLessonId: lessonId,
     });
   },
 
@@ -175,6 +218,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       rounds: [],
       allCards,
       clearEvent: null,
+      activeLessonId: null,
     });
   },
 
@@ -223,7 +267,16 @@ export const useGameStore = create<GameState>((set, get) => ({
     const progressStore = useProgressStore.getState();
     const currentProgress = progressStore.getProgress(card.id);
     const wasCleared = isCleared(currentProgress);
-    progressStore.updateCard(updateProgress(currentProgress, card.id, correct));
+    const wasMastered = isMastered(currentProgress);
+    const nextProgress = updateProgress(currentProgress, card.id, correct);
+    progressStore.updateCard(nextProgress);
+    const newlyMastered = !wasMastered && isMastered(nextProgress);
+    if (newlyMastered) {
+      usePortfolio.getState().capture(card, FAMILY_LABELS[card.family]);
+    }
+    if (newlyMastered) feedbackReward();
+    else if (correct) feedbackCorrect();
+    else feedbackWrong();
     if (correct && !wasCleared) {
       const updatedMap = useProgressStore.getState().progressMap;
       const familyTotal = get().allCards.filter((c) => c.family === card.family).length;
@@ -242,6 +295,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   finishSpeed: ({ mode, score, hits, total, maxStreak }) => {
     useSessionHistory.getState().addSession({ mode, score, hits, total, maxStreak });
+    useStreak.getState().recordPlay();
     trackEvent({
       event: "session_completed",
       properties: {
@@ -268,7 +322,24 @@ export const useGameStore = create<GameState>((set, get) => ({
         total: state.queue.length,
         maxStreak: state.maxStreak,
       });
+      useStreak.getState().recordPlay();
       const accuracy = state.queue.length > 0 ? (state.hits / state.queue.length) * 100 : 0;
+      // Curriculum: finishing a lesson completes it (guaranteed advancement);
+      // accuracy sets the star rating (best kept on replay).
+      if (state.mode === "lesson" && state.activeLessonId) {
+        const stars = useCurriculum
+          .getState()
+          .completeLesson(state.activeLessonId, state.hits, state.queue.length);
+        trackEvent({
+          event: "lesson_completed",
+          properties: {
+            lessonId: state.activeLessonId,
+            stars,
+            hits: state.hits,
+            total: state.queue.length,
+          },
+        });
+      }
       trackEvent({
         event: "session_completed",
         properties: {
@@ -312,7 +383,12 @@ export const useGameStore = create<GameState>((set, get) => ({
       momentum: 50,
       hits: 0,
       rounds: [],
+      activeLessonId: null,
     });
+  },
+
+  openPortfolio: () => {
+    set({ phase: "portfolio" });
   },
 }));
 
@@ -333,6 +409,7 @@ function freshSessionState(): Partial<GameState> {
     hits: 0,
     rounds: [],
     clearEvent: null,
+    activeLessonId: null,
   };
 }
 
@@ -378,8 +455,13 @@ function resolveRound(
   const progressStore = useProgressStore.getState();
   const currentProgress = progressStore.getProgress(round.card.id);
   const wasCleared = isCleared(currentProgress);
+  const wasMastered = isMastered(currentProgress);
   const newProgress = updateProgress(currentProgress, round.card.id, correct);
   progressStore.updateCard(newProgress);
+
+  if (!wasMastered && isMastered(newProgress)) {
+    usePortfolio.getState().capture(round.card, FAMILY_LABELS[round.card.family]);
+  }
 
   let clearEvent: ClearEvent | null = null;
   if (correct && !wasCleared) {

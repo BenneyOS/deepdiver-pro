@@ -15,8 +15,10 @@ import { ObjectionVolley } from "./game/components/ObjectionVolley";
 import { MatchPairs } from "./game/components/MatchPairs";
 import { Reveal } from "./game/components/Reveal";
 import { Scorecard } from "./game/components/Scorecard";
+import { PitchPortfolio } from "./game/components/PitchPortfolio";
 import { AgenticLog } from "./game/components/AgenticLog";
 import { Ada } from "./game/components/Ada";
+import { starsForAccuracy } from "./game/engine/curriculum";
 
 const seed = seedData as Seed;
 
@@ -56,18 +58,28 @@ function App() {
 
   if (game.phase === "home") {
     return (
-      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8">
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8 animate-screen-in">
         <PathHomeScreen
           seed={seed}
           onStart={(mode, focusFamily) => game.prepareSession(mode, focusFamily)}
+          onStartLesson={(lessonId) => game.startLesson(seed, lessonId)}
+          onOpenPortfolio={() => game.openPortfolio()}
         />
+      </main>
+    );
+  }
+
+  if (game.phase === "portfolio") {
+    return (
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8 animate-screen-in" aria-label="Pitch Portfolio">
+        <PitchPortfolio onHome={() => game.goHome()} />
       </main>
     );
   }
 
   if (game.phase === "intro") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-[var(--page)] px-4 py-8">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[var(--page)] px-4 py-8 animate-screen-in">
         <ModeIntro
           mode={game.pendingMode}
           focusFamily={game.pendingFamily}
@@ -80,7 +92,7 @@ function App() {
 
   if (game.phase === "speed") {
     return (
-      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6" aria-label="Speed Round">
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6 animate-screen-in" aria-label="Speed Round">
         <SpeedRound onHome={() => game.goHome()} />
       </main>
     );
@@ -88,7 +100,7 @@ function App() {
 
   if (game.phase === "volley") {
     return (
-      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6" aria-label="Objection Volley">
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6 animate-screen-in" aria-label="Objection Volley">
         <ObjectionVolley onHome={() => game.goHome()} />
       </main>
     );
@@ -96,7 +108,7 @@ function App() {
 
   if (game.phase === "match") {
     return (
-      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6" aria-label="Match Pairs">
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-6 animate-screen-in" aria-label="Match Pairs">
         <MatchPairs onHome={() => game.goHome()} />
       </main>
     );
@@ -104,7 +116,7 @@ function App() {
 
   if (game.phase === "scorecard") {
     return (
-      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8" aria-label="Scorecard">
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8 animate-screen-in" aria-label="Scorecard">
         <Scorecard
           score={game.score}
           maxStreak={game.maxStreak}
@@ -112,7 +124,16 @@ function App() {
           rounds={game.rounds}
           queue={game.queue}
           onHome={() => game.goHome()}
-          onReplay={() => game.startSession(seed, game.mode)}
+          onReplay={() =>
+            game.mode === "lesson" && game.activeLessonId
+              ? game.startLesson(seed, game.activeLessonId)
+              : game.startSession(seed, game.mode)
+          }
+          lessonStars={
+            game.mode === "lesson"
+              ? starsForAccuracy(game.hits, game.queue.length)
+              : null
+          }
         />
       </main>
     );

@@ -20,9 +20,9 @@ const WRONG_LINES = [
 
 const STREAK_LINES: Record<number, string> = {
   3: "Three straight. Warming up.",
-  5: "Five straight. You're reading them cold.",
-  7: "Seven. That's elite.",
-  10: "Ten streak. Masterclass.",
+  5: "Five straight. You're reading them cold \u2014 Senior Seller territory.",
+  7: "Seven. You're not answering questions, you're architecting outcomes.",
+  10: "Ten streak. This is who you are now.",
 };
 
 export function getAdaMicrocopy(

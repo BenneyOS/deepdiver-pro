@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Card, Tier } from "../../data/schema";
 import { FAMILY_LABELS, TIER_LABELS } from "../../data/schema";
 import type { Wager } from "../engine/scoring";
 import type { AnswerOption } from "../engine/session";
 import type { ClearEvent } from "../store/useGameStore";
 import { roundPoints } from "../engine/scoring";
+import { feedbackCorrect, feedbackWrong, feedbackReward } from "../feedback";
+import { shouldShowMasteryMoment, buildMasteryMoment, masteryShareText } from "../engine/masteryMoment";
 import { Ada } from "./Ada";
 import { getAdaMicrocopy } from "./adaMicrocopy";
 import { ParticleBurst } from "./ParticleBurst";
@@ -55,6 +57,45 @@ export function Reveal({
     : "unbothered";
 
   const [activeTab, setActiveTab] = useState<TabKey>("read");
+  const [momentCopied, setMomentCopied] = useState(false);
+
+  // Variable reward — compute once per reveal instance so it doesn't flicker.
+  const [moment] = useState(() =>
+    shouldShowMasteryMoment(correct, streak) ? buildMasteryMoment(card, streak) : null,
+  );
+
+  async function shareMoment() {
+    const text = masteryShareText(card);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: card.pattern, text });
+        return;
+      }
+    } catch {
+      // dismissed; fall through to clipboard
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      setMomentCopied(true);
+      setTimeout(() => setMomentCopied(false), 1800);
+    } catch {
+      // clipboard unavailable
+    }
+  }
+
+  // Visceral micro-feedback: fire once per reveal. A unit unlock escalates to
+  // the reward cue; otherwise correct/wrong each get a distinct tick + haptic.
+  useEffect(() => {
+    if (clearEvent?.didUnlock) {
+      feedbackReward();
+    } else if (correct) {
+      feedbackCorrect();
+    } else {
+      feedbackWrong();
+    }
+    // Only on mount for this reveal instance.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md space-y-3">
@@ -62,9 +103,9 @@ export function Reveal({
       <div
         className={`relative rounded-2xl border p-4 ${
           correct
-            ? "bg-[var(--success)]/10 border-[var(--success)]/30"
-            : "bg-[var(--danger)]/10 border-[var(--danger)]/30"
-        } animate-card-deal`}
+            ? "bg-[var(--success)]/10 border-[var(--success)]/30 animate-correct-pop"
+            : "bg-[var(--danger)]/10 border-[var(--danger)]/30 animate-card-tremor"
+        }`}
       >
         <div className="flex items-center gap-3">
           <Ada expression={adaExpression as "neutral" | "pleased" | "thinking" | "impressed" | "unbothered"} size={40} />
@@ -87,14 +128,44 @@ export function Reveal({
         </div>
       </div>
 
-      {/* Clear event — unit progress ticks up in the moment */}
+      {/* Mastery Moment — variable, shareable reward (not shown every time) */}
+      {moment && (
+        <div
+          className={`rounded-2xl border p-4 animate-section-enter ${
+            moment.flourish
+              ? "border-[var(--accent)] bg-[var(--accent-bg)]"
+              : "border-[var(--accent)]/40 bg-[var(--card)]"
+          }`}
+          style={{ animationDelay: "60ms" }}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[var(--accent-ink)]">
+                {moment.flourish && <span aria-hidden="true">&#9889;</span>}
+                {moment.headline}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--ink)]">
+                &ldquo;{moment.nugget}&rdquo;
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={shareMoment}
+              className="shrink-0 rounded-full bg-[var(--accent)] px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-[var(--accent-hover)] min-h-[36px]"
+              aria-label="Share this mastery moment"
+            >
+              {momentCopied ? "Copied" : "Share"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Clear event — a first-time correct read on this card. Lesson/unit
+          progress is shown on the scorecard and path, not with a raw
+          "X of 49" denominator. */}
       {clearEvent && (
         <div
-          className={`rounded-2xl border p-3 animate-card-deal ${
-            clearEvent.didUnlock
-              ? "border-[var(--accent)] bg-[var(--accent-bg)]"
-              : "border-[var(--success)]/30 bg-[var(--success)]/10"
-          }`}
+          className="rounded-2xl border border-[var(--success)]/30 bg-[var(--success)]/10 p-3 animate-card-deal"
           role="status"
         >
           <div className="flex items-center gap-2">
@@ -104,19 +175,10 @@ export function Reveal({
               </svg>
             </span>
             <div className="flex-1 text-sm">
-              <span className="font-bold text-[var(--ink)]">Cleared &mdash; added to your path.</span>{" "}
-              <span className="text-[var(--text-dim)]">{clearEvent.familyLabel}:</span>{" "}
-              <span className="inline-block font-telemetry font-bold text-[var(--success)] animate-clear-tick">
-                {clearEvent.clearedCount} of {clearEvent.familyTotal}
-              </span>
+              <span className="font-bold text-[var(--ink)]">New read cleared</span>{" "}
+              <span className="text-[var(--text-dim)]">&mdash; a first for this {clearEvent.familyLabel} card.</span>
             </div>
           </div>
-          {clearEvent.didUnlock && (
-            <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-[var(--accent-ink)]">
-              <span aria-hidden="true">&#128275;</span>
-              Next unit unlocked!
-            </p>
-          )}
         </div>
       )}
 
