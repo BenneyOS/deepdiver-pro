@@ -16,6 +16,9 @@ export interface Card {
   angle: string;
   objection: string;
   reframe: string;
+  /** The transferable seller takeaway — the "so what" principle behind this
+   * card, distinct from the buyer-facing reframe. Bespoke per card. */
+  soWhat: string;
   personaShift: Record<Persona, string>;
   version: number;
   active: boolean;

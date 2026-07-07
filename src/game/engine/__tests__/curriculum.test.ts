@@ -35,6 +35,7 @@ function makeCard(id: string, family: Family): Card {
     angle: "t",
     objection: "t",
     reframe: "t",
+    soWhat: "t",
     personaShift: { CTO: "t", VPE: "t", CFO: "t", CRO: "t" },
     version: 1,
     active: true,

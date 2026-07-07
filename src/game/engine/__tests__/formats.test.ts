@@ -23,6 +23,7 @@ function makeCard(id: string, overrides: Partial<Card> = {}): Card {
     angle: `angle ${id}`,
     objection: `obj ${id}`,
     reframe: `First part. Second part — third part, fourth part.`,
+    soWhat: `so what ${id}`,
     personaShift: {
       CTO: `cto ${id}`,
       VPE: `vpe ${id}`,
