@@ -13,6 +13,10 @@ import {
   nextLessonOverall,
   findLesson,
   completedLessonCount,
+  UNLOCK_THRESHOLD,
+  unitUnlockThreshold,
+  unlockedUnitCount,
+  masteredUnitCount,
   type CompletedLessons,
 } from "../curriculum";
 import type { Card, Family } from "../../../data/schema";
@@ -104,6 +108,64 @@ describe("unit + unlock state", () => {
 
     const aDone = complete("A-L0", "A-L1", "A-L2");
     expect(isUnitUnlocked(cards, FAMILIES, 1, aDone)).toBe(true);
+  });
+});
+
+describe("early unlock (checkpoint before mastery)", () => {
+  // Big deck: X = 50 cards (10 lessons), Y = 20 cards (4 lessons).
+  function bigDeck(): Card[] {
+    const cards: Card[] = [];
+    for (let i = 0; i < 50; i++) cards.push(makeCard(`X${i}`, "A"));
+    for (let i = 0; i < 20; i++) cards.push(makeCard(`Y${i}`, "B"));
+    return cards;
+  }
+  const FAMS: Family[] = ["A", "B"];
+  const xLessons = (n: number) =>
+    complete(...Array.from({ length: n }, (_, i) => lessonId("A", i)));
+
+  it("UNLOCK_THRESHOLD is 3 and is capped at a unit's lesson count", () => {
+    expect(UNLOCK_THRESHOLD).toBe(3);
+    expect(unitUnlockThreshold(10)).toBe(3);
+    expect(unitUnlockThreshold(2)).toBe(2); // tiny unit
+  });
+
+  it("next unit unlocks at exactly 3 lessons, not full completion", () => {
+    const cards = bigDeck();
+    expect(isUnitUnlocked(cards, FAMS, 1, xLessons(2))).toBe(false);
+    expect(isUnitUnlocked(cards, FAMS, 1, xLessons(3))).toBe(true);
+    expect(isUnitUnlocked(cards, FAMS, 1, xLessons(5))).toBe(true);
+  });
+
+  it("unitState reports clearedNext + lessonsUntilUnlock as it advances", () => {
+    const cards = bigDeck();
+    const s0 = unitState(cards, "A", {});
+    expect(s0.unlockThreshold).toBe(3);
+    expect(s0.clearedNext).toBe(false);
+    expect(s0.lessonsUntilUnlock).toBe(3);
+
+    const s2 = unitState(cards, "A", xLessons(2));
+    expect(s2.clearedNext).toBe(false);
+    expect(s2.lessonsUntilUnlock).toBe(1);
+
+    const s3 = unitState(cards, "A", xLessons(3));
+    expect(s3.clearedNext).toBe(true);
+    expect(s3.lessonsUntilUnlock).toBe(0);
+    expect(s3.complete).toBe(false); // unlocked but not mastered
+  });
+
+  it("unlocked and mastered are distinct — 5/10 is unlocked-through but not complete", () => {
+    const cards = bigDeck();
+    const five = xLessons(5);
+    expect(unlockedUnitCount(cards, FAMS, five)).toBe(2); // A + B unlocked
+    expect(masteredUnitCount(cards, FAMS, five)).toBe(0); // nothing mastered yet
+
+    const allX = xLessons(10);
+    expect(masteredUnitCount(cards, FAMS, allX)).toBe(1); // A mastered
+  });
+
+  it("unlockedUnitCount starts at 1 (unit A) on a fresh slate", () => {
+    const cards = bigDeck();
+    expect(unlockedUnitCount(cards, FAMS, {})).toBe(1);
   });
 });
 

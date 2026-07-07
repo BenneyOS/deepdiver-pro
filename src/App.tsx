@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import type { Seed } from "./data/schema";
+import type { Seed, Family } from "./data/schema";
+import { FAMILY_LABELS } from "./data/schema";
 import seedData from "./data/seed.json";
 import { useGameStore } from "./game/store/useGameStore";
 import { useProgressStore } from "./game/store/useProgressStore";
@@ -18,7 +19,11 @@ import { Scorecard } from "./game/components/Scorecard";
 import { PitchPortfolio } from "./game/components/PitchPortfolio";
 import { AgenticLog } from "./game/components/AgenticLog";
 import { Ada } from "./game/components/Ada";
-import { starsForAccuracy } from "./game/engine/curriculum";
+import {
+  starsForAccuracy,
+  lessonsForFamily,
+  unitUnlockThreshold,
+} from "./game/engine/curriculum";
 
 const seed = seedData as Seed;
 
@@ -115,6 +120,20 @@ function App() {
   }
 
   if (game.phase === "scorecard") {
+    // Did finishing this lesson just unlock the next unit? True when it was the
+    // lesson at the unlock threshold (e.g. the 3rd) and a next unit exists.
+    const unlockedUnitLabel = ((): string | null => {
+      if (game.mode !== "lesson" || !game.activeLessonId) return null;
+      const [fam, lPart] = game.activeLessonId.split("-L");
+      const idxInUnit = Number(lPart);
+      if (Number.isNaN(idxInUnit)) return null;
+      const families = Object.keys(seed.families) as Family[];
+      const famIdx = families.indexOf(fam as Family);
+      if (famIdx < 0 || famIdx >= families.length - 1) return null;
+      const total = lessonsForFamily(seed.cards, fam as Family).length;
+      const threshold = unitUnlockThreshold(total);
+      return idxInUnit + 1 === threshold ? FAMILY_LABELS[families[famIdx + 1]] : null;
+    })();
     return (
       <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8 animate-screen-in" aria-label="Scorecard">
         <Scorecard
@@ -134,6 +153,7 @@ function App() {
               ? starsForAccuracy(game.hits, game.queue.length)
               : null
           }
+          unlockedUnitLabel={unlockedUnitLabel}
         />
       </main>
     );
