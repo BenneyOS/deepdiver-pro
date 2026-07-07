@@ -1,6 +1,6 @@
 export type Family =
   | "A" | "B" | "C" | "D" | "E" | "F" | "G"
-  | "H" | "I" | "J" | "K" | "L" | "M" | "N";
+  | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O";
 export type Tier = 1 | 2 | 3 | 4;
 export type Persona = "CTO" | "VPE" | "CFO" | "CRO";
 
@@ -20,6 +20,13 @@ export interface Card {
    * card, distinct from the buyer-facing reframe. Bespoke per card. */
   soWhat: string;
   personaShift: Record<Persona, string>;
+  /** Case-study fields — present only on the "Case Files" unit (family O), where
+   * each card is grounded in a real Devin customer. `gtmMotion` is the winning
+   * go-to-market play, `customer` the named account, `proofMetric` the real
+   * outcome the Reveal surfaces as a concrete proof point. */
+  customer?: string;
+  gtmMotion?: string;
+  proofMetric?: string;
   version: number;
   active: boolean;
 }
@@ -57,6 +64,7 @@ export const FAMILY_LABELS: Record<Family, string> = {
   L: "Developer Experience & Tooling",
   M: "Integration & API Sprawl",
   N: "Observability & Reliability Gaps",
+  O: "Case Files: Real Customer Wins",
 };
 
 // A distinct glyph per unit so the path reads as recognizable themes rather than
@@ -76,6 +84,7 @@ export const FAMILY_ICONS: Record<Family, string> = {
   L: "\u{1F9F0}", // developer experience / toolbox
   M: "\u{1F50C}", // integration & API / plug
   N: "\u{1F4E1}", // observability / satellite dish
+  O: "\u{1F3C6}", // case files / real customer wins / trophy
 };
 
 export const TIER_LABELS: Record<Tier, string> = {

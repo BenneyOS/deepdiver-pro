@@ -412,4 +412,48 @@ export default {
   N9: "Fragmented observability hides the picture. Sell consolidating telemetry into one coherent view.",
   N10: "A reactive reliability stance pays after the outage. Sell cheap observability so you invest before it.",
   N11: "'Observability is clutter' until the next incident. Sell clean, consistent instrumentation that pays for itself then.",
+
+  // O — Case Files: real customer wins (grounded in devin.ai/customers)
+  // L0 Client-Zero Proof
+  O1: "Sell the method, not the environment. Prove it on your own org first and you walk in with numbers, not promises.",
+  O2: "Never ship a strategy you haven't run. Bring the board a two-week result, and the mandate writes itself.",
+  O3: "Turn adoption into a falsifiable experiment. Let the buyer set the success bar on their own live backlog.",
+  O4: "'We tried AI' means autocomplete. Reframe to end-to-end ownership and measure the capacity gain directly.",
+  O5: "Value trapped in a few power users never compounds. Make delegation a tracked, teachable skill so it spreads.",
+  // L1 Beachhead on the Dreaded Migration
+  O6: "Land on the migration everyone dreads. Fixed teach-cost, then an army of agents scales what humans can't staff.",
+  O7: "A forced compliance change is the perfect beachhead — 'done' is defined by the rules, so agents fan it everywhere.",
+  O8: "Partition the mountain into thousands of sub-tasks. Parallel agents beat the estimate when each validates its own work.",
+  O9: "Kill 'it'll add tech debt' at the PR level. Merge rate and coverage at your review bar is a signal you can't argue with.",
+  O10: "Prove one component end to end; the rest is a replay. Tangled once becomes patterned everywhere after.",
+  // L2 Bottoms-Up Land-and-Expand
+  O11: "When engineers pull the tool in themselves, don't create demand — remove the access friction so the pull can spread.",
+  O12: "Seats cap the spread. Pooled credits let value surface from teams you never expected, and you pay for work, not chairs.",
+  O13: "When attempting is nearly free, 'should we?' debates become 'let's just try it.' Sell the collapse of decision cost.",
+  O14: "If a task is too vague for an agent, it's too vague for a human. Sell the discipline of well-specified, verifiable work.",
+  O15: "Every change routed through engineering becomes a queue. Let others self-serve reviewed PRs and free your engineers.",
+  // L3 Top-Down Mandate + Enablement
+  O16: "A mandate without enablement is shelfware. Pair exec conviction with a program that rebuilds the bottleneck function.",
+  O17: "Don't A/B a compounding capability. Measure a fully-committed squad — that's the signal that justifies going all-in.",
+  O18: "Make delegation measurable and you can coach it. A mandate becomes capability instead of compliance.",
+  O19: "Fear kills mandates from the bottom. Sell the career upgrade — rote work to agents, people into higher-value roles.",
+  O20: "Knowledge trapped in a few heads throttles everyone. Sell a living knowledge layer that regenerates with the code.",
+  // L4 Win the Bake-Off
+  O21: "Don't argue the claim — win the eval. Being the only tool that finishes the buyer's hardest task closes the deal.",
+  O22: "Enterprise gates come before capability. Clear them all, then put the right tool on the right kind of work.",
+  O23: "When velocity is noisy, measure at the PR level. A clean, direct signal unlocks the scale decision.",
+  O24: "An eval win isn't ROI. Turn it into a scheduled playbook and let the return compound on a day of setup.",
+  O25: "Replace brute-force review meetings with generated coverage — agents even surface conflicting requirements humans miss.",
+  // L5 Ride the Industry Inflection
+  O26: "Sell the moment, not the feature. When capacity stops being the constraint, launching becomes a question of intent.",
+  O27: "Regulation isn't the blocker — it's where agents create the most leverage. Bounded, defined work with the audit trail intact.",
+  O28: "A new product paradigm rewards speed with safety. Agents add QA layers so quality rises as velocity does.",
+  O29: "Staying on legacy is the risk. Sell reallocating maintenance budget into the products that win the inflection.",
+  O30: "Pace becomes the brand. An enterprise that ships at startup cadence makes rivals call to ask what changed.",
+  // L6 Productize into a Partner Offering
+  O31: "Package proven internal wins into a repeatable offering. Sell the methodology, and meet clients wherever they are.",
+  O32: "Bespoke delivery caps a practice. Template the repeating motions into playbooks so each engagement starts ahead.",
+  O33: "Buyers fund outcomes, not activity. Bundle ROI analytics so returns land in terms a board can act on.",
+  O34: "A managed service without methodology is body-shopping. Differentiate on the repeatable system you proved on yourself.",
+  O35: "A champion's workflow is worthless if it's stuck on one team. Make it a portable playbook and one win becomes everyone's baseline.",
 };

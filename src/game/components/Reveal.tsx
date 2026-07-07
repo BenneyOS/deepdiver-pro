@@ -133,6 +133,23 @@ export function Reveal({
         </p>
       </div>
 
+      {/* Real outcome — case-study proof point. Only present on Case Files
+          (family O) cards, where each scenario is a real named account. Anchors
+          the takeaway in a concrete, quotable result. */}
+      {card.proofMetric && card.customer && (
+        <div
+          className="rounded-2xl border border-[var(--success)]/40 bg-[var(--success)]/10 p-4 animate-section-enter"
+          style={{ animationDelay: "50ms" }}
+        >
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--success)]">
+            Real outcome &middot; {card.customer}
+          </p>
+          <p className="mt-1.5 text-sm font-medium leading-snug text-[var(--ink)]">
+            {card.proofMetric}
+          </p>
+        </div>
+      )}
+
       {/* Mastery Moment — variable, shareable reward (not shown every time) */}
       {moment && (
         <div
