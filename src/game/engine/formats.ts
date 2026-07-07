@@ -30,17 +30,52 @@ export const FORMAT_LABELS: Record<ExerciseFormat, string> = {
 
 const PERSONAS: Persona[] = ["CTO", "VPE", "CFO", "CRO"];
 
-// Deliberately weak reframes — the anti-patterns CONTENT_STYLE warns against
-// (overclaiming, dismissive, hand-wavy). Used only as the wrong-to-emulate
-// option in "spot the weak answer".
+// Deliberately weak reframes — the anti-patterns CONTENT_STYLE warns against.
+// Grouped by the *kind* of bad selling move so the weak option varies in flavour
+// (not just wording), and one is picked deterministically per card (see
+// weakReframeFor) so you don't keep seeing the same "just trust it" line.
 export const WEAK_REFRAMES: string[] = [
+  // Overclaiming the model
   "Honestly, the AI is smart enough to just figure it out on its own.",
+  "The model basically never makes mistakes, so validation is overkill.",
+  "Its output is right often enough that double-checking is a waste of time.",
+  "Trust the AI here — it understands your systems better than your team does.",
+  // Dismissing the concern
+  "That's not really a concern; nobody serious worries about that anymore.",
+  "You're overthinking it — that risk is more theoretical than real.",
+  "That fear goes away the moment you see the demo. Just trust me, it works.",
+  "Honestly, that objection is a solved problem. Let's not dwell on it.",
+  // Hand-waving process / skipping controls
   "Don't overthink it — just let the tool run and trust the output.",
-  "That's not really a concern; the model basically never makes mistakes.",
-  "You're worrying too much — everyone's doing this now, so it's fine.",
-  "We can skip the review step; it only slows things down anyway.",
-  "It'll replace most of that manual work, so headcount won't matter.",
+  "We can skip the review step; the gates only slow the rollout down.",
+  "Push it straight to production — if something breaks you'll catch it fast.",
+  "Let the agent handle it end to end; human oversight just adds friction.",
+  // FOMO / social proof
+  "Everyone's doing this already, so there's really no risk in just going for it.",
+  "Say yes now and we'll figure out the details later — momentum is what matters.",
+  "You'll get left behind if you wait to think it through, so let's just start.",
+  // Headcount / bravado
+  "It'll replace most of that manual work, so those concerns won't matter soon.",
+  "We've done this a hundred times; there's nothing here that could go wrong.",
+  "Your engineers will love it once it's in — no need to bring them along first.",
 ];
+
+// Stable, well-distributed hash so a given card always maps to the same weak
+// line (good for learning "this is the wrong move here") while different cards
+// draw different lines — which is what kills the repetition.
+function hashString(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/** The weak reframe shown for a card in "spot the weak answer". */
+export function weakReframeFor(card: Card): string {
+  return WEAK_REFRAMES[hashString(card.id) % WEAK_REFRAMES.length];
+}
 
 function seededShuffle<T>(arr: T[], rand: () => number): T[] {
   const a = [...arr];
@@ -78,7 +113,7 @@ export function buildSpotWeak(
   rand: () => number = Math.random,
   box: number = 1,
 ): { format: "spot-weak"; options: AnswerOption[] } {
-  const weak = seededShuffle(WEAK_REFRAMES, rand)[0];
+  const weak = weakReframeFor(card);
   // The two "strong but not this one" foils are the reframes most confusable
   // with THIS card's reframe, so the weak line doesn't stand out by topic.
   const { hardness } = difficultyForBox(box);

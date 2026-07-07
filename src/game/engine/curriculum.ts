@@ -215,6 +215,50 @@ export function currentUnitIndex(
   return -1; // whole curriculum complete
 }
 
+/**
+ * The unit the home screen's hero ring should focus on — it follows the player
+ * DOWN the path instead of freezing on the first incomplete unit.
+ *
+ *  - Nothing played yet → the frontier (first unlocked, incomplete unit).
+ *  - Otherwise → the DEEPEST unit with any progress. If that unit still has
+ *    lessons left, stay on it. If it's fully mastered, advance to the next
+ *    unlocked, not-yet-complete unit (so finishing a unit moves the hero forward
+ *    rather than snapping back to an earlier, still-incomplete unit).
+ */
+export function focusedUnitIndex(
+  cards: Card[],
+  families: Family[],
+  completed: CompletedLessons,
+): number {
+  let deepestEngaged = -1;
+  for (let i = families.length - 1; i >= 0; i--) {
+    if (unitState(cards, families[i], completed).done > 0) {
+      deepestEngaged = i;
+      break;
+    }
+  }
+  if (deepestEngaged < 0) {
+    return currentUnitIndex(cards, families, completed);
+  }
+  if (!unitState(cards, families[deepestEngaged], completed).complete) {
+    return deepestEngaged;
+  }
+  // The deepest engaged unit is mastered — move forward to the next playable,
+  // not-yet-complete unit so the hero tracks the new frontier.
+  for (let i = deepestEngaged + 1; i < families.length; i++) {
+    if (
+      isUnitUnlocked(cards, families, i, completed) &&
+      !unitState(cards, families[i], completed).complete
+    ) {
+      return i;
+    }
+  }
+  // Nothing playable ahead (end of path or all ahead mastered): fall back to any
+  // remaining incomplete unit, else keep showing the mastered deepest unit.
+  const frontier = currentUnitIndex(cards, families, completed);
+  return frontier >= 0 ? frontier : deepestEngaged;
+}
+
 /** The next lesson the player should do anywhere in the path. */
 export function nextLessonOverall(
   cards: Card[],

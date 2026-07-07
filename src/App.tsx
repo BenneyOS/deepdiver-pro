@@ -22,7 +22,11 @@ import {
   starsForAccuracy,
   lessonsForFamily,
   unitUnlockThreshold,
+  nextLessonOverall,
+  nextLessonInUnit,
+  isUnitUnlocked,
 } from "./game/engine/curriculum";
+import { useCurriculum } from "./game/store/useCurriculum";
 
 const seed = seedData as Seed;
 
@@ -133,6 +137,39 @@ function App() {
       const threshold = unitUnlockThreshold(total);
       return idxInUnit + 1 === threshold ? FAMILY_LABELS[families[famIdx + 1]] : null;
     })();
+
+    // Post-lesson curriculum state (completeLesson already ran before this phase),
+    // used to point "Continue" at the next lesson and offer a lateral module jump.
+    const isLesson = game.mode === "lesson" && !!game.activeLessonId;
+    const completed = useCurriculum.getState().completed;
+    const allFamilies = Object.keys(seed.families) as Family[];
+    const currentFamily = isLesson
+      ? (game.activeLessonId!.split("-L")[0] as Family)
+      : null;
+
+    // "Continue" plays the next incomplete lesson anywhere on the path.
+    const continueLesson = isLesson
+      ? nextLessonOverall(seed.cards, allFamilies, completed)
+      : null;
+    const continueLabel = continueLesson
+      ? continueLesson.family === currentFamily
+        ? `Lesson ${continueLesson.index + 1}`
+        : FAMILY_LABELS[continueLesson.family]
+      : null;
+
+    // A *different* unlocked module you can jump to instead of continuing this one.
+    const otherModule = (() => {
+      if (!isLesson) return null;
+      for (let i = 0; i < allFamilies.length; i++) {
+        const fam = allFamilies[i];
+        if (fam === continueLesson?.family) continue;
+        if (!isUnitUnlocked(seed.cards, allFamilies, i, completed)) continue;
+        const next = nextLessonInUnit(seed.cards, fam, completed);
+        if (next) return { label: FAMILY_LABELS[fam], lessonId: next.id };
+      }
+      return null;
+    })();
+
     return (
       <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8 animate-screen-in" aria-label="Scorecard">
         <Scorecard
@@ -146,6 +183,18 @@ function App() {
             game.mode === "lesson" && game.activeLessonId
               ? game.startLesson(seed, game.activeLessonId)
               : game.startSession(seed, game.mode)
+          }
+          continueLabel={continueLabel}
+          onContinue={
+            continueLesson
+              ? () => game.startLesson(seed, continueLesson.id)
+              : undefined
+          }
+          otherModuleLabel={otherModule?.label ?? null}
+          onTryAnotherModule={
+            otherModule
+              ? () => game.startLesson(seed, otherModule.lessonId)
+              : undefined
           }
           lessonStars={
             game.mode === "lesson"

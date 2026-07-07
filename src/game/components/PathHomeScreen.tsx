@@ -6,7 +6,7 @@ import {
   allLessons,
   unitState,
   isUnitUnlocked,
-  currentUnitIndex,
+  focusedUnitIndex,
   nextLessonInUnit,
   unlockedUnitCount,
   type UnitState,
@@ -50,7 +50,10 @@ export function PathHomeScreen({
   const { count: dayStreak, atRisk, freezes } = useStreak();
 
   const families = Object.keys(seed.families) as Family[];
-  const currentIdx = currentUnitIndex(seed.cards, families, completed);
+  // The unit the hero ring focuses on. Follows the player down the path (deepest
+  // engaged, not-yet-mastered unit) instead of freezing on the first incomplete
+  // unit until it's 100% mastered.
+  const currentIdx = focusedUnitIndex(seed.cards, families, completed);
 
   const nodes: PathNode[] = families.map((fam, i) => {
     const unit = unitState(seed.cards, fam, completed);

@@ -14,6 +14,12 @@ interface ScorecardProps {
   queue: Card[];
   onHome: () => void;
   onReplay: () => void;
+  /** Primary CTA in lesson mode: label + handler for the next lesson to play. */
+  continueLabel?: string | null;
+  onContinue?: () => void;
+  /** Secondary CTA: jump to a different unlocked module. */
+  otherModuleLabel?: string | null;
+  onTryAnotherModule?: () => void;
   /** When set, this was a curriculum lesson: show the completion + star banner. */
   lessonStars?: number | null;
   /** When set, finishing this lesson just unlocked the named next unit. */
@@ -28,6 +34,10 @@ export function Scorecard({
   queue,
   onHome,
   onReplay,
+  continueLabel = null,
+  onContinue,
+  otherModuleLabel = null,
+  onTryAnotherModule,
   lessonStars = null,
   unlockedUnitLabel = null,
 }: ScorecardProps) {
@@ -225,27 +235,88 @@ export function Scorecard({
             : "Share Scorecard"}
       </button>
 
-      {/* Actions */}
-      <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={onHome}
-          aria-label="Return to home screen"
-          className="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] py-4 font-bold text-[var(--ink)] transition-all hover:bg-[var(--card-2)] active:scale-[0.98] min-h-[44px]"
-          style={{ transitionTimingFunction: "var(--ease-standard)" }}
-        >
-          Home
-        </button>
-        <button
-          type="button"
-          onClick={onReplay}
-          aria-label="Play another session"
-          className="flex-1 rounded-2xl bg-[var(--accent)] py-4 font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.98] min-h-[44px]"
-          style={{ transitionTimingFunction: "var(--ease-standard)" }}
-        >
-          Play Again
-        </button>
-      </div>
+      {/* Actions — lesson mode leads with Continue so you keep moving without a
+          trip home; practice modes keep the simple Home / Play Again pair. */}
+      {onContinue ? (
+        <div className="space-y-3">
+          <button
+            type="button"
+            onClick={onContinue}
+            aria-label={continueLabel ? `Continue to ${continueLabel}` : "Continue"}
+            className="w-full rounded-2xl bg-[var(--accent)] py-4 font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.98] min-h-[44px]"
+            style={{ transitionTimingFunction: "var(--ease-standard)" }}
+          >
+            Continue
+            {continueLabel && (
+              <span className="mt-0.5 block text-sm font-medium text-white/85">
+                Next up · {continueLabel}
+              </span>
+            )}
+          </button>
+
+          <div className="flex gap-3">
+            {onTryAnotherModule && (
+              <button
+                type="button"
+                onClick={onTryAnotherModule}
+                aria-label={
+                  otherModuleLabel
+                    ? `Try another module: ${otherModuleLabel}`
+                    : "Try another module"
+                }
+                className="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] py-3 font-bold text-[var(--ink)] transition-all hover:bg-[var(--card-2)] active:scale-[0.98] min-h-[44px]"
+                style={{ transitionTimingFunction: "var(--ease-standard)" }}
+              >
+                Try another module
+                {otherModuleLabel && (
+                  <span className="mt-0.5 block text-xs font-medium text-[var(--text-dim)]">
+                    {otherModuleLabel}
+                  </span>
+                )}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onHome}
+              aria-label="Return to home screen"
+              className="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] py-3 font-bold text-[var(--ink)] transition-all hover:bg-[var(--card-2)] active:scale-[0.98] min-h-[44px]"
+              style={{ transitionTimingFunction: "var(--ease-standard)" }}
+            >
+              Home
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={onReplay}
+            aria-label="Replay this lesson for a higher star rating"
+            className="w-full py-1 text-sm font-medium text-[var(--text-dim)] underline-offset-2 transition-colors hover:text-[var(--ink)] hover:underline min-h-[44px]"
+          >
+            Replay this lesson
+          </button>
+        </div>
+      ) : (
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={onHome}
+            aria-label="Return to home screen"
+            className="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] py-4 font-bold text-[var(--ink)] transition-all hover:bg-[var(--card-2)] active:scale-[0.98] min-h-[44px]"
+            style={{ transitionTimingFunction: "var(--ease-standard)" }}
+          >
+            Home
+          </button>
+          <button
+            type="button"
+            onClick={onReplay}
+            aria-label="Play another session"
+            className="flex-1 rounded-2xl bg-[var(--accent)] py-4 font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.98] min-h-[44px]"
+            style={{ transitionTimingFunction: "var(--ease-standard)" }}
+          >
+            Play Again
+          </button>
+        </div>
+      )}
     </div>
   );
 }
