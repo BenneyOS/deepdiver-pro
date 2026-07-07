@@ -126,6 +126,7 @@ export function buildRound(
   format: ExerciseFormat = "classic",
   rand: () => number = Math.random,
   box: number = 1,
+  recentWeak: string[] = [],
 ): Round {
   const base = {
     card,
@@ -147,7 +148,7 @@ export function buildRound(
       };
     }
     case "spot-weak": {
-      const r = buildSpotWeak(card, allCards, rand, box);
+      const r = buildSpotWeak(card, allCards, rand, box, recentWeak);
       return {
         ...base,
         options: r.options,

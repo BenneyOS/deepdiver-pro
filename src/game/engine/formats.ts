@@ -32,8 +32,8 @@ const PERSONAS: Persona[] = ["CTO", "VPE", "CFO", "CRO"];
 
 // Deliberately weak reframes — the anti-patterns CONTENT_STYLE warns against.
 // Grouped by the *kind* of bad selling move so the weak option varies in flavour
-// (not just wording), and one is picked deterministically per card (see
-// weakReframeFor) so you don't keep seeing the same "just trust it" line.
+// (not just wording). One is picked per round (see pickWeakReframe), avoiding
+// recently-shown lines so you don't keep seeing the same "just trust it" line.
 export const WEAK_REFRAMES: string[] = [
   // Overclaiming the model
   "Honestly, the AI is smart enough to just figure it out on its own.",
@@ -60,21 +60,19 @@ export const WEAK_REFRAMES: string[] = [
   "Your engineers will love it once it's in — no need to bring them along first.",
 ];
 
-// Stable, well-distributed hash so a given card always maps to the same weak
-// line (good for learning "this is the wrong move here") while different cards
-// draw different lines — which is what kills the repetition.
-function hashString(s: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-/** The weak reframe shown for a card in "spot the weak answer". */
-export function weakReframeFor(card: Card): string {
-  return WEAK_REFRAMES[hashString(card.id) % WEAK_REFRAMES.length];
+/**
+ * Pick a weak reframe, avoiding any recently-shown ones so the same line
+ * doesn't recur across nearby spot-the-weak rounds (the repetition players
+ * complained about). Selection is random per appearance — so revisiting the
+ * same card no longer shows an identical round — with recent lines filtered out.
+ */
+export function pickWeakReframe(
+  rand: () => number = Math.random,
+  recentWeak: string[] = [],
+): string {
+  const fresh = WEAK_REFRAMES.filter((w) => !recentWeak.includes(w));
+  const pool = fresh.length ? fresh : WEAK_REFRAMES;
+  return seededShuffle(pool, rand)[0];
 }
 
 function seededShuffle<T>(arr: T[], rand: () => number): T[] {
@@ -112,8 +110,9 @@ export function buildSpotWeak(
   allCards: Card[],
   rand: () => number = Math.random,
   box: number = 1,
+  recentWeak: string[] = [],
 ): { format: "spot-weak"; options: AnswerOption[] } {
-  const weak = weakReframeFor(card);
+  const weak = pickWeakReframe(rand, recentWeak);
   // The two "strong but not this one" foils are the reframes most confusable
   // with THIS card's reframe, so the weak line doesn't stand out by topic.
   const { hardness } = difficultyForBox(box);
@@ -156,7 +155,7 @@ export function buildReframeOptions(
 }
 
 // Format rotation. Spaced repetition selects WHICH cards appear; format is
-// layered on top. Rule: never serve the same format more than twice in a row.
+// layered on top. Rule: never serve the same format twice in a row.
 export function rotateFormats(
   count: number,
   pool: ExerciseFormat[],
@@ -164,10 +163,9 @@ export function rotateFormats(
 ): ExerciseFormat[] {
   const out: ExerciseFormat[] = [];
   for (let i = 0; i < count; i++) {
-    const candidates = pool.filter((f) => {
-      const n = out.length;
-      return !(n >= 2 && out[n - 1] === f && out[n - 2] === f);
-    });
+    // Never repeat a format back-to-back (when the pool allows it) so a session
+    // feels varied rather than serving the same shape twice running.
+    const candidates = pool.filter((f) => out.length === 0 || out[out.length - 1] !== f);
     const choices = candidates.length ? candidates : pool;
     out.push(choices[Math.floor(rand() * choices.length)]);
   }
