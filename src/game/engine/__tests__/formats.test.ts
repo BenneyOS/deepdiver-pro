@@ -6,6 +6,7 @@ import {
   rotateFormats,
   formatPoolForMode,
   WEAK_REFRAMES,
+  weakReframeFor,
   type ExerciseFormat,
 } from "../formats";
 
@@ -65,6 +66,18 @@ describe("buildSpotWeak", () => {
     expect(r.options).toHaveLength(4);
     expect(correct).toHaveLength(1);
     expect(WEAK_REFRAMES).toContain(correct[0].text);
+  });
+
+  it("uses a card-specific weak line: stable per card, varied across cards", () => {
+    // Same card → same line every time (stable, learnable).
+    const c = makeCard("A17");
+    expect(weakReframeFor(c)).toBe(weakReframeFor(c));
+    expect(WEAK_REFRAMES).toContain(weakReframeFor(c));
+
+    // A spread of cards should hit many different weak lines, not repeat one.
+    const ids = Array.from({ length: 60 }, (_, i) => `X${i}`);
+    const picked = new Set(ids.map((id) => weakReframeFor(makeCard(id))));
+    expect(picked.size).toBeGreaterThanOrEqual(8);
   });
 });
 

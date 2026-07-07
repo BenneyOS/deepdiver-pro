@@ -10,6 +10,7 @@ import {
   isUnitUnlocked,
   nextLessonInUnit,
   currentUnitIndex,
+  focusedUnitIndex,
   nextLessonOverall,
   findLesson,
   completedLessonCount,
@@ -189,6 +190,56 @@ describe("what to play next", () => {
     const all = complete("A-L0", "A-L1", "A-L2", "B-L0", "C-L0", "C-L1");
     expect(currentUnitIndex(cards, FAMILIES, all)).toBe(-1);
     expect(nextLessonOverall(cards, FAMILIES, all)).toBeNull();
+  });
+});
+
+describe("focusedUnitIndex (hero ring follows the player down the path)", () => {
+  // Big deck: A = 50 cards (10 lessons), B = 20 cards (4 lessons), C = 15 (3).
+  function bigDeck(): Card[] {
+    const cards: Card[] = [];
+    for (let i = 0; i < 50; i++) cards.push(makeCard(`A${i}`, "A"));
+    for (let i = 0; i < 20; i++) cards.push(makeCard(`B${i}`, "B"));
+    for (let i = 0; i < 15; i++) cards.push(makeCard(`C${i}`, "C"));
+    return cards;
+  }
+  const fams: Family[] = ["A", "B", "C"];
+  const aL = (n: number) =>
+    Array.from({ length: n }, (_, i) => lessonId("A", i));
+
+  it("uses the frontier before anything is played", () => {
+    expect(focusedUnitIndex(bigDeck(), fams, {})).toBe(0);
+  });
+
+  it("stays on the deepest engaged, not-yet-mastered unit", () => {
+    const cards = bigDeck();
+    expect(focusedUnitIndex(cards, fams, complete("A-L0"))).toBe(0);
+  });
+
+  it("REGRESSION: follows you forward instead of freezing on an earlier incomplete unit", () => {
+    // A unlocked B at 3/10 (A still incomplete), then you play a lesson of B.
+    const cards = bigDeck();
+    const state = complete(...aL(3), "B-L0");
+    // Old behavior returned 0 (first incomplete unit = A) — the freeze bug.
+    expect(currentUnitIndex(cards, fams, state)).toBe(0);
+    // New behavior tracks the deepest unit you've engaged.
+    expect(focusedUnitIndex(cards, fams, state)).toBe(1);
+  });
+
+  it("advances to the next unlocked unit when the deepest engaged unit is mastered", () => {
+    // Master all of A (10 lessons). Nothing played in B yet.
+    const cards = bigDeck();
+    const state = complete(...aL(10));
+    expect(unitState(cards, "A", state).complete).toBe(true);
+    // Hero should move to B (freshly unlocked, unplayed), not sit on mastered A.
+    expect(focusedUnitIndex(cards, fams, state)).toBe(1);
+  });
+
+  it("skips over mastered units to the next incomplete one", () => {
+    // A + B fully mastered, C untouched but unlocked.
+    const cards = bigDeck();
+    const bL = Array.from({ length: 4 }, (_, i) => lessonId("B", i));
+    const state = complete(...aL(10), ...bL);
+    expect(focusedUnitIndex(cards, fams, state)).toBe(2);
   });
 });
 

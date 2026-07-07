@@ -7,6 +7,7 @@ import type { ClearEvent } from "../store/useGameStore";
 import { roundPoints } from "../engine/scoring";
 import { feedbackCorrect, feedbackWrong, feedbackReward } from "../feedback";
 import { shouldShowMasteryMoment, buildMasteryMoment, masteryShareText } from "../engine/masteryMoment";
+import { allPersonaLenses } from "../engine/persona";
 import { Ada } from "./Ada";
 import { getAdaMicrocopy } from "./adaMicrocopy";
 import { ParticleBurst } from "./ParticleBurst";
@@ -308,19 +309,13 @@ export function Reveal({
           )}
 
           {activeTab === "persona" && (
-            <div className="grid grid-cols-2 gap-2">
-              {(["CTO", "VPE", "CFO", "CRO"] as const).map((persona) => (
-                <div
-                  key={persona}
-                  className="rounded-xl border border-[var(--border)] bg-[var(--card-2)] px-3 py-2"
-                >
-                  <span className="text-xs font-bold text-[var(--accent-ink)]">
-                    {persona}
-                  </span>
-                  <p className="mt-0.5 text-xs text-[var(--text-dim)]">
-                    {card.personaShift[persona]}
-                  </p>
-                </div>
+            <div className="space-y-2">
+              <p className="text-xs text-[var(--text-faint)]">
+                Same situation, four rooms. Tap a stakeholder to see why it lands
+                differently and what to say.
+              </p>
+              {allPersonaLenses(card).map((lens) => (
+                <PersonaCard key={lens.persona} lens={lens} />
               ))}
             </div>
           )}
@@ -336,6 +331,53 @@ export function Reveal({
       >
         {isLastRound ? "View Scorecard" : "Next Deal"}
       </button>
+    </div>
+  );
+}
+
+function PersonaCard({ lens }: { lens: ReturnType<typeof allPersonaLenses>[number] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--card-2)] overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 px-3 py-2.5 text-left min-h-[44px]"
+      >
+        <span className="rounded-full bg-[var(--accent)]/15 px-2 py-0.5 text-xs font-bold text-[var(--accent-ink)]">
+          {lens.persona}
+        </span>
+        <span className="flex-1 text-xs font-medium text-[var(--text-dim)]">
+          Cares about {lens.cares}
+        </span>
+        <span
+          className={`text-[var(--text-faint)] transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        >
+          &#9662;
+        </span>
+      </button>
+      {open && (
+        <div className="space-y-2 border-t border-[var(--border)] px-3 py-2.5">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-faint)]">
+              Why it lands
+            </p>
+            <p className="mt-0.5 text-xs leading-relaxed text-[var(--text-dim)]">
+              {lens.why}
+            </p>
+          </div>
+          <div className="rounded-lg border-l-2 border-[var(--accent)] bg-[var(--card)] px-2.5 py-1.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-faint)]">
+              Say it like this
+            </p>
+            <p className="mt-0.5 text-xs leading-relaxed text-[var(--ink)]">
+              &ldquo;{lens.say}&rdquo;
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
