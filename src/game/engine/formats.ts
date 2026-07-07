@@ -5,6 +5,14 @@
 import type { Card, Persona } from "../../data/schema";
 import { FAMILY_LABELS } from "../../data/schema";
 import type { AnswerOption } from "./session";
+import { difficultyForBox, selectDistractors } from "./distractors";
+import type { DistractorCandidate } from "./distractors";
+
+function reframeCandidates(card: Card, allCards: Card[]): DistractorCandidate[] {
+  return allCards
+    .filter((c) => c.id !== card.id)
+    .map((c) => ({ text: c.reframe, family: c.family, tier: c.tier }));
+}
 
 // Per-card formats served inside the standard round flow. Speed round,
 // match-pairs and objection-volley are structurally different and handled by
@@ -43,11 +51,6 @@ function seededShuffle<T>(arr: T[], rand: () => number): T[] {
   return a;
 }
 
-function pickDistinct(pool: string[], count: number, exclude: Set<string>, rand: () => number): string[] {
-  const unique = [...new Set(pool)].filter((s) => !exclude.has(s));
-  return seededShuffle(unique, rand).slice(0, count);
-}
-
 export interface WhosSpeakingRound {
   format: "whos-speaking";
   line: string;
@@ -73,10 +76,19 @@ export function buildSpotWeak(
   card: Card,
   allCards: Card[],
   rand: () => number = Math.random,
+  box: number = 1,
 ): { format: "spot-weak"; options: AnswerOption[] } {
   const weak = seededShuffle(WEAK_REFRAMES, rand)[0];
-  const strongPool = allCards.filter((c) => c.id !== card.id).map((c) => c.reframe);
-  const strongers = pickDistinct(strongPool, 2, new Set([card.reframe]), rand);
+  // The two "strong but not this one" foils are the reframes most confusable
+  // with THIS card's reframe, so the weak line doesn't stand out by topic.
+  const { hardness } = difficultyForBox(box);
+  const strongers = selectDistractors(
+    { family: card.family, tier: card.tier, correct: card.reframe },
+    reframeCandidates(card, allCards),
+    2,
+    hardness,
+    rand,
+  );
   const strong = [card.reframe, ...strongers];
   const options: AnswerOption[] = [
     { text: weak, correct: true }, // "correct" = the weak one you must find
@@ -91,9 +103,16 @@ export function buildReframeOptions(
   card: Card,
   allCards: Card[],
   rand: () => number = Math.random,
+  box: number = 1,
 ): AnswerOption[] {
-  const pool = allCards.filter((c) => c.id !== card.id).map((c) => c.reframe);
-  const distractors = pickDistinct(pool, 3, new Set([card.reframe]), rand);
+  const { hardness } = difficultyForBox(box);
+  const distractors = selectDistractors(
+    { family: card.family, tier: card.tier, correct: card.reframe },
+    reframeCandidates(card, allCards),
+    3,
+    hardness,
+    rand,
+  );
   const options: AnswerOption[] = [
     { text: card.reframe, correct: true },
     ...distractors.map((text) => ({ text, correct: false })),

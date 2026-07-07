@@ -1,11 +1,12 @@
 import type { Card, Family, Persona, Tier } from "../../data/schema";
-import { FAMILY_LABELS } from "../../data/schema";
 import type { ExerciseFormat } from "./formats";
 import {
   buildWhosSpeaking,
   buildSpotWeak,
   FORMAT_LABELS,
 } from "./formats";
+import { difficultyForBox, selectDistractors } from "./distractors";
+import type { DistractorCandidate } from "./distractors";
 
 export type SessionMode =
   | "lesson"
@@ -51,8 +52,11 @@ export const SESSION_CONFIGS: Record<SessionMode, Omit<SessionConfig, "focusFami
   "match-pairs": { mode: "match-pairs", cardCount: 4 },
 };
 
+// Tier 1 no longer asks "which family?" — inside a unit lesson the family is
+// already known, so that was a giveaway. Instead we ask for the specific
+// PATTERN, discriminating against sibling patterns from the same family.
 const TIER_QUESTIONS: Record<Tier, string> = {
-  1: "Which situation family does this describe?",
+  1: "Which pattern is playing out here?",
   2: "What is the root cause beneath this symptom?",
   3: "What is the sharpest diagnostic question to ask?",
   4: "What is the best way to reframe this objection?",
@@ -61,7 +65,7 @@ const TIER_QUESTIONS: Record<Tier, string> = {
 function getCorrectAnswer(card: Card): string {
   switch (card.tier) {
     case 1:
-      return FAMILY_LABELS[card.family];
+      return card.pattern;
     case 2:
       return card.rootCause;
     case 3:
@@ -71,28 +75,22 @@ function getCorrectAnswer(card: Card): string {
   }
 }
 
-function getDistractorPool(card: Card, allCards: Card[]): string[] {
-  const others = allCards.filter((c) => c.id !== card.id);
-
-  switch (card.tier) {
-    case 1: {
-      const families = new Set(others.map((c) => FAMILY_LABELS[c.family]));
-      families.delete(FAMILY_LABELS[card.family]);
-      return [...families];
-    }
-    case 2:
-      return others.map((c) => c.rootCause);
-    case 3:
-      return others.map((c) => c.diagnostic);
-    case 4:
-      return others.map((c) => c.reframe);
-  }
+function tierField(card: Card): string {
+  return getCorrectAnswer(card);
 }
 
-function shuffleArray<T>(arr: T[]): T[] {
+// Candidates carry family/tier so the distractor engine can favour confusable,
+// same-family near-misses over random unrelated answers.
+function getDistractorCandidates(card: Card, allCards: Card[]): DistractorCandidate[] {
+  return allCards
+    .filter((c) => c.id !== card.id)
+    .map((c) => ({ text: tierField(c), family: c.family, tier: c.tier }));
+}
+
+function shuffleArray<T>(arr: T[], rand: () => number = Math.random): T[] {
   const shuffled = [...arr];
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rand() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
@@ -101,19 +99,25 @@ function shuffleArray<T>(arr: T[]): T[] {
 export function generateOptions(
   card: Card,
   allCards: Card[],
-  distractorCount: number = 3,
+  opts: { box?: number; rand?: () => number } = {},
 ): AnswerOption[] {
+  const rand = opts.rand ?? Math.random;
+  const { distractorCount, hardness } = difficultyForBox(opts.box ?? 1);
   const correct = getCorrectAnswer(card);
-  const pool = getDistractorPool(card, allCards);
-  const uniqueDistractors = [...new Set(pool)].filter((d) => d !== correct);
-  const selected = shuffleArray(uniqueDistractors).slice(0, distractorCount);
+  const distractors = selectDistractors(
+    { family: card.family, tier: card.tier, correct },
+    getDistractorCandidates(card, allCards),
+    distractorCount,
+    hardness,
+    rand,
+  );
 
   const options: AnswerOption[] = [
     { text: correct, correct: true },
-    ...selected.map((text) => ({ text, correct: false })),
+    ...distractors.map((text) => ({ text, correct: false })),
   ];
 
-  return shuffleArray(options);
+  return shuffleArray(options, rand);
 }
 
 export function buildRound(
@@ -121,6 +125,7 @@ export function buildRound(
   allCards: Card[],
   format: ExerciseFormat = "classic",
   rand: () => number = Math.random,
+  box: number = 1,
 ): Round {
   const base = {
     card,
@@ -142,7 +147,7 @@ export function buildRound(
       };
     }
     case "spot-weak": {
-      const r = buildSpotWeak(card, allCards, rand);
+      const r = buildSpotWeak(card, allCards, rand, box);
       return {
         ...base,
         options: r.options,
@@ -155,7 +160,7 @@ export function buildRound(
     default:
       return {
         ...base,
-        options: generateOptions(card, allCards),
+        options: generateOptions(card, allCards, { box, rand }),
         showQuote: true,
         instruction: TIER_QUESTIONS[card.tier],
         usesWager: true,

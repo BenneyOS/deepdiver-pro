@@ -8,14 +8,27 @@ export function demote(box: number): number {
   return Math.max(1, box - 1);
 }
 
+// Cards answered within this window are pushed down the selection order so a
+// back-to-back session doesn't recycle the same handful you just saw.
+const RECENCY_WINDOW_MIN = 20;
+const RECENCY_PENALTY = 4;
+
 export function selectionWeight(
   card: Card,
   progress: CardProgress | undefined,
+  now: number = Date.now(),
 ): number {
   const box = progress?.box ?? 1;
   const unseen = !progress?.seen;
   const jitter = pseudoRandom(card.id) * 1.5;
-  return (6 - box) + (unseen ? 3 : 0) + jitter;
+  let weight = (6 - box) + (unseen ? 3 : 0) + jitter;
+  if (progress?.lastAttemptAt) {
+    const ageMin = (now - Date.parse(progress.lastAttemptAt)) / 60000;
+    if (ageMin >= 0 && ageMin < RECENCY_WINDOW_MIN) {
+      weight -= RECENCY_PENALTY * (1 - ageMin / RECENCY_WINDOW_MIN);
+    }
+  }
+  return weight;
 }
 
 function pseudoRandom(seed: string): number {

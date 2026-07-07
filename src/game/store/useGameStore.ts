@@ -23,6 +23,12 @@ import { useSessionHistory } from "./useSessionHistory";
 import { useStreak } from "./useStreak";
 import { trackEvent } from "../analytics";
 
+// The Leitner box for a card (1 = new, 5 = mastered) drives adaptive question
+// difficulty: familiar cards get more options and harder near-miss distractors.
+function boxFor(cardId: string): number {
+  return useProgressStore.getState().progressMap.get(cardId)?.box ?? 1;
+}
+
 export type GamePhase =
   | "home"
   | "intro"
@@ -123,7 +129,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       .filter((c): c is Card => Boolean(c));
     const formats = rotateFormats(queue.length, formatPoolForMode("quick-drill"));
     const firstRound =
-      queue.length > 0 ? buildRound(queue[0], seed.cards, formats[0]) : null;
+      queue.length > 0
+        ? buildRound(queue[0], seed.cards, formats[0], Math.random, boxFor(queue[0].id))
+        : null;
 
     trackEvent({
       event: "session_started",
@@ -191,7 +199,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     const allCards = seed.cards;
     const formats = rotateFormats(queue.length, formatPoolForMode(mode));
     const firstRound =
-      queue.length > 0 ? buildRound(queue[0], allCards, formats[0]) : null;
+      queue.length > 0
+        ? buildRound(queue[0], allCards, formats[0], Math.random, boxFor(queue[0].id))
+        : null;
 
     trackEvent({
       event: "session_started",
@@ -349,7 +359,13 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
 
     const nextCard = state.queue[nextIndex];
-    const nextRound = buildRound(nextCard, state.allCards, state.formats[nextIndex]);
+    const nextRound = buildRound(
+      nextCard,
+      state.allCards,
+      state.formats[nextIndex],
+      Math.random,
+      boxFor(nextCard.id),
+    );
 
     set({
       phase: "answer",
