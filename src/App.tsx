@@ -10,7 +10,6 @@ import { Hud } from "./game/components/Hud";
 import { SessionProgress } from "./game/components/SessionProgress";
 import { OptionList } from "./game/components/OptionList";
 import { Wager } from "./game/components/Wager";
-import { BuildReframe } from "./game/components/BuildReframe";
 import { SpeedRound } from "./game/components/SpeedRound";
 import { ObjectionVolley } from "./game/components/ObjectionVolley";
 import { MatchPairs } from "./game/components/MatchPairs";
@@ -224,17 +223,7 @@ function App() {
               </div>
             )}
 
-            {game.phase === "answer" && round.format === "build-reframe" && (
-              <BuildReframe
-                key={game.currentIndex}
-                tokens={round.reframeTokens ?? []}
-                correctOrder={round.reframeOrder ?? []}
-                instruction={round.instruction}
-                onSubmit={(correct) => game.submitAssembly(correct)}
-              />
-            )}
-
-            {game.phase === "answer" && round.format !== "build-reframe" && (
+            {game.phase === "answer" && (
               <OptionList
                 options={round.options}
                 tierLabel={round.instruction}

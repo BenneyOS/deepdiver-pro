@@ -3,8 +3,6 @@ import type { Card } from "../../../data/schema";
 import {
   buildWhosSpeaking,
   buildSpotWeak,
-  buildReframeAssembly,
-  tokenizeReframe,
   rotateFormats,
   formatPoolForMode,
   WEAK_REFRAMES,
@@ -70,33 +68,9 @@ describe("buildSpotWeak", () => {
   });
 });
 
-describe("tokenizeReframe", () => {
-  it("splits on sentence and clause boundaries", () => {
-    expect(tokenizeReframe("First part. Second part — third part, fourth part.")).toEqual([
-      "First part.",
-      "Second part",
-      "third part",
-      "fourth part.",
-    ]);
-  });
-});
-
-describe("buildReframeAssembly", () => {
-  it("preserves the correct order and adds distractors from other cards", () => {
-    const target = makeCard("A1");
-    const others = [makeCard("A2", { reframe: "Alien clause one. Alien clause two." })];
-    const r = buildReframeAssembly(target, [target, ...others], Math.random);
-    expect(r.correctOrder).toEqual(tokenizeReframe(target.reframe));
-    // shuffled contains all real fragments plus at least one distractor
-    const realCount = r.shuffled.filter((t) => !t.isDistractor).length;
-    expect(realCount).toBe(r.correctOrder.length);
-    expect(r.shuffled.some((t) => t.isDistractor)).toBe(true);
-  });
-});
-
 describe("rotateFormats", () => {
   it("never serves the same format more than twice in a row", () => {
-    const pool: ExerciseFormat[] = ["classic", "whos-speaking", "spot-weak", "build-reframe"];
+    const pool: ExerciseFormat[] = ["classic", "whos-speaking", "spot-weak"];
     const seqOut = rotateFormats(200, pool, Math.random);
     for (let i = 2; i < seqOut.length; i++) {
       const threeSame = seqOut[i] === seqOut[i - 1] && seqOut[i] === seqOut[i - 2];
@@ -110,9 +84,9 @@ describe("rotateFormats", () => {
 });
 
 describe("formatPoolForMode", () => {
-  it("quick-drill mixes all four per-card formats", () => {
+  it("quick-drill mixes the per-card formats", () => {
     expect(formatPoolForMode("quick-drill").sort()).toEqual(
-      ["build-reframe", "classic", "spot-weak", "whos-speaking"].sort(),
+      ["classic", "spot-weak", "whos-speaking"].sort(),
     );
   });
 
@@ -121,6 +95,12 @@ describe("formatPoolForMode", () => {
   });
 
   it("family-focus uses review formats", () => {
-    expect(formatPoolForMode("family-focus")).toContain("build-reframe");
+    expect(formatPoolForMode("family-focus")).toContain("whos-speaking");
+  });
+
+  it("no pool includes the removed build-reframe format", () => {
+    for (const mode of ["quick-drill", "boss-deals", "family-focus"]) {
+      expect(formatPoolForMode(mode)).not.toContain("build-reframe");
+    }
   });
 });

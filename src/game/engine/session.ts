@@ -1,10 +1,9 @@
 import type { Card, Family, Persona, Tier } from "../../data/schema";
 import { FAMILY_LABELS } from "../../data/schema";
-import type { ExerciseFormat, ReframeToken } from "./formats";
+import type { ExerciseFormat } from "./formats";
 import {
   buildWhosSpeaking,
   buildSpotWeak,
-  buildReframeAssembly,
   FORMAT_LABELS,
 } from "./formats";
 
@@ -33,9 +32,6 @@ export interface Round {
   promptOverride?: string;
   instruction: string;
   usesWager: boolean;
-  // build-reframe only
-  reframeTokens?: ReframeToken[];
-  reframeOrder?: string[];
   correctPersona?: Persona;
 }
 
@@ -153,18 +149,6 @@ export function buildRound(
         showQuote: false,
         instruction: "Three of these are solid. Which is the weak answer to avoid?",
         usesWager: false,
-      };
-    }
-    case "build-reframe": {
-      const r = buildReframeAssembly(card, allCards, rand);
-      return {
-        ...base,
-        options: [],
-        showQuote: true,
-        instruction: "Assemble the strongest reframe, in order.",
-        usesWager: false,
-        reframeTokens: r.shuffled,
-        reframeOrder: r.correctOrder,
       };
     }
     case "classic":

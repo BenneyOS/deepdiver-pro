@@ -72,7 +72,6 @@ interface GameState {
   startLesson: (seed: Seed, lessonId: string) => void;
   selectAnswer: (optionIndex: number) => void;
   placeWager: (wager: Wager) => void;
-  submitAssembly: (correct: boolean) => void;
   recordAnswer: (card: Card, correct: boolean) => void;
   finishSpeed: (summary: { mode: SessionMode; score: number; hits: number; total: number; maxStreak: number }) => void;
   nextRound: () => void;
@@ -242,12 +241,6 @@ export const useGameStore = create<GameState>((set, get) => ({
     resolveRound(get, set, correct, wager);
   },
 
-  submitAssembly: (correct: boolean) => {
-    // build-reframe: no options, correctness computed by the component.
-    set({ selectedAnswer: correct ? 0 : -1 });
-    resolveRound(get, set, correct, "hunch");
-  },
-
   // Speed round, objection-volley and match-pairs all write to the same ledger
   // as every other format: a first correct answer clears the card and can
   // unlock the next unit.
@@ -413,9 +406,9 @@ function freshSessionState(): Partial<GameState> {
   };
 }
 
-// Shared round resolution — every format (classic, who's-speaking, spot-weak,
-// build-reframe) funnels through here, so all write identical round_completed
-// and card_cleared events to the one progress ledger.
+// Shared round resolution — every format (classic, who's-speaking, spot-weak)
+// funnels through here, so all write identical round_completed and card_cleared
+// events to the one progress ledger.
 function resolveRound(
   get: () => GameState,
   set: (partial: Partial<GameState>) => void,
