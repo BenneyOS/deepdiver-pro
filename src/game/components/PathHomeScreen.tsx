@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Seed, Family } from "../../data/schema";
-import { FAMILY_LABELS } from "../../data/schema";
+import { FAMILY_LABELS, FAMILY_ICONS } from "../../data/schema";
 import type { SessionMode } from "../engine/session";
 import {
   allLessons,
@@ -113,9 +113,6 @@ export function PathHomeScreen({
   const continueNumber = continueLesson
     ? continueLesson.index + 1
     : 0;
-  const continueUnit = continueLesson
-    ? unitState(seed.cards, continueLesson.family, completed)
-    : null;
 
   function handleContinue() {
     if (continueLesson) onStartLesson(continueLesson.id);
@@ -163,7 +160,6 @@ export function PathHomeScreen({
           <HeroRing
             done={heroUnit.done}
             total={heroUnit.total}
-            threshold={heroUnit.unlockThreshold}
             complete={heroUnit.complete}
           />
 
@@ -203,9 +199,9 @@ export function PathHomeScreen({
             }
           >
             <span className="block text-lg leading-tight">Continue</span>
-            {continueLesson && continueUnit && (
+            {continueLesson && (
               <span className="block text-xs font-medium text-white/85">
-                Lesson {continueNumber} of {continueUnit.total}
+                Next up · Lesson {continueNumber}
               </span>
             )}
           </button>
@@ -329,7 +325,6 @@ export function PathHomeScreen({
             isLocked && prevNode
               ? `${remainingInPrev} more ${remainingInPrev === 1 ? "lesson" : "lessons"} in ${prevNode.label} to unlock`
               : null;
-          const ringPct = unit.total > 0 ? unit.done / unit.total : 0;
 
           return (
             <div key={unit.family} className="relative flex items-center gap-4 py-2">
@@ -345,9 +340,6 @@ export function PathHomeScreen({
               )}
 
               <div className="relative flex-shrink-0">
-                {(isCurrent || isUnlockedAhead) && (
-                  <RingProgress pct={ringPct} />
-                )}
                 <button
                   type="button"
                   disabled={isLocked}
@@ -377,7 +369,7 @@ export function PathHomeScreen({
                   }, ${unit.done} of ${unit.total} lessons`}
                 >
                   {isComplete ? (
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   ) : isLocked ? (
@@ -386,7 +378,9 @@ export function PathHomeScreen({
                       <path d="M9 11V7a3 3 0 016 0v4" />
                     </svg>
                   ) : (
-                    <span className="font-extrabold text-sm">{unit.family}</span>
+                    <span className="text-2xl leading-none" aria-hidden="true">
+                      {FAMILY_ICONS[unit.family]}
+                    </span>
                   )}
                 </button>
               </div>
@@ -401,13 +395,13 @@ export function PathHomeScreen({
                 </p>
                 {isCurrent && (
                   <p className="font-telemetry text-xs text-[var(--text-dim)]">
-                    Lesson {unit.done + 1} of {unit.total}
+                    {unit.done} of {unit.total} lessons
                     <StarRow stars={Math.round(unit.stars / Math.max(1, unit.done))} inline />
                   </p>
                 )}
                 {isUnlockedAhead && (
                   <p className="font-telemetry text-xs text-[var(--text-dim)]">
-                    {unit.done > 0 ? `Lesson ${unit.done + 1} of ${unit.total}` : `Unlocked · ${unit.total} lessons`}
+                    {unit.done > 0 ? `${unit.done} of ${unit.total} lessons` : `Unlocked · ${unit.total} lessons`}
                     {unit.done > 0 && (
                       <StarRow stars={Math.round(unit.stars / Math.max(1, unit.done))} inline />
                     )}
@@ -439,17 +433,15 @@ export function PathHomeScreen({
   );
 }
 
-// Hero ring: the single dominant progress dial. Fills done/total, marks the
-// unlock checkpoint with a notch, and shows "N/total lessons" in the centre.
+// Hero ring: the single dominant progress dial. Fills done/total and shows
+// "N/total lessons" in the centre. A clean full-circle track, no notch.
 function HeroRing({
   done,
   total,
-  threshold,
   complete,
 }: {
   done: number;
   total: number;
-  threshold: number;
   complete: boolean;
 }) {
   const size = 140;
@@ -460,13 +452,6 @@ function HeroRing({
   const circ = 2 * Math.PI * r;
   const pct = total > 0 ? Math.max(0, Math.min(1, done / total)) : 0;
   const offset = circ * (1 - pct);
-
-  // Notch at the unlock checkpoint, measured from 12 o'clock going clockwise.
-  const notchFrac = total > 0 ? Math.min(1, threshold / total) : 0;
-  const notchAngle = (-90 + notchFrac * 360) * (Math.PI / 180);
-  const nx = cx + r * Math.cos(notchAngle);
-  const ny = cy + r * Math.sin(notchAngle);
-  const reached = done >= threshold;
   const track = complete ? "var(--success)" : "var(--accent)";
 
   return (
@@ -486,16 +471,6 @@ function HeroRing({
           transform={`rotate(-90 ${cx} ${cy})`}
           style={{ transition: "stroke-dashoffset 600ms var(--ease-standard)" }}
         />
-        {!complete && notchFrac < 1 && (
-          <circle
-            cx={nx}
-            cy={ny}
-            r={5}
-            fill={reached ? "var(--success)" : "var(--card)"}
-            stroke={reached ? "var(--success)" : "var(--accent-strong)"}
-            strokeWidth="2.5"
-          />
-        )}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         {complete ? (
@@ -516,40 +491,6 @@ function HeroRing({
         )}
       </div>
     </div>
-  );
-}
-
-// Thin circular progress ring drawn just outside a 58px node, showing how many
-// of the unit's lessons are done. Purely decorative (node carries the label).
-function RingProgress({ pct }: { pct: number }) {
-  const clamped = Math.max(0, Math.min(1, pct));
-  const size = 66;
-  const r = 31;
-  const c = 2 * Math.PI * r;
-  const offset = c * (1 - clamped);
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      className="pointer-events-none absolute -left-1 -top-1"
-      aria-hidden="true"
-    >
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--border)" strokeWidth="3" />
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={r}
-        fill="none"
-        stroke="var(--accent)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeDasharray={c}
-        strokeDashoffset={offset}
-        transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        style={{ transition: "stroke-dashoffset 500ms var(--ease-standard)" }}
-      />
-    </svg>
   );
 }
 
