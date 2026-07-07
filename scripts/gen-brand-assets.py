@@ -106,6 +106,65 @@ def make_icon(px, maskable=False):
     return img.convert("RGBA")
 
 
+def draw_growth_chart(img, box, ss):
+    """A premium ascending bar chart with a rising trend line + arrow,
+    evoking sales growth. `box` = (x0, y0, x1, y1) in supersampled coords."""
+    x0, y0, x1, y1 = box
+    d = ImageDraw.Draw(img)
+
+    # soft rounded panel behind the chart
+    panel = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    pd = ImageDraw.Draw(panel)
+    pad = 34 * ss
+    pd.rounded_rectangle([x0 - pad, y0 - pad, x1 + pad, y1 + pad],
+                         radius=40 * ss, fill=(255, 255, 255, 150))
+    img.alpha_composite(panel)
+    d = ImageDraw.Draw(img)
+
+    baseline = y1
+    chart_h = y1 - y0
+    n = 5
+    heights = [0.26, 0.40, 0.55, 0.74, 1.0]
+    gap = int((x1 - x0) * 0.045)
+    bw = int(((x1 - x0) - gap * (n - 1)) / n)
+
+    tops = []
+    for i, hf in enumerate(heights):
+        bx0 = x0 + i * (bw + gap)
+        bx1 = bx0 + bw
+        bh = int(chart_h * hf)
+        bt = baseline - bh
+        tops.append((bx0 + bw // 2, bt))
+        # vertical amber gradient per bar
+        bar = Image.new("RGBA", (bw, max(1, bh)), (0, 0, 0, 0))
+        bd = ImageDraw.Draw(bar)
+        for yy in range(bh):
+            t = yy / max(1, bh)
+            c = lerp((245, 193, 128), TERRA, t)
+            bd.line([(0, yy), (bw, yy)], fill=c + (255,))
+        # rounded-top mask
+        m = Image.new("L", (bw, max(1, bh)), 0)
+        md = ImageDraw.Draw(m)
+        md.rounded_rectangle([0, 0, bw, bh + 20 * ss], radius=min(bw // 2, 16 * ss), fill=255)
+        img.paste(bar, (bx0, bt), m)
+
+    d = ImageDraw.Draw(img)
+    # rising trend line just above the bar tops
+    pts = [(cx, ty - 22 * ss) for (cx, ty) in tops]
+    d.line(pts, fill=DEEP, width=8 * ss, joint="curve")
+    for (px, py) in pts:
+        r = 11 * ss
+        d.ellipse([px - r, py - r, px + r, py + r], fill=PAGE, outline=DEEP, width=6 * ss)
+    # arrowhead extending up-right past the last node
+    lx, ly = pts[-1]
+    ax, ay = lx + 46 * ss, ly - 46 * ss
+    d.line([(lx, ly), (ax, ay)], fill=DEEP, width=8 * ss)
+    ah = 26 * ss
+    d.polygon([(ax + ah * 0.15, ay - ah * 0.1),
+               (ax - ah, ay - ah * 0.15),
+               (ax + ah * 0.1, ay + ah)], fill=DEEP)
+
+
 def make_og():
     """1200x630 social share card."""
     ss = 2
@@ -120,18 +179,16 @@ def make_og():
                fill=(232, 162, 74, 40))
     gd.ellipse([W * 0.66, H * 0.25, W * 1.2, H * 1.25],
                fill=(199, 125, 58, 30))
-    img = Image.alpha_composite(img.convert("RGBA"), glow).convert("RGB")
+    img = Image.alpha_composite(img.convert("RGBA"), glow)
     d = ImageDraw.Draw(img)
 
     pad = int(72 * ss)
-    left_max = int(W * 0.60)          # text column right edge
+    left_max = int(W * 0.585)         # text column right edge
     col_w = left_max - pad            # available text width
 
-    # large brand badge on the right, vertically centered
-    bs = 330 * ss
-    right_cx = (left_max + (W - pad)) // 2
-    badge = make_icon(bs).convert("RGBA")
-    img.paste(badge, (right_cx - bs // 2, H // 2 - bs // 2), badge)
+    # commercial growth chart on the right
+    cx0 = int(W * 0.635)
+    draw_growth_chart(img, (cx0, int(H * 0.30), W - pad - 34 * ss, int(H * 0.74)), ss)
 
     # brand row: mini icon + wordmark
     icon = make_icon(92 * ss).convert("RGBA")
@@ -160,7 +217,7 @@ def make_og():
     d.text((pad, y0 + line_gap), l2, font=f1, fill=DEEP)
 
     # subhead — fit within the text column so it clears the badge
-    sub = "Diagnostic selling training for enterprise tech."
+    sub = "Diagnostic sales training for Devin"
     ssz = 37 * ss
     while ssz > 22 * ss:
         fsub = font("Inter-Medium.ttf", ssz)
@@ -186,7 +243,7 @@ def make_og():
         d.text((x + 22 * ss, y + 13 * ss), c, font=fchip, fill=DEEP)
         x += cw + 20 * ss
 
-    return img.resize((1200, 630), Image.LANCZOS)
+    return img.convert("RGB").resize((1200, 630), Image.LANCZOS)
 
 
 def main():
