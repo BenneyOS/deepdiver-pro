@@ -16,6 +16,8 @@ interface ScorecardProps {
   onReplay: () => void;
   /** When set, this was a curriculum lesson: show the completion + star banner. */
   lessonStars?: number | null;
+  /** When set, finishing this lesson just unlocked the named next unit. */
+  unlockedUnitLabel?: string | null;
 }
 
 export function Scorecard({
@@ -27,6 +29,7 @@ export function Scorecard({
   onHome,
   onReplay,
   lessonStars = null,
+  unlockedUnitLabel = null,
 }: ScorecardProps) {
   const total = rounds.length;
   const accuracy = total > 0 ? (hits / total) * 100 : 0;
@@ -120,6 +123,19 @@ export function Scorecard({
             {lessonStars >= 3
               ? "Flawless — that read is now second nature."
               : "Path advanced. Replay for 3 stars to lock it in."}
+          </p>
+        </div>
+      )}
+
+      {/* Unit-unlock celebration — fired when this lesson hit the unlock checkpoint */}
+      {unlockedUnitLabel && (
+        <div
+          className="flex items-center justify-center gap-2 rounded-2xl border border-[var(--success)]/40 bg-[var(--success)]/10 p-4 text-center animate-rank-spring"
+          role="status"
+        >
+          <span aria-hidden="true" className="text-xl">&#x1F513;</span>
+          <p className="text-sm font-bold text-[var(--success)]">
+            New unit unlocked — {unlockedUnitLabel}!
           </p>
         </div>
       )}

@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Seed, Family } from "../../data/schema";
 import { FAMILY_LABELS } from "../../data/schema";
 import type { SessionMode } from "../engine/session";
-import { totalMastered } from "../engine/progress";
 import {
   allLessons,
   unitState,
@@ -10,11 +9,12 @@ import {
   currentUnitIndex,
   nextLessonInUnit,
   completedLessonCount,
+  unlockedUnitCount,
+  masteredUnitCount,
   type UnitState,
   type LessonRef,
 } from "../engine/curriculum";
 import { useSessionHistory } from "../store/useSessionHistory";
-import { useProgressStore } from "../store/useProgressStore";
 import { useCurriculum } from "../store/useCurriculum";
 import { usePortfolio } from "../store/usePortfolio";
 import { useSettings } from "../store/useSettings";
@@ -44,7 +44,6 @@ export function PathHomeScreen({
   onOpenPortfolio,
 }: PathHomeScreenProps) {
   const [showFamilyPicker, setShowFamilyPicker] = useState(false);
-  const { progressMap } = useProgressStore();
   const { sessions } = useSessionHistory();
   const completed = useCurriculum((s) => s.completed);
   const portfolioCount = usePortfolio((s) => s.pitches.length);
@@ -70,8 +69,47 @@ export function PathHomeScreen({
   const totalLessons = lessons.length;
   const lessonsDone = completedLessonCount(completed);
   const lessonsPct = totalLessons > 0 ? Math.round((lessonsDone / totalLessons) * 100) : 0;
-  const unitsDone = nodes.filter((n) => n.unit.complete).length;
-  const masteredCount = totalMastered(seed.cards, progressMap);
+  const unitsMastered = masteredUnitCount(seed.cards, families, completed);
+  const unitsUnlocked = unlockedUnitCount(seed.cards, families, completed);
+
+  // Fire a one-time "Unlocked!" toast when a new unit becomes playable. Baseline
+  // is 1 (Unit A is always unlocked), persisted so it only fires once per unlock.
+  const [unlockToast, setUnlockToast] = useState<string | null>(null);
+  const toastTimer = useRef<number | null>(null);
+  useEffect(() => {
+    const KEY = "rtr_seen_unlocked";
+    let prev = 1;
+    try {
+      prev = Number(localStorage.getItem(KEY) ?? "1") || 1;
+    } catch {
+      prev = 1;
+    }
+    if (unitsUnlocked > prev) {
+      const newlyLabel = FAMILY_LABELS[families[unitsUnlocked - 1]];
+      setUnlockToast(newlyLabel);
+      if (toastTimer.current) window.clearTimeout(toastTimer.current);
+      toastTimer.current = window.setTimeout(() => setUnlockToast(null), 4500);
+    }
+    if (unitsUnlocked !== prev) {
+      try {
+        localStorage.setItem(KEY, String(unitsUnlocked));
+      } catch {
+        /* storage unavailable */
+      }
+    }
+    return () => {
+      if (toastTimer.current) window.clearTimeout(toastTimer.current);
+    };
+  }, [unitsUnlocked, families]);
+
+  // The unit "Continue" is currently working through, and how close it is to
+  // unlocking the next unit — powers the countdown cue.
+  const currentUnit = currentIdx >= 0 ? nodes[currentIdx].unit : null;
+  const nextUnitLabel =
+    currentIdx >= 0 && currentIdx + 1 < families.length
+      ? FAMILY_LABELS[families[currentIdx + 1]]
+      : null;
+  const lessonsUntilUnlock = currentUnit?.lessonsUntilUnlock ?? 0;
 
   const currentNode = currentIdx >= 0 ? nodes[currentIdx] : null;
   // What "Continue" plays: the next incomplete lesson, or a replay for mastery
@@ -103,6 +141,19 @@ export function PathHomeScreen({
         <Ada expression={dayStreak >= 3 ? "pleased" : "neutral"} size={44} />
       </div>
 
+      {/* Unit-unlocked celebration toast */}
+      {unlockToast && (
+        <div
+          role="status"
+          className="flex items-center gap-2 rounded-2xl border border-[var(--success)]/40 bg-[var(--success)]/10 px-4 py-3 animate-rank-spring"
+        >
+          <span aria-hidden="true" className="text-lg">&#x1F513;</span>
+          <span className="text-sm font-bold text-[var(--success)]">
+            New unit unlocked — {unlockToast}!
+          </span>
+        </div>
+      )}
+
       {/* Primary CTA — starts the next lesson in your path */}
       <button
         type="button"
@@ -123,6 +174,24 @@ export function PathHomeScreen({
           </span>
         )}
       </button>
+
+      {/* Countdown cue — how close you are to unlocking the next unit */}
+      {nextUnitLabel && lessonsUntilUnlock > 0 && (
+        <div className="flex items-center justify-center gap-1.5 rounded-2xl border border-dashed border-[var(--accent)]/50 bg-[var(--accent-bg)] px-4 py-2.5 text-center">
+          <span aria-hidden="true">&#x1F513;</span>
+          <span className="text-xs font-semibold text-[var(--accent-ink)]">
+            {lessonsUntilUnlock} more {lessonsUntilUnlock === 1 ? "lesson" : "lessons"} to unlock {nextUnitLabel}
+          </span>
+        </div>
+      )}
+      {nextUnitLabel && lessonsUntilUnlock === 0 && currentUnit && !currentUnit.complete && (
+        <div className="flex items-center justify-center gap-1.5 rounded-2xl border border-[var(--success)]/40 bg-[var(--success)]/10 px-4 py-2.5 text-center">
+          <span aria-hidden="true">&#x2713;</span>
+          <span className="text-xs font-semibold text-[var(--success)]">
+            {nextUnitLabel} unlocked — keep going to master this unit
+          </span>
+        </div>
+      )}
 
       {/* Streak — with a protective freeze so one missed day doesn't reset it */}
       {dayStreak > 0 && (
@@ -158,8 +227,8 @@ export function PathHomeScreen({
           />
         </div>
         <div className="mt-1.5 flex items-center justify-between text-xs text-[var(--text-dim)]">
-          <span>{unitsDone} of {families.length} units complete</span>
-          <span className="font-telemetry">{masteredCount} cards mastered</span>
+          <span className="font-telemetry">{unitsUnlocked} of {families.length} units unlocked</span>
+          <span className="font-telemetry">{unitsMastered} mastered</span>
         </div>
       </div>
 
@@ -234,11 +303,15 @@ export function PathHomeScreen({
           const isComplete = unit.complete;
           const isCurrent = node.isCurrent;
           const isLocked = !node.isUnlocked;
+          const isUnlockedAhead = !isLocked && !isComplete && !isCurrent;
+          const isPlayable = !isLocked;
           const prevNode = i > 0 ? nodes[i - 1] : null;
+          const remainingInPrev = prevNode?.unit.lessonsUntilUnlock ?? 0;
           const unlockText =
             isLocked && prevNode
-              ? `Complete ${prevNode.label} to unlock`
+              ? `${remainingInPrev} more ${remainingInPrev === 1 ? "lesson" : "lessons"} in ${prevNode.label} to unlock`
               : null;
+          const ringPct = unit.total > 0 ? unit.done / unit.total : 0;
 
           return (
             <div key={unit.family} className="relative flex items-center gap-4 py-2">
@@ -253,44 +326,57 @@ export function PathHomeScreen({
                 />
               )}
 
-              <button
-                type="button"
-                disabled={isLocked}
-                onClick={() => {
-                  if (node.nextLesson) onStartLesson(node.nextLesson.id);
-                  else if (unit.lessons[0]) onStartLesson(unit.lessons[0].id);
-                }}
-                className={`relative flex h-[58px] w-[58px] flex-shrink-0 items-center justify-center rounded-full border-2 transition-all
-                  ${
-                    isCurrent
-                      ? "animate-node-bob border-[var(--accent-strong)] bg-[var(--accent-strong)] text-[var(--ink)] shadow-md active:scale-[0.93] cursor-pointer"
-                      : isComplete
-                        ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)] cursor-pointer active:scale-[0.95]"
-                        : "border-[var(--border)] bg-[var(--card)] text-[var(--text-faint)] cursor-not-allowed opacity-60"
-                  }
-                  min-h-[44px]`}
-                aria-label={`${node.label}: ${
-                  isComplete ? "complete" : isCurrent ? "current — tap to start next lesson" : "locked"
-                }, ${unit.done} of ${unit.total} lessons`}
-              >
-                {isComplete ? (
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                ) : isLocked ? (
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <rect x="6" y="11" width="12" height="10" rx="2" />
-                    <path d="M9 11V7a3 3 0 016 0v4" />
-                  </svg>
-                ) : (
-                  <span className="font-extrabold text-sm">{unit.family}</span>
+              <div className="relative flex-shrink-0">
+                {(isCurrent || isUnlockedAhead) && (
+                  <RingProgress pct={ringPct} />
                 )}
-              </button>
+                <button
+                  type="button"
+                  disabled={isLocked}
+                  onClick={() => {
+                    if (node.nextLesson) onStartLesson(node.nextLesson.id);
+                    else if (unit.lessons[0]) onStartLesson(unit.lessons[0].id);
+                  }}
+                  className={`relative flex h-[58px] w-[58px] items-center justify-center rounded-full border-2 transition-all
+                    ${
+                      isCurrent
+                        ? "animate-node-bob border-[var(--accent-strong)] bg-[var(--accent-strong)] text-[var(--ink)] shadow-md active:scale-[0.93] cursor-pointer"
+                        : isComplete
+                          ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)] cursor-pointer active:scale-[0.95]"
+                          : isUnlockedAhead
+                            ? "border-[var(--accent)] bg-[var(--card)] text-[var(--accent-ink)] cursor-pointer active:scale-[0.95]"
+                            : "border-[var(--border)] bg-[var(--card)] text-[var(--text-faint)] cursor-not-allowed opacity-60"
+                    }
+                    min-h-[44px]`}
+                  aria-label={`${node.label}: ${
+                    isComplete
+                      ? "mastered"
+                      : isCurrent
+                        ? "current — tap to start next lesson"
+                        : isUnlockedAhead
+                          ? "unlocked — tap to play"
+                          : "locked"
+                  }, ${unit.done} of ${unit.total} lessons`}
+                >
+                  {isComplete ? (
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : isLocked ? (
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <rect x="6" y="11" width="12" height="10" rx="2" />
+                      <path d="M9 11V7a3 3 0 016 0v4" />
+                    </svg>
+                  ) : (
+                    <span className="font-extrabold text-sm">{unit.family}</span>
+                  )}
+                </button>
+              </div>
 
               <div className="flex-1 min-w-0">
                 <p
                   className={`text-sm font-semibold ${
-                    isCurrent || isComplete ? "text-[var(--ink)]" : "text-[var(--text-faint)]"
+                    isPlayable || isComplete ? "text-[var(--ink)]" : "text-[var(--text-faint)]"
                   }`}
                 >
                   {node.label}
@@ -301,9 +387,17 @@ export function PathHomeScreen({
                     <StarRow stars={Math.round(unit.stars / Math.max(1, unit.done))} inline />
                   </p>
                 )}
+                {isUnlockedAhead && (
+                  <p className="font-telemetry text-xs text-[var(--text-dim)]">
+                    {unit.done > 0 ? `Lesson ${unit.done + 1} of ${unit.total}` : `Unlocked · ${unit.total} lessons`}
+                    {unit.done > 0 && (
+                      <StarRow stars={Math.round(unit.stars / Math.max(1, unit.done))} inline />
+                    )}
+                  </p>
+                )}
                 {isComplete && (
                   <p className="font-telemetry text-xs text-[var(--success)]">
-                    Complete · {unit.stars}/{unit.maxStars} &#9733;
+                    Mastered · {unit.stars}/{unit.maxStars} &#9733;
                   </p>
                 )}
                 {isLocked && unlockText && (
@@ -324,6 +418,40 @@ export function PathHomeScreen({
         <SettingToggle label="Sound" on={sound} onToggle={toggleSound} />
       </div>
     </div>
+  );
+}
+
+// Thin circular progress ring drawn just outside a 58px node, showing how many
+// of the unit's lessons are done. Purely decorative (node carries the label).
+function RingProgress({ pct }: { pct: number }) {
+  const clamped = Math.max(0, Math.min(1, pct));
+  const size = 66;
+  const r = 31;
+  const c = 2 * Math.PI * r;
+  const offset = c * (1 - clamped);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      className="pointer-events-none absolute -left-1 -top-1"
+      aria-hidden="true"
+    >
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--border)" strokeWidth="3" />
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={r}
+        fill="none"
+        stroke="var(--accent)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeDasharray={c}
+        strokeDashoffset={offset}
+        transform={`rotate(-90 ${size / 2} ${size / 2})`}
+        style={{ transition: "stroke-dashoffset 500ms var(--ease-standard)" }}
+      />
+    </svg>
   );
 }
 

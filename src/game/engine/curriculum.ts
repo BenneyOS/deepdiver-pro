@@ -8,8 +8,10 @@ import type { Card, Family } from "../../data/schema";
  *   - Playing a lesson to the end COMPLETES it (guaranteed advancement — this is
  *     the fix for "I played 19 times and nothing moved"). Accuracy earns 1–3
  *     stars, which you can improve by replaying.
- *   - A unit is complete when all its lessons are complete; the next unit
- *     unlocks when the previous unit is complete.
+ *   - A unit is MASTERED when all its lessons are complete (the gold state).
+ *   - The next unit UNLOCKS early — as soon as you finish `UNLOCK_THRESHOLD`
+ *     lessons of the current unit (default 3), so progress is never blocked on
+ *     100%. Mastery is the optional completionist layer on top.
  *
  * Card-level Leitner progress (cleared / mastered) still runs underneath for
  * spaced repetition and the Pitch Portfolio, but the VISIBLE progression is
@@ -17,6 +19,19 @@ import type { Card, Family } from "../../data/schema";
  */
 
 export const LESSON_SIZE = 5;
+
+/**
+ * How many lessons of a unit you must finish before the NEXT unit unlocks.
+ * Kept low and flat (not a percentage) so the sense of progress is fast and
+ * predictable regardless of unit size. Units smaller than this unlock the next
+ * one only when fully done (see `unitUnlockThreshold`).
+ */
+export const UNLOCK_THRESHOLD = 3;
+
+/** Effective unlock threshold for a unit — never more than its lesson count. */
+export function unitUnlockThreshold(unitTotal: number): number {
+  return Math.min(UNLOCK_THRESHOLD, unitTotal);
+}
 
 /** Star rating for a single play of a lesson. Finishing always earns ≥ 1. */
 export type Stars = 0 | 1 | 2 | 3;
@@ -97,7 +112,10 @@ export interface UnitState {
   done: number; // completed lessons
   stars: number; // total stars earned in the unit
   maxStars: number; // total*3
-  complete: boolean;
+  complete: boolean; // MASTERED — every lesson done
+  unlockThreshold: number; // lessons needed to unlock the NEXT unit
+  clearedNext: boolean; // done >= unlockThreshold (next unit is unlocked)
+  lessonsUntilUnlock: number; // remaining lessons before the next unit unlocks
 }
 
 export function unitState(
@@ -114,6 +132,7 @@ export function unitState(
       stars += lessonStars(completed, l.id);
     }
   }
+  const threshold = unitUnlockThreshold(lessons.length);
   return {
     family,
     lessons,
@@ -122,10 +141,17 @@ export function unitState(
     stars,
     maxStars: lessons.length * 3,
     complete: lessons.length > 0 && done >= lessons.length,
+    unlockThreshold: threshold,
+    clearedNext: done >= threshold,
+    lessonsUntilUnlock: Math.max(0, threshold - done),
   };
 }
 
-/** A unit is unlocked when the previous unit in the path is complete. */
+/**
+ * A unit is unlocked when the previous unit has cleared its unlock threshold
+ * (default: 3 lessons done) — NOT when it's fully mastered. This keeps players
+ * moving forward without grinding an entire unit first.
+ */
 export function isUnitUnlocked(
   cards: Card[],
   families: Family[],
@@ -133,7 +159,33 @@ export function isUnitUnlocked(
   completed: CompletedLessons,
 ): boolean {
   if (index <= 0) return true;
-  return unitState(cards, families[index - 1], completed).complete;
+  return unitState(cards, families[index - 1], completed).clearedNext;
+}
+
+/** How many units are unlocked (playable) right now. */
+export function unlockedUnitCount(
+  cards: Card[],
+  families: Family[],
+  completed: CompletedLessons,
+): number {
+  let count = 0;
+  for (let i = 0; i < families.length; i++) {
+    if (isUnitUnlocked(cards, families, i, completed)) count += 1;
+  }
+  return count;
+}
+
+/** How many units are fully mastered (all lessons done). */
+export function masteredUnitCount(
+  cards: Card[],
+  families: Family[],
+  completed: CompletedLessons,
+): number {
+  let count = 0;
+  for (const f of families) {
+    if (unitState(cards, f, completed).complete) count += 1;
+  }
+  return count;
 }
 
 /** The first not-yet-complete lesson in a unit (what "Continue" plays). */
