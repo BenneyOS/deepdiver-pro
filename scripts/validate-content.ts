@@ -14,6 +14,7 @@ const REQUIRED = [
   "angle",
   "objection",
   "reframe",
+  "soWhat",
   "personaShift",
 ];
 const PERSONAS = ["CTO", "VPE", "CFO", "CRO"];

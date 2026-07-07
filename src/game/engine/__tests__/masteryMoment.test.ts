@@ -19,6 +19,7 @@ function makeCard(): Card {
     angle: "a",
     objection: "o",
     reframe: "The winning reframe.",
+    soWhat: "The transferable takeaway.",
     personaShift: { CTO: "t", VPE: "t", CFO: "t", CRO: "t" },
     version: 1,
     active: true,

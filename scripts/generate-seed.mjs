@@ -20,6 +20,10 @@ import {
   tiers,
   personas,
 } from "../content/meta.mjs";
+// Bespoke, per-card seller takeaway ("so what"), keyed by card id (e.g. "A7").
+// Kept in a dedicated file so the reveal's headline lesson is authored as its
+// own pedagogical layer rather than buried in each card body.
+import soWhat from "../content/sowhat.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
@@ -35,6 +39,7 @@ const REQUIRED = [
   "angle",
   "objection",
   "reframe",
+  "soWhat",
   "personaShift",
 ];
 const PERSONAS = ["CTO", "VPE", "CFO", "CRO"];
@@ -51,8 +56,9 @@ for (const family of FAMILIES) {
   }
   list.forEach((body, i) => {
     const id = `${family}${i + 1}`;
+    const merged = { id, family, ...body, soWhat: soWhat[id] };
     for (const f of REQUIRED) {
-      const v = body[f];
+      const v = merged[f];
       if (v === undefined || v === null || v === "") {
         problems.push(`${id} missing/empty field: ${f}`);
       }
@@ -65,7 +71,7 @@ for (const family of FAMILIES) {
     if (![1, 2, 3, 4].includes(body.tier)) {
       problems.push(`${id} bad tier: ${body.tier}`);
     }
-    cards.push({ id, family, ...body, version: 1, active: true });
+    cards.push({ ...merged, version: 1, active: true });
   });
 }
 

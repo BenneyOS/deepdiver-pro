@@ -25,6 +25,7 @@ function makeCard(id: string, overrides?: Partial<Card>): Card {
     angle: "test",
     objection: "test",
     reframe: "test",
+    soWhat: "test",
     personaShift: { CTO: "t", VPE: "t", CFO: "t", CRO: "t" },
     version: 1,
     active: true,

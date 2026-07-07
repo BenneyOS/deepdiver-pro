@@ -15,6 +15,7 @@ function makeCard(overrides: Partial<Card> = {}): Card {
     angle: "a",
     objection: "o",
     reframe: "rf",
+    soWhat: "sw",
     personaShift: {
       CTO: "De-risks the modernization roadmap.",
       VPE: "reduces risk on every change to the core",

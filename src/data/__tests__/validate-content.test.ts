@@ -14,6 +14,7 @@ const REQUIRED_FIELDS = [
   "angle",
   "objection",
   "reframe",
+  "soWhat",
   "personaShift",
 ] as const;
 const PERSONAS = ["CTO", "VPE", "CFO", "CRO"] as const;
@@ -66,6 +67,28 @@ describe("seed.json content validation", () => {
     const ids = seed.cards.map((c) => c.id);
     const unique = new Set(ids);
     expect(unique.size).toBe(ids.length);
+  });
+
+  it("every card has a bespoke, distinct so-what takeaway", () => {
+    const seen = new Map<string, string>();
+    for (const card of seed.cards) {
+      const soWhat = card.soWhat as string | undefined;
+      expect(soWhat, `Card ${card.id} missing soWhat`).toBeTruthy();
+      if (soWhat) {
+        // Genuinely distinct per card — no two reveals share a takeaway.
+        const prior = seen.get(soWhat);
+        expect(
+          prior,
+          `Cards ${prior} and ${card.id} share an identical soWhat`,
+        ).toBeUndefined();
+        seen.set(soWhat, card.id as string);
+        // Not a verbatim reprint of the buyer-facing reframe.
+        expect(
+          soWhat,
+          `Card ${card.id} soWhat duplicates its reframe`,
+        ).not.toBe(card.reframe);
+      }
+    }
   });
 
   it("every card has all four persona shifts", () => {

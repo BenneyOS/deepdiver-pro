@@ -48,6 +48,7 @@
         "CFO": "cuts the cost of maintaining an opaque system",
         "VPE": "reduces risk on every change to the core"
       },
+      "soWhat": "Fear guards every legacy core. Start read-only: understanding before surgery is what earns the first yes.",
       "version": 1,
       "active": true
     },
@@ -69,6 +70,7 @@
         "VPE": "reduces risk on every change to the core",
         "CRO": "reduces key-person and continuity risk"
       },
+      "soWhat": "When a rewrite feels impossibly huge, shrink the ask — one bounded, measurable slice beats an eight-figure leap of faith.",
       "version": 1,
       "active": true
     },
@@ -90,6 +92,7 @@
         "CTO": "makes the untouchable core modernizable",
         "CFO": "cuts the run-cost of an opaque legacy system"
       },
+      "soWhat": "Key-person risk is a countdown, not a maybe. Sell the urgency of capturing logic before the last expert walks out.",
       "version": 1,
       "active": true
     },
@@ -111,6 +114,7 @@
         "VPE": "reduces risk on every change to the core",
         "CFO": "cuts the run-cost of an opaque legacy system"
       },
+      "soWhat": "Don't pitch new governance. Show the agent riding existing controls: reviewable PRs, same gates, nothing new to trust.",
       "version": 1,
       "active": true
     },
@@ -132,6 +136,7 @@
         "VPE": "reduces risk on every change to the core",
         "CFO": "cuts the run-cost of an opaque legacy system"
       },
+      "soWhat": "When the workarounds become the problem, sell the map first — you can't safely change what nobody can see.",
       "version": 1,
       "active": true
     },
@@ -153,6 +158,7 @@
         "CFO": "cuts the run-cost of an opaque legacy system",
         "CRO": "reduces key-person and continuity risk"
       },
+      "soWhat": "Never argue capability. Let skeptics test it on a module they know cold and judge the output themselves.",
       "version": 1,
       "active": true
     },
@@ -174,6 +180,7 @@
         "CFO": "cuts the cost of a rigid policy engine",
         "CRO": "reduces key-person risk on a critical system"
       },
+      "soWhat": "'Too central to touch' is the opening, not the objection — read-only documentation changes nothing and earns entry.",
       "version": 1,
       "active": true
     },
@@ -195,6 +202,7 @@
         "CFO": "cuts the cost of operational fragility",
         "CRO": "removes single-operator dependency"
       },
+      "soWhat": "A black box everyone fears is a documentation sale. Trace the job chains before the 2am call finds no one.",
       "version": 1,
       "active": true
     },
@@ -216,6 +224,7 @@
         "CFO": "reduces the cost of a fragile core",
         "CRO": "mitigates continuity risk on operations"
       },
+      "soWhat": "What's tedious for humans is tractable for agents. Reframe 'too low-level' as exactly why they need the help.",
       "version": 1,
       "active": true
     },
@@ -237,6 +246,7 @@
         "CFO": "cuts the cost of high-risk manual change",
         "CRO": "reduces compliance and continuity risk"
       },
+      "soWhat": "In risk-averse shops, safety is the yes you're selling — lead with 'understand before you change,' not speed.",
       "version": 1,
       "active": true
     },
@@ -258,6 +268,7 @@
         "CFO": "reduces reliance on scarce RPG skills",
         "CRO": "mitigates operator-retirement risk"
       },
+      "soWhat": "Niche stacks aren't the blocker. The sale is capturing logic before a retiring operator base takes it with them.",
       "version": 1,
       "active": true
     },
@@ -279,6 +290,7 @@
         "CFO": "cuts the cost of a frozen core",
         "CRO": "reduces cascading-failure risk"
       },
+      "soWhat": "Fear of the unknown freezes the core. Sell the impact map that finally answers 'what breaks if I change this?'",
       "version": 1,
       "active": true
     },
@@ -300,6 +312,7 @@
         "CFO": "reduces the cost of unpredictable ripple effects",
         "CRO": "reduces data-integrity risk"
       },
+      "soWhat": "The problem often isn't the COBOL — it's the data nobody tracks. Sell lineage where humans already gave up.",
       "version": 1,
       "active": true
     },
@@ -321,6 +334,7 @@
         "CFO": "stops the sunk-cost bleed",
         "CRO": "de-risks a chronically stalled program"
       },
+      "soWhat": "If the target keeps moving, sell continuous re-sync, not a frozen snapshot — that's why past migrations never converged.",
       "version": 1,
       "active": true
     },
@@ -342,6 +356,7 @@
         "VPE": "reduces performance firefighting",
         "CRO": "reduces concentration on a single costly platform"
       },
+      "soWhat": "Separate the cost of doing business from waste. Some compute growth is inefficiency an agent can find and cut.",
       "version": 1,
       "active": true
     },
@@ -363,6 +378,7 @@
         "CFO": "protects the UI investment by fixing the root",
         "CRO": "reduces risk concentrated in the core"
       },
+      "soWhat": "A new UI over an old core still inherits its limits. Sell modernization that reaches the real constraint.",
       "version": 1,
       "active": true
     },
@@ -384,6 +400,7 @@
         "CFO": "reduces cost of error-prone changes",
         "CRO": "reduces settlement-integrity risk"
       },
+      "soWhat": "When no one can draw the flow end to end, that's the sale — agents stitch scattered logic into one picture.",
       "version": 1,
       "active": true
     },
@@ -405,6 +422,7 @@
         "VPE": "starts value flowing early",
         "CRO": "converts latent risk into a fundable plan"
       },
+      "soWhat": "Don't sell the program, sell the proof. One cheap slice with real numbers builds the case leadership will fund.",
       "version": 1,
       "active": true
     },
@@ -426,6 +444,7 @@
         "VPE": "relieves an overstretched maintenance effort",
         "CRO": "mitigates key-person and continuity risk"
       },
+      "soWhat": "Shift the cost story: one reviewer over agent output, not a team of premium contractors doing the grind.",
       "version": 1,
       "active": true
     },
@@ -447,6 +466,7 @@
         "CFO": "cuts repeated bespoke-integration cost",
         "CRO": "reduces risk from ad-hoc access paths"
       },
+      "soWhat": "Every bespoke integration is a recurring tax. Sell the reusable layer, not another one-off you'll pay for again.",
       "version": 1,
       "active": true
     },
@@ -468,6 +488,7 @@
         "VPE": "ends the manual re-documentation cycle",
         "CFO": "cuts recurring audit-preparation cost"
       },
+      "soWhat": "Recurring audit pain is durable value — agent-drafted, human-signed docs turn re-explaining into standing evidence.",
       "version": 1,
       "active": true
     },
@@ -489,6 +510,7 @@
         "CFO": "realizes merger synergies faster",
         "CRO": "reduces consolidation risk"
       },
+      "soWhat": "Under a merger clock, speed of understanding is the sale — document both cores in parallel so the call isn't a guess.",
       "version": 1,
       "active": true
     },
@@ -510,6 +532,7 @@
         "VPE": "delivers value before overrun risk builds",
         "CRO": "de-risks the program structurally"
       },
+      "soWhat": "'Always overruns' really means 'always big-bang.' Sell the inverted shape: one measured slice before any commitment.",
       "version": 1,
       "active": true
     },
@@ -531,6 +554,7 @@
         "VPE": "keeps security gates intact",
         "CFO": "avoids the cost of a bespoke control regime"
       },
+      "soWhat": "Don't ask for new access. Show the agent as a scoped, audited identity inside controls that already exist.",
       "version": 1,
       "active": true
     },
@@ -552,6 +576,7 @@
         "CFO": "gets more value from expensive experts",
         "CRO": "reduces flight risk of key people"
       },
+      "soWhat": "Threatened experts sink deals quietly. Sell elevation — they direct and review while the agent takes the grind.",
       "version": 1,
       "active": true
     },
@@ -573,6 +598,7 @@
         "CFO": "avoids repeating a wasted tool spend",
         "CRO": "reduces reliance on undocumented knowledge"
       },
+      "soWhat": "Past burn is skepticism, not a no. Distinguish reasoning from static analysis, then let them test it on known code.",
       "version": 1,
       "active": true
     },
@@ -594,6 +620,7 @@
         "CFO": "reduces cost of unsafe workarounds",
         "CRO": "reduces calculation-integrity risk"
       },
+      "soWhat": "'Too sensitive to change' means sell understanding first — document the rules read-only before anyone contemplates an edit.",
       "version": 1,
       "active": true
     },
@@ -615,6 +642,7 @@
         "CFO": "reduces run-cost of an opaque system",
         "CRO": "mitigates knowledge-loss risk"
       },
+      "soWhat": "Unfashionable models still run the business. Sell capturing the logic now, before the last person who gets it leaves.",
       "version": 1,
       "active": true
     },
@@ -636,6 +664,7 @@
         "CFO": "cuts the cost of glacial change",
         "CRO": "keeps safety while removing waste"
       },
+      "soWhat": "Heavy ceremony is distrust of the code in disguise. Restore understanding and tests, and the process can safely shrink.",
       "version": 1,
       "active": true
     },
@@ -657,6 +686,7 @@
         "CFO": "reduces cost of opaque failures",
         "CRO": "reduces risk in a tangled core"
       },
+      "soWhat": "Cross-language black boxes are an agent's strength, not its limit — sell tracing the boundaries humans can't follow.",
       "version": 1,
       "active": true
     },
@@ -678,6 +708,7 @@
         "CFO": "phases the spend against milestones",
         "CRO": "de-risks a high-stakes retirement"
       },
+      "soWhat": "A date without a plan is hope. Sell the year-one first slice that makes the five-year target actually credible.",
       "version": 1,
       "active": true
     },
@@ -699,6 +730,7 @@
         "CFO": "protects rules that underpin revenue",
         "CRO": "reduces risk of losing critical rules"
       },
+      "soWhat": "When specs and code disagree, the code wins. Sell extracting the real rules before that understanding is lost.",
       "version": 1,
       "active": true
     },
@@ -720,6 +752,7 @@
         "VPE": "avoids emergency firefighting later",
         "CRO": "closes the window before it becomes a crisis"
       },
+      "soWhat": "'It works' masks a countdown. Sell acting now, cheaply, versus acting later in a crisis at a premium.",
       "version": 1,
       "active": true
     },
@@ -741,6 +774,7 @@
         "CFO": "reduces risk of an unsupported core",
         "CRO": "reduces continuity risk without a vendor"
       },
+      "soWhat": "No vendor safety net means all the risk is theirs. Sell reconstructing the customizations so they can own it.",
       "version": 1,
       "active": true
     },
@@ -762,6 +796,7 @@
         "CFO": "prevents compounding risk cost",
         "CRO": "finally arrests a deferred risk"
       },
+      "soWhat": "If it always loses to revenue work, remove the trade-off — agents add capacity so modernization stops competing.",
       "version": 1,
       "active": true
     },
@@ -783,6 +818,7 @@
         "CFO": "protects transaction revenue",
         "CRO": "reduces concentration risk"
       },
+      "soWhat": "The most critical system is often the most fragile. Sell documenting the switch logic before a failure forces it.",
       "version": 1,
       "active": true
     },
@@ -804,6 +840,7 @@
         "CFO": "cuts repeated contractor spend",
         "CRO": "reduces key-person fragmentation"
       },
+      "soWhat": "Fragmented contractor knowledge is a liability you rent. Sell consolidating it into one shared base you own.",
       "version": 1,
       "active": true
     },
@@ -825,6 +862,7 @@
         "VPE": "unblocks a stalled offload",
         "CRO": "reduces reliance on a single platform"
       },
+      "soWhat": "You can't offload what you can't see. Sell documenting the data so reporting moves to cheaper platforms safely.",
       "version": 1,
       "active": true
     },
@@ -846,6 +884,7 @@
         "CFO": "unblocks a stalled approval",
         "VPE": "keeps the human-approval model intact"
       },
+      "soWhat": "Win the board by changing the words: not 'AI touches the core' but 'a scoped contributor passing every gate.'",
       "version": 1,
       "active": true
     },
@@ -867,6 +906,7 @@
         "VPE": "frees people from manual reconciliation",
         "CRO": "improves data integrity and trust"
       },
+      "soWhat": "Reconciliation burden is a symptom of opaque data. Sell documenting the source so the burden shrinks or vanishes.",
       "version": 1,
       "active": true
     },
@@ -888,6 +928,7 @@
         "VPE": "builds team momentum fast",
         "CRO": "reduces risk of a stalled program"
       },
+      "soWhat": "Funding follows momentum. Sell a quick, documented, working first slice to keep the initiative alive past the first review.",
       "version": 1,
       "active": true
     },
@@ -909,6 +950,7 @@
         "CFO": "enables faster business decisions",
         "CRO": "reduces risk of stale-data decisions"
       },
+      "soWhat": "Batch limits are business limits. Sell documenting the batch logic as the first concrete step toward real-time.",
       "version": 1,
       "active": true
     },
@@ -930,6 +972,7 @@
         "VPE": "makes in-house supervision viable",
         "CRO": "reduces single-vendor dependence"
       },
+      "soWhat": "Outsourcing hollowed out your leverage. Sell rebuilding internal understanding through documentation you control.",
       "version": 1,
       "active": true
     },
@@ -951,6 +994,7 @@
         "CFO": "caps exposure to one slice",
         "VPE": "keeps the core untouched during proof"
       },
+      "soWhat": "Flip the risk frame: a read-only pilot has near-zero downside; the real risk is the unmanaged status quo.",
       "version": 1,
       "active": true
     },
@@ -972,6 +1016,7 @@
         "CFO": "protects the documentation investment",
         "CRO": "durable, current audit evidence"
       },
+      "soWhat": "Docs rot the moment they're written. Sell regeneration from current code, not another document that decays.",
       "version": 1,
       "active": true
     },
@@ -993,6 +1038,7 @@
         "CFO": "reduces cost of prolonged incidents",
         "CRO": "reduces operational-incident risk"
       },
+      "soWhat": "Slow diagnosis is untraced control flow. Sell the trace that turns hours of debugging into minutes.",
       "version": 1,
       "active": true
     },
@@ -1014,6 +1060,7 @@
         "CFO": "avoids a production-halting failure",
         "CRO": "removes a critical continuity risk"
       },
+      "soWhat": "Dying hardware is a hard deadline nobody sets on purpose. Sell documenting the system so it can move off in time.",
       "version": 1,
       "active": true
     },
@@ -1035,6 +1082,7 @@
         "CFO": "protects new-product revenue",
         "CRO": "controls how the core is accessed"
       },
+      "soWhat": "New products stall on batch access. Sell documenting the paths that let you build a real-time layer over the core.",
       "version": 1,
       "active": true
     },
@@ -1056,6 +1104,7 @@
         "CFO": "no commitment until proven",
         "VPE": "keeps the core safe during proof"
       },
+      "soWhat": "A burned CIO wants evidence, not promises. Sell a bounded pilot with one clear success metric they pick.",
       "version": 1,
       "active": true
     },
@@ -1077,6 +1126,7 @@
         "CTO": "unblocks hiring and modern tooling",
         "CFO": "reduces fragmented maintenance cost"
       },
+      "soWhat": "Upgrades are mechanical, verifiable, and parallel — sell a fleet doing every repo at once while engineers just approve.",
       "version": 1,
       "active": true
     },
@@ -1098,6 +1148,7 @@
         "VPE": "clears an upgrade backlog nobody owns",
         "CRO": "closes vulnerabilities in outdated dependencies"
       },
+      "soWhat": "You can't standardize what you haven't counted. Sell the estate-wide inventory before the fix.",
       "version": 1,
       "active": true
     },
@@ -1119,6 +1170,7 @@
         "CTO": "unblocks modern tooling and hiring",
         "CFO": "reduces fragmented maintenance cost"
       },
+      "soWhat": "A stalled runtime migration moves the moment translation is automated and tested — sell removing the manual bottleneck.",
       "version": 1,
       "active": true
     },
@@ -1140,6 +1192,7 @@
         "CFO": "reduces fragmented maintenance cost",
         "CRO": "closes vulnerabilities in outdated dependencies"
       },
+      "soWhat": "The difference between dumping work and reducing it is verification — sell green, reviewable PRs, not a pile of diffs.",
       "version": 1,
       "active": true
     },
@@ -1161,6 +1214,7 @@
         "CTO": "unblocks modern tooling and hiring",
         "CFO": "reduces fragmented maintenance cost"
       },
+      "soWhat": "EOL isn't a someday problem. Sell the version-by-version climb to a supported release, verified at each step.",
       "version": 1,
       "active": true
     },
@@ -1182,6 +1236,7 @@
         "CFO": "reduces fragmented maintenance cost",
         "CRO": "closes vulnerabilities in outdated dependencies"
       },
+      "soWhat": "Dependency conflicts are where upgrades die. Sell diagnosing the root conflict, not just bumping numbers.",
       "version": 1,
       "active": true
     },
@@ -1203,6 +1258,7 @@
         "CFO": "reduces cost of maintaining a dead framework",
         "CRO": "closes an unpatchable security gap"
       },
+      "soWhat": "A dead framework in production is silent risk. Sell doing the heavy mechanical migration while the team reviews.",
       "version": 1,
       "active": true
     },
@@ -1224,6 +1280,7 @@
         "CFO": "reduces cost of an isolated stack",
         "CRO": "restores a supported runtime"
       },
+      "soWhat": "Lock-in feels permanent until the migration is cheap. Sell moving off .NET Framework across the whole estate at once.",
       "version": 1,
       "active": true
     },
@@ -1245,6 +1302,7 @@
         "CFO": "reduces cost of a divergent codebase",
         "CRO": "reduces reliance on outdated patterns"
       },
+      "soWhat": "Legacy patterns spread by copy-paste. Sell mechanically converting them everywhere, not one component at a time by hand.",
       "version": 1,
       "active": true
     },
@@ -1266,6 +1324,7 @@
         "CFO": "reduces long-term maintenance risk",
         "CRO": "restores security support"
       },
+      "soWhat": "A major-version cliff is climbed component by component. Sell systematic, verified steps over a scary all-at-once jump.",
       "version": 1,
       "active": true
     },
@@ -1287,6 +1346,7 @@
         "CFO": "reduces maintenance drag",
         "CRO": "closes plugin vulnerabilities"
       },
+      "soWhat": "jQuery dependence is a slow leak. Sell replacing the patterns incrementally so nothing breaks on the way out.",
       "version": 1,
       "active": true
     },
@@ -1308,6 +1368,7 @@
         "CFO": "prevents compounding upgrade debt",
         "CRO": "closes the widening vulnerability gap"
       },
+      "soWhat": "Upgrades always lose to features because they share the same team. Sell capacity that doesn't compete with the roadmap.",
       "version": 1,
       "active": true
     },
@@ -1329,6 +1390,7 @@
         "CFO": "reduces fragmented maintenance cost",
         "CRO": "de-duplicates vulnerability exposure"
       },
+      "soWhat": "Version sprawl is an alignment problem, not a rewrite. Sell aligning the whole monorepo in parallel.",
       "version": 1,
       "active": true
     },
@@ -1350,6 +1412,7 @@
         "CFO": "reduces cost of maintaining a fork",
         "CRO": "restores a supported dependency"
       },
+      "soWhat": "An internal fork is a tax you forgot you're paying. Sell reconciling with upstream so you can finally drop it.",
       "version": 1,
       "active": true
     },
@@ -1371,6 +1434,7 @@
         "CFO": "reduces risk of an unsupported stack",
         "CRO": "restores security patching"
       },
+      "soWhat": "Extreme lag is many jumps, each with its own breaking changes. Sell stepping through them sequentially, verified.",
       "version": 1,
       "active": true
     },
@@ -1392,6 +1456,7 @@
         "CFO": "reduces cost of upgrade surprises",
         "CRO": "reduces regression risk"
       },
+      "soWhat": "Never upgrade without a net. Sell adding the missing coverage first, then upgrading against real tests.",
       "version": 1,
       "active": true
     },
@@ -1413,6 +1478,7 @@
         "CFO": "reduces the cost of falling behind",
         "CRO": "keeps vulnerabilities continuously closed"
       },
+      "soWhat": "Painful batches happen because currency isn't continuous. Sell keeping dependencies current in the background instead.",
       "version": 1,
       "active": true
     },
@@ -1434,6 +1500,7 @@
         "CFO": "reduces cost of prolonged vacancies",
         "CRO": "restores full runtime support"
       },
+      "soWhat": "A stale stack is a recruiting handicap you can measure in offers declined. Sell the move to a modern LTS.",
       "version": 1,
       "active": true
     },
@@ -1455,6 +1522,7 @@
         "CFO": "recovers lost engineering time",
         "CRO": "reduces risk in opaque tooling"
       },
+      "soWhat": "Opaque build tooling blocks everything downstream. Sell documenting the config, then migrating it incrementally.",
       "version": 1,
       "active": true
     },
@@ -1476,6 +1544,7 @@
         "CFO": "protects app-store revenue",
         "CRO": "avoids a compliance delisting"
       },
+      "soWhat": "A store deadline is leverage, not a threat. Sell driving the SDK migration to hit it with deprecated APIs handled.",
       "version": 1,
       "active": true
     },
@@ -1497,6 +1566,7 @@
         "CFO": "reduces cost of endless patching",
         "CRO": "restores a supported data layer"
       },
+      "soWhat": "Broad, repetitive, cross-cutting changes are exactly what agents scale — sell the pervasive-dependency upgrade at once.",
       "version": 1,
       "active": true
     },
@@ -1518,6 +1588,7 @@
         "CFO": "reduces fragmented maintenance cost",
         "CRO": "closes vulnerabilities without manual toil"
       },
+      "soWhat": "Backlash comes from naive automation. Sell the agent that builds, fixes regressions, and surfaces only green PRs.",
       "version": 1,
       "active": true
     },
@@ -1539,6 +1610,7 @@
         "VPE": "avoids emergency upgrade scrambles",
         "CRO": "continuously reduces exposure"
       },
+      "soWhat": "Frame upgrades as cheap continuous insurance the agent makes near-free — versus expensive crisis remediation later.",
       "version": 1,
       "active": true
     },
@@ -1560,6 +1632,7 @@
         "CFO": "frees expensive people from mechanical work",
         "CRO": "keeps expert oversight on every change"
       },
+      "soWhat": "Delegation resistance melts when seniors keep the judgment. Sell them directing while the agent does the bulk.",
       "version": 1,
       "active": true
     },
@@ -1581,6 +1654,7 @@
         "CFO": "reduces cost of late-surfacing bugs",
         "CRO": "reduces production-incident risk"
       },
+      "soWhat": "Manual upgrades miss the subtle regressions. Sell coverage around the change that catches what eyes don't.",
       "version": 1,
       "active": true
     },
@@ -1602,6 +1676,7 @@
         "CFO": "reduces maintenance risk",
         "CRO": "closes unpatched gem vulnerabilities"
       },
+      "soWhat": "Abandoned dependencies don't get safer with time. Sell upgrading the framework and swapping in maintained equivalents.",
       "version": 1,
       "active": true
     },
@@ -1623,6 +1698,7 @@
         "CFO": "reduces cost of upgrade surprises",
         "CRO": "restores a supported framework"
       },
+      "soWhat": "Behavior-dependent lag hides landmines. Sell finding every dependence on changed behavior and adapting it under test.",
       "version": 1,
       "active": true
     },
@@ -1644,6 +1720,7 @@
         "CFO": "keeps migration cost bounded",
         "CRO": "reduces strategic lock-in risk"
       },
+      "soWhat": "Betting on a fading ecosystem compounds. Sell making the eventual migration affordable and incremental now, not later.",
       "version": 1,
       "active": true
     },
@@ -1665,6 +1742,7 @@
         "CFO": "eliminates duplicated tooling cost",
         "CRO": "reduces divergent-version risk"
       },
+      "soWhat": "Version divergence breaks at the seams. Sell realigning both sides toward compatible, current tooling in parallel.",
       "version": 1,
       "active": true
     },
@@ -1686,6 +1764,7 @@
         "CFO": "protects feature-driven revenue",
         "CRO": "brings the platform current"
       },
+      "soWhat": "When a version blocks a feature, the upgrade is feature work. Sell it as unblocking revenue, not housekeeping.",
       "version": 1,
       "active": true
     },
@@ -1707,6 +1786,7 @@
         "CFO": "protects brand perception",
         "CRO": "reduces reliance on stale libraries"
       },
+      "soWhat": "A stale UI framework ages the whole product. Sell migrating it and modernizing the component patterns incrementally.",
       "version": 1,
       "active": true
     },
@@ -1728,6 +1808,7 @@
         "CFO": "avoids emergency-migration cost",
         "CRO": "keeps runtimes supported"
       },
+      "soWhat": "A provider cutoff is a wall with a date on it. Sell upgrading the runtime and fixing incompatibilities before it hits.",
       "version": 1,
       "active": true
     },
@@ -1749,6 +1830,7 @@
         "VPE": "ends ongoing maintenance drag",
         "CRO": "reduces risk of an aging framework"
       },
+      "soWhat": "Sunk cost keeps teams stuck. Sell making the move cheap enough that ongoing lag cost clearly outweighs it.",
       "version": 1,
       "active": true
     },
@@ -1770,6 +1852,7 @@
         "CFO": "reduces duplicated per-product effort",
         "CRO": "closes shared-library vulnerabilities"
       },
+      "soWhat": "A lagging foundation library holds every consumer hostage. Sell upgrading it and propagating to all of them.",
       "version": 1,
       "active": true
     },
@@ -1791,6 +1874,7 @@
         "CFO": "reduces cost of a frozen API",
         "CRO": "restores a supported API library"
       },
+      "soWhat": "API coupling makes upgrades scary. Sell decoupling and upgrading while preserving behavior under test.",
       "version": 1,
       "active": true
     },
@@ -1812,6 +1896,7 @@
         "CFO": "reduces maintenance and breach cost",
         "CRO": "shrinks an internet-facing attack surface"
       },
+      "soWhat": "An EOL language drags stale plugins with it. Sell upgrading the runtime and modernizing or replacing the plugins.",
       "version": 1,
       "active": true
     },
@@ -1833,6 +1918,7 @@
         "CFO": "reduces cost of poor test tooling",
         "CRO": "improves regression protection"
       },
+      "soWhat": "Deprecated test tooling quietly rots your safety net. Sell migrating the suite and converting the tests as you go.",
       "version": 1,
       "active": true
     },
@@ -1854,6 +1940,7 @@
         "CFO": "reduces fragmented support cost",
         "CRO": "closes inconsistent vulnerability states"
       },
+      "soWhat": "Fragmented internal libraries multiply maintenance. Sell rolling the current version across services and fixing call sites.",
       "version": 1,
       "active": true
     },
@@ -1875,6 +1962,7 @@
         "CFO": "protects prior design investment",
         "CRO": "keeps human control over key decisions"
       },
+      "soWhat": "Architects fear losing intent. Sell the agent upgrading within their constraints and flagging conflicts for review.",
       "version": 1,
       "active": true
     },
@@ -1896,6 +1984,7 @@
         "CFO": "stops debt compounding behind the freeze",
         "CRO": "closes the accumulated vulnerabilities"
       },
+      "soWhat": "A dependency freeze only grows the wall. Sell incremental, tested upgrades so it never has to be scaled all at once.",
       "version": 1,
       "active": true
     },
@@ -1917,6 +2006,7 @@
         "CFO": "reduces future rework cost",
         "CRO": "eliminates an abandoned-library risk"
       },
+      "soWhat": "An officially deprecated dependency has a named successor. Sell executing the recommended migration everywhere.",
       "version": 1,
       "active": true
     },
@@ -1938,6 +2028,7 @@
         "CFO": "reduces cost of stalled platform work",
         "CRO": "keeps the platform supported"
       },
+      "soWhat": "Removed platform APIs break at launch, not before. Sell finding every use and migrating manifests to current equivalents.",
       "version": 1,
       "active": true
     },
@@ -1959,6 +2050,7 @@
         "CFO": "reduces compounding lag cost",
         "CRO": "maintains continuous security posture"
       },
+      "soWhat": "Estate-wide lag is a scale problem manual effort can't win. Sell continuous currency across the whole estate.",
       "version": 1,
       "active": true
     },
@@ -1980,6 +2072,7 @@
         "CFO": "reduces cost of repeated failed attempts",
         "CRO": "reduces production-incident risk"
       },
+      "soWhat": "Rollback scars make teams upgrade-shy. Sell stronger coverage so problems surface in CI, not in production.",
       "version": 1,
       "active": true
     },
@@ -2001,6 +2094,7 @@
         "CFO": "reduces cost of a stalled pipeline",
         "CRO": "restores a buildable, supported stack"
       },
+      "soWhat": "A broken toolchain blocks the upgrades it should enable. Sell modernizing CI first, then the dependencies it builds.",
       "version": 1,
       "active": true
     },
@@ -2022,6 +2116,7 @@
         "CFO": "quantifies the maintenance risk",
         "CRO": "provides evidence of currency posture"
       },
+      "soWhat": "Leadership can't fund invisible lag. Sell the version-currency metric that makes the risk legible and fundable.",
       "version": 1,
       "active": true
     },
@@ -2043,6 +2138,7 @@
         "CTO": "unsticks a strategic program",
         "CRO": "de-risks a stalled, high-stakes migration"
       },
+      "soWhat": "Split the work: agents do the repetitive translation, humans own architecture — the Itaú pattern, 59 services to 9.",
       "version": 1,
       "active": true
     },
@@ -2064,6 +2160,7 @@
         "VPE": "returns senior engineers to high-value work",
         "CRO": "de-risks a stalled, high-stakes migration"
       },
+      "soWhat": "Don't boil the ocean. Sell one proven pilot, then a fleet running the estate in parallel — not a big-bang rewrite.",
       "version": 1,
       "active": true
     },
@@ -2085,6 +2182,7 @@
         "VPE": "returns senior engineers to high-value work",
         "CRO": "de-risks a stalled, high-stakes migration"
       },
+      "soWhat": "A forced platform exit is a deadline you can use. Sell accelerating the migration and de-risking the date.",
       "version": 1,
       "active": true
     },
@@ -2106,6 +2204,7 @@
         "CTO": "delivers the target architecture on time",
         "VPE": "returns senior engineers to high-value work"
       },
+      "soWhat": "Close the trust deficit with proof — a bounded slice, an agreed metric, verification built into every step.",
       "version": 1,
       "active": true
     },
@@ -2127,6 +2226,7 @@
         "CFO": "stops migration overrun and cost bleed",
         "CRO": "de-risks a stalled, high-stakes migration"
       },
+      "soWhat": "A monolith yields to mapping, not machetes. Sell dependency-mapped, incremental extraction against a verifiable target.",
       "version": 1,
       "active": true
     },
@@ -2148,6 +2248,7 @@
         "VPE": "returns senior engineers to high-value work",
         "CRO": "de-risks a stalled, high-stakes migration"
       },
+      "soWhat": "Re-platforming is repetitive adaptation at scale. Sell doing it in parallel while the team steers the design.",
       "version": 1,
       "active": true
     },
@@ -2169,6 +2270,7 @@
         "CFO": "shortens an expensive migration",
         "CRO": "de-risks a long-running program"
       },
+      "soWhat": "Slow translation is the whole delay. Sell parallel agents doing it while engineers own the architecture.",
       "version": 1,
       "active": true
     },
@@ -2190,6 +2292,7 @@
         "CFO": "cuts Oracle licensing cost sooner",
         "CRO": "de-risks a critical data migration"
       },
+      "soWhat": "Stored-procedure logic is where migrations hide. Sell translating it and verifying behavior against the source.",
       "version": 1,
       "active": true
     },
@@ -2211,6 +2314,7 @@
         "CFO": "converts a stalled mandate to progress",
         "CRO": "de-risks a high-visibility program"
       },
+      "soWhat": "A cloud mandate without capacity just stalls. Sell the execution that turns it into measurable progress.",
       "version": 1,
       "active": true
     },
@@ -2232,6 +2336,7 @@
         "CFO": "reduces opportunity cost",
         "CRO": "de-risks a multi-year effort"
       },
+      "soWhat": "Save your best people for the new design. Sell agents taking the repetitive porting off their plate.",
       "version": 1,
       "active": true
     },
@@ -2253,6 +2358,7 @@
         "CFO": "reduces migration effort",
         "CRO": "de-risks the cutover"
       },
+      "soWhat": "Toolchain migrations die in the edge cases. Sell handling them and rebuilding the automation on the new platform.",
       "version": 1,
       "active": true
     },
@@ -2274,6 +2380,7 @@
         "CFO": "reduces cost of post-migration fixes",
         "CRO": "reduces migration-defect risk"
       },
+      "soWhat": "Never migrate blind. Sell documenting the source behavior first, then migrating against that verified spec.",
       "version": 1,
       "active": true
     },
@@ -2295,6 +2402,7 @@
         "CFO": "avoids costly data-corruption incidents",
         "CRO": "protects data integrity through migration"
       },
+      "soWhat": "Data-model change is the risky half of migration. Sell building and verifying the transform mappings alongside the code.",
       "version": 1,
       "active": true
     },
@@ -2316,6 +2424,7 @@
         "CFO": "salvages a large sunk investment",
         "CRO": "reduces key-person migration risk"
       },
+      "soWhat": "When the original team left mid-migration, sell reconstructing its state and decisions from the code, then finishing.",
       "version": 1,
       "active": true
     },
@@ -2337,6 +2446,7 @@
         "CFO": "reduces cost of stalled throughput",
         "CRO": "raises confidence in converted code"
       },
+      "soWhat": "Verification is the real bottleneck. Sell auto-generated tests that clear converted modules without a human queue.",
       "version": 1,
       "active": true
     },
@@ -2358,6 +2468,7 @@
         "CFO": "reduces attrition and rehire cost",
         "CRO": "reduces key-person flight risk"
       },
+      "soWhat": "Migration burns out your seniors. Sell agents taking the repetitive porting so they return to work that keeps them.",
       "version": 1,
       "active": true
     },
@@ -2379,6 +2490,7 @@
         "CFO": "collapses 60 projects into one program",
         "CRO": "de-risks a large parallel migration"
       },
+      "soWhat": "Per-service migration is a pattern applied N times. Sell running that consistent pattern across all of them at once.",
       "version": 1,
       "active": true
     },
@@ -2400,6 +2512,7 @@
         "VPE": "supplies the capacity to hit it",
         "CRO": "reduces vendor lock-in risk"
       },
+      "soWhat": "A renewal price hike is a deadline. Sell accelerating the vendor exit to beat it before the increase lands.",
       "version": 1,
       "active": true
     },
@@ -2421,6 +2534,7 @@
         "CFO": "makes the spend forecastable",
         "CRO": "reduces planning risk"
       },
+      "soWhat": "'We can't estimate it' is solvable. Sell analyzing the source to produce a grounded scope, not a guess.",
       "version": 1,
       "active": true
     },
@@ -2442,6 +2556,7 @@
         "CFO": "reduces cost of architectural churn",
         "CRO": "de-risks the split"
       },
+      "soWhat": "You can't decompose what you can't see. Sell mapping the monolith's real dependencies to reveal natural boundaries.",
       "version": 1,
       "active": true
     },
@@ -2463,6 +2578,7 @@
         "CFO": "avoids costly post-migration defects",
         "VPE": "reduces rework from subtle bugs"
       },
+      "soWhat": "A quality-deficit trust gap closes with verification. Sell checking migrated behavior against the source at each step.",
       "version": 1,
       "active": true
     },
@@ -2484,6 +2600,7 @@
         "CFO": "reduces cost of all-manual migration",
         "CRO": "keeps human oversight where it matters"
       },
+      "soWhat": "Let humans keep the novel decisions. Sell the agent taking the repetitive majority under review — that's the split.",
       "version": 1,
       "active": true
     },
@@ -2505,6 +2622,7 @@
         "VPE": "avoids emergency migration later",
         "CRO": "reduces the risk of deferral"
       },
+      "soWhat": "Freezing until crisis is the riskier path. Sell incremental, verified migration as the lower-risk alternative.",
       "version": 1,
       "active": true
     },
@@ -2526,6 +2644,7 @@
         "VPE": "reduces the burden of running two systems",
         "CRO": "reduces risk of prolonged dual operation"
       },
+      "soWhat": "A long parallel run bleeds money. Sell shortening the migration so that expensive window closes sooner.",
       "version": 1,
       "active": true
     },
@@ -2547,6 +2666,7 @@
         "CFO": "reduces cost of undetected regressions",
         "CRO": "raises confidence in the migration"
       },
+      "soWhat": "Without equivalence checks, regressions slip through. Sell automated old-vs-new output comparison at every step.",
       "version": 1,
       "active": true
     },
@@ -2568,6 +2688,7 @@
         "CFO": "cuts reliance on scarce experts",
         "CRO": "mitigates knowledge-loss risk"
       },
+      "soWhat": "Obscure source languages aren't a dead end. Sell agents reading and translating them where human expertise is gone.",
       "version": 1,
       "active": true
     },
@@ -2589,6 +2710,7 @@
         "CFO": "makes the program budgetable",
         "CRO": "reduces open-ended program risk"
       },
+      "soWhat": "Scope creep comes from discovering the finish line late. Sell inventorying the full scope up front so it's defined.",
       "version": 1,
       "active": true
     },
@@ -2610,6 +2732,7 @@
         "VPE": "reduces the systems to maintain",
         "CRO": "reduces fragmentation risk"
       },
+      "soWhat": "Three acquired systems is a consolidation, not three migrations. Sell mapping the overlaps and driving onto one target.",
       "version": 1,
       "active": true
     },
@@ -2631,6 +2754,7 @@
         "VPE": "avoids over-committing on unknowns",
         "CRO": "reduces commercial risk"
       },
+      "soWhat": "Fixed-price buyers fear the unknown. Sell one bounded slice at a fixed price to calibrate the rest with data.",
       "version": 1,
       "active": true
     },
@@ -2652,6 +2776,7 @@
         "CFO": "moves analytics to cheaper platforms",
         "CRO": "preserves data-pipeline integrity"
       },
+      "soWhat": "ETL logic is dense and undocumented. Sell documenting and translating it to the new platform at scale.",
       "version": 1,
       "active": true
     },
@@ -2673,6 +2798,7 @@
         "CFO": "extends the life of valuable models",
         "CRO": "protects result integrity"
       },
+      "soWhat": "Scientific code demands precision. Sell translating the numerical logic and verifying results match to the digit.",
       "version": 1,
       "active": true
     },
@@ -2694,6 +2820,7 @@
         "CFO": "avoids a costly failed cutover",
         "CRO": "protects data consistency through transition"
       },
+      "soWhat": "Cutover risk lives in sync and reconciliation. Sell building and verifying that logic to de-risk the switch.",
       "version": 1,
       "active": true
     },
@@ -2715,6 +2842,7 @@
         "CFO": "protects accumulated investment",
         "CRO": "reduces program-continuity risk"
       },
+      "soWhat": "Long programs die with the sponsor. Sell early, durable, incremental results that survive leadership churn.",
       "version": 1,
       "active": true
     },
@@ -2736,6 +2864,7 @@
         "CFO": "gets understanding and speed",
         "CRO": "documents the system as a byproduct"
       },
+      "soWhat": "Understanding doesn't require typing it all by hand. Sell gaining it through reviewing generated changes, faster.",
       "version": 1,
       "active": true
     },
@@ -2757,6 +2886,7 @@
         "CFO": "reduces rework cost",
         "CRO": "reduces risk of an unstable target"
       },
+      "soWhat": "An unstable target churns your work. Sell agents adapting migrated code quickly as the target settles.",
       "version": 1,
       "active": true
     },
@@ -2778,6 +2908,7 @@
         "CFO": "avoids downtime revenue loss",
         "CRO": "protects continuous operations"
       },
+      "soWhat": "Zero-downtime is a design, not a wish. Sell helping design and verify the incremental, no-downtime path.",
       "version": 1,
       "active": true
     },
@@ -2799,6 +2930,7 @@
         "CFO": "accelerates the cloud move",
         "CRO": "de-risks the platform shift"
       },
+      "soWhat": "Containerization fails on hidden assumptions. Sell finding and fixing them across the whole app estate.",
       "version": 1,
       "active": true
     },
@@ -2820,6 +2952,7 @@
         "CTO": "de-risks a critical service",
         "CFO": "reduces cost of slow ramp and rework"
       },
+      "soWhat": "Tribal knowledge is a single point of failure. Sell the docs and tests that make an opaque system legible.",
       "version": 1,
       "active": true
     },
@@ -2841,6 +2974,7 @@
         "CFO": "reduces cost of slow ramp and rework",
         "CRO": "removes single-point-of-failure risk"
       },
+      "soWhat": "You can't change safely without a net. Sell writing the missing coverage as you modernize, unlocking safe change.",
       "version": 1,
       "active": true
     },
@@ -2862,6 +2996,7 @@
         "CTO": "turns opaque systems legible and changeable",
         "CRO": "removes single-point-of-failure risk"
       },
+      "soWhat": "Opacity is why onboarding drags. Sell generated docs and consistent patterns that compress ramp time.",
       "version": 1,
       "active": true
     },
@@ -2883,6 +3018,7 @@
         "CFO": "reduces cost of slow ramp and rework",
         "CRO": "removes single-point-of-failure risk"
       },
+      "soWhat": "Docs written once drift into fiction. Sell generating them from the actual current code so they reflect reality.",
       "version": 1,
       "active": true
     },
@@ -2904,6 +3040,7 @@
         "CRO": "reduces unintended-breakage risk",
         "CFO": "reduces cost of slow ramp and rework"
       },
+      "soWhat": "Refactoring blind is a gamble. Sell tracing and mapping dependencies so change becomes informed, not risky.",
       "version": 1,
       "active": true
     },
@@ -2925,6 +3062,7 @@
         "CTO": "de-risks releases",
         "CFO": "reduces cost of deploy bottlenecks"
       },
+      "soWhat": "Deploy knowledge in one head is an outage waiting to happen. Sell a runbook anyone can follow.",
       "version": 1,
       "active": true
     },
@@ -2946,6 +3084,7 @@
         "VPE": "eases the succession",
         "CFO": "reduces cost of lost expertise"
       },
+      "soWhat": "An expert's last day is a deadline. Sell capturing their architectural knowledge from the code before it's gone.",
       "version": 1,
       "active": true
     },
@@ -2967,6 +3106,7 @@
         "CRO": "reduces risk of unknown settings",
         "CFO": "reduces maintenance overhead"
       },
+      "soWhat": "Mystery config is fear you touch nothing. Sell tracing where each flag is used and documenting its real effect.",
       "version": 1,
       "active": true
     },
@@ -2988,6 +3128,7 @@
         "CRO": "reduces risk of not-understood code",
         "CFO": "reduces cost of fearful changes"
       },
+      "soWhat": "Cargo-cult code persists because no one dares explain it. Sell analysis that lets you change it with understanding.",
       "version": 1,
       "active": true
     },
@@ -3009,6 +3150,7 @@
         "CRO": "reduces single-person operational risk",
         "CFO": "reduces cost of stalled incidents"
       },
+      "soWhat": "Runbooks decay silently. Sell regenerating current ones from the actual system so ops stops flying blind.",
       "version": 1,
       "active": true
     },
@@ -3030,6 +3172,7 @@
         "CFO": "reduces cost of cross-team bottlenecks",
         "CRO": "reduces knowledge-concentration risk"
       },
+      "soWhat": "A platform-knowledge monopoly bottlenecks every team. Sell documenting it so consumers self-serve safely.",
       "version": 1,
       "active": true
     },
@@ -3051,6 +3194,7 @@
         "CFO": "makes spend forecastable",
         "CRO": "reduces planning risk"
       },
+      "soWhat": "You can't scope what you don't understand. Sell documenting the system so work can be estimated before it's started.",
       "version": 1,
       "active": true
     },
@@ -3072,6 +3216,7 @@
         "CFO": "reduces cost of long unproductive ramp",
         "CRO": "reduces dependence on shadowing experts"
       },
+      "soWhat": "Months of shadowing is a knowledge tax. Sell generated docs that compress the ramp dramatically.",
       "version": 1,
       "active": true
     },
@@ -3093,6 +3238,7 @@
         "CFO": "reduces cost of prolonged outages",
         "CRO": "reduces reliance on individual memory"
       },
+      "soWhat": "Incident diagnosis is slow when the system is a mystery. Sell the documentation that shortens time-to-cause.",
       "version": 1,
       "active": true
     },
@@ -3114,6 +3260,7 @@
         "CFO": "avoids months of expert time cost",
         "CRO": "secures knowledge before it's lost"
       },
+      "soWhat": "The cost objection ignores who does the work. Sell the agent drafting docs while the expert reviews, not authors.",
       "version": 1,
       "active": true
     },
@@ -3135,6 +3282,7 @@
         "CFO": "reduces bottleneck cost",
         "CRO": "reduces deliberate key-person risk"
       },
+      "soWhat": "When knowledge is job security, reframe it — sell documentation as elevating experts to leaders, not diminishing them.",
       "version": 1,
       "active": true
     },
@@ -3156,6 +3304,7 @@
         "CRO": "reduces risk from unknown assumptions",
         "CFO": "reduces cost of assumption-driven outages"
       },
+      "soWhat": "Implicit data assumptions cause silent corruption. Sell surfacing and documenting them before they bite.",
       "version": 1,
       "active": true
     },
@@ -3177,6 +3326,7 @@
         "CRO": "reduces risk of a critical unknown",
         "CFO": "avoids a costly surprise failure"
       },
+      "soWhat": "An orphaned critical artifact is a landmine. Sell analyzing and documenting it so it can be maintained or replaced.",
       "version": 1,
       "active": true
     },
@@ -3198,6 +3348,7 @@
         "CRO": "protects business rules through change",
         "CFO": "reduces cost of accidental rule loss"
       },
+      "soWhat": "Business rules buried in code disappear with it. Sell extracting and documenting them before any refactor.",
       "version": 1,
       "active": true
     },
@@ -3219,6 +3370,7 @@
         "CRO": "reduces risk of ignored failures",
         "CFO": "reduces cost of skipped-test defects"
       },
+      "soWhat": "A test suite nobody understands gives meaningless failures. Sell documenting what each test actually verifies.",
       "version": 1,
       "active": true
     },
@@ -3240,6 +3392,7 @@
         "VPE": "keeps docs current cheaply",
         "CFO": "avoids the cost of a knowledge cliff"
       },
+      "soWhat": "Documentation loses to delivery every time. Sell making it cheap enough that it stops being a trade-off.",
       "version": 1,
       "active": true
     },
@@ -3261,6 +3414,7 @@
         "CRO": "reduces dependence on a lost contractor",
         "CFO": "reduces risk to a partner relationship"
       },
+      "soWhat": "An integration only a vendor understands is captive risk. Sell documenting the logic to bring it in-house.",
       "version": 1,
       "active": true
     },
@@ -3282,6 +3436,7 @@
         "CFO": "eliminates reinvention cost",
         "CRO": "reduces fragmentation risk"
       },
+      "soWhat": "Teams rebuild what they can't find. Sell documenting and indexing existing capabilities so they reuse instead.",
       "version": 1,
       "active": true
     },
@@ -3303,6 +3458,7 @@
         "CRO": "reduces reliance on veteran memory",
         "CFO": "reduces cost of diagnosis delays"
       },
+      "soWhat": "Cryptic error codes waste every on-call. Sell documenting them and their causes into a usable reference.",
       "version": 1,
       "active": true
     },
@@ -3324,6 +3480,7 @@
         "CRO": "reduces reliance on unverifiable memory",
         "CFO": "avoids the cost of no documentation"
       },
+      "soWhat": "'Docs might be wrong' misses the baseline. Sell reviewed generated docs as more accurate than tribal memory.",
       "version": 1,
       "active": true
     },
@@ -3345,6 +3502,7 @@
         "VPE": "ends the audit scramble",
         "CFO": "reduces audit-preparation cost"
       },
+      "soWhat": "Unverifiable controls fail audits. Sell documenting where and how they're implemented as durable evidence.",
       "version": 1,
       "active": true
     },
@@ -3366,6 +3524,7 @@
         "CRO": "reduces silent-failure risk",
         "CFO": "reduces cost of mysterious outages"
       },
+      "soWhat": "Operational glue scattered across scripts is invisible risk. Sell discovering and mapping it into one picture.",
       "version": 1,
       "active": true
     },
@@ -3387,6 +3546,7 @@
         "CRO": "reduces dispersed-knowledge risk",
         "CFO": "reduces cost of fragmented ownership"
       },
+      "soWhat": "Dispersed ownership means no one holds the whole. Sell reconstructing a coherent, whole-system understanding.",
       "version": 1,
       "active": true
     },
@@ -3408,6 +3568,7 @@
         "VPE": "de-risks delivery capacity",
         "CFO": "reduces cost of key-person disruption"
       },
+      "soWhat": "Bus-factor risk is concentrated knowledge. Sell documenting what key people hold to spread it and cut the risk.",
       "version": 1,
       "active": true
     },
@@ -3429,6 +3590,7 @@
         "CRO": "reduces client-breakage risk",
         "CFO": "protects client relationships"
       },
+      "soWhat": "Accidental API behaviors become contracts consumers depend on. Sell documenting the de facto contract before you change it.",
       "version": 1,
       "active": true
     },
@@ -3450,6 +3612,7 @@
         "CRO": "reduces knowledge risk once proven",
         "CFO": "avoids cost of dismissed efforts"
       },
+      "soWhat": "'Our system is unique' is testable. Sell proving accuracy on a module the team knows and letting them judge.",
       "version": 1,
       "active": true
     },
@@ -3471,6 +3634,7 @@
         "VPE": "enables safe access changes",
         "CFO": "reduces risk of access errors"
       },
+      "soWhat": "Authorization logic you can't reason about can't be trusted. Sell mapping and documenting it so access is auditable.",
       "version": 1,
       "active": true
     },
@@ -3492,6 +3656,7 @@
         "CFO": "directs spend to what matters",
         "CRO": "reduces risk of touching the wrong things"
       },
+      "soWhat": "You can't focus effort on an unknown footprint. Sell usage analysis that separates live, dormant, and dead code.",
       "version": 1,
       "active": true
     },
@@ -3513,6 +3678,7 @@
         "VPE": "lets any responder execute DR",
         "CFO": "reduces catastrophic-failure cost"
       },
+      "soWhat": "A DR plan assumes knowledge no one wrote down. Sell documenting it so recovery is executable by anyone.",
       "version": 1,
       "active": true
     },
@@ -3534,6 +3700,7 @@
         "CRO": "reduces revenue-integrity risk",
         "CFO": "protects billing accuracy"
       },
+      "soWhat": "Special-case business exceptions live only in veterans' heads. Sell surfacing each one from the code.",
       "version": 1,
       "active": true
     },
@@ -3555,6 +3722,7 @@
         "VPE": "completes a stalled sunset",
         "CRO": "reduces risk of a surprise break"
       },
+      "soWhat": "You can't retire a system with unknown dependencies. Sell tracing every one so it can actually be sunset.",
       "version": 1,
       "active": true
     },
@@ -3576,6 +3744,7 @@
         "CFO": "recovers lost delivery capacity",
         "CRO": "reduces risk hidden in unmaintained code"
       },
+      "soWhat": "Debt is code that slows developers down. Sell attacking it continuously and in parallel — the Project Coral framing.",
       "version": 1,
       "active": true
     },
@@ -3597,6 +3766,7 @@
         "CFO": "recovers compounding lost delivery capacity",
         "CRO": "reduces risk hidden in unmaintained code"
       },
+      "soWhat": "Inconsistency compounds. Sell applying consistent patterns across the estate at a scale humans can't sustain by hand.",
       "version": 1,
       "active": true
     },
@@ -3618,6 +3788,7 @@
         "CFO": "recovers compounding lost delivery capacity",
         "CRO": "reduces risk hidden in unmaintained code"
       },
+      "soWhat": "Dead code carries risk with no upside. Sell tracing usage and removing it safely, with tests confirming nothing breaks.",
       "version": 1,
       "active": true
     },
@@ -3639,6 +3810,7 @@
         "CFO": "recovers compounding lost velocity",
         "CRO": "reduces risk hidden in unmaintained code"
       },
+      "soWhat": "Deferring debt forever is a decision, not a delay. Sell continuous background paydown that doesn't touch feature capacity.",
       "version": 1,
       "active": true
     },
@@ -3660,6 +3832,7 @@
         "CTO": "a board-legible answer to the slowdown",
         "CRO": "reduces risk hidden in unmaintained code"
       },
+      "soWhat": "Slow builds tax every developer, every day. Sell optimizing the pipeline to restore fast feedback.",
       "version": 1,
       "active": true
     },
@@ -3681,6 +3854,7 @@
         "CFO": "pay for debt cleared, not dashboards",
         "CRO": "reduces risk hidden in unmaintained code"
       },
+      "soWhat": "Debt tools that only report disappoint. Sell agents that do the remediation and let you measure the outcome.",
       "version": 1,
       "active": true
     },
@@ -3702,6 +3876,7 @@
         "CFO": "recovers wasted maintenance effort",
         "CRO": "reduces risk of missed fixes"
       },
+      "soWhat": "Duplication multiplies every future change. Sell finding and consolidating it across the codebase.",
       "version": 1,
       "active": true
     },
@@ -3723,6 +3898,7 @@
         "CFO": "recovers velocity lost to complexity",
         "CRO": "reduces change-breakage risk"
       },
+      "soWhat": "God functions are untestable and unchangeable. Sell breaking them down incrementally with tests confirming behavior.",
       "version": 1,
       "active": true
     },
@@ -3744,6 +3920,7 @@
         "CFO": "protects delivery capacity",
         "CRO": "keeps risk from compounding"
       },
+      "soWhat": "Every sprint adds debt. Sell continuous paydown in the background that offsets what accrues.",
       "version": 1,
       "active": true
     },
@@ -3765,6 +3942,7 @@
         "CFO": "recovers hidden lost capacity",
         "CRO": "reduces risk building unseen"
       },
+      "soWhat": "A felt slowdown has concrete causes. Sell attacking the real debt behind it so improvement becomes measurable.",
       "version": 1,
       "active": true
     },
@@ -3786,6 +3964,7 @@
         "CFO": "reduces debugging cost",
         "CRO": "reduces risk of silent failures"
       },
+      "soWhat": "Inconsistent error handling breaks unpredictably. Sell standardizing it to one predictable strategy.",
       "version": 1,
       "active": true
     },
@@ -3807,6 +3986,7 @@
         "CFO": "reduces QA cost",
         "CRO": "reduces regression risk"
       },
+      "soWhat": "Coverage debt makes every change slow and scary. Sell writing the missing tests so verification is automated.",
       "version": 1,
       "active": true
     },
@@ -3828,6 +4008,7 @@
         "VPE": "enables rational prioritization",
         "CRO": "surfaces where risk concentrates"
       },
+      "soWhat": "You can't act on debt you haven't counted. Sell inventorying it into concrete, prioritized items leadership can fund.",
       "version": 1,
       "active": true
     },
@@ -3849,6 +4030,7 @@
         "CFO": "recovers effort lost to workarounds",
         "CRO": "reduces risk of fragile patches"
       },
+      "soWhat": "Every workaround is a recurring tax. Sell removing the debt that forces them, freeing capacity for real work.",
       "version": 1,
       "active": true
     },
@@ -3870,6 +4052,7 @@
         "CFO": "maximizes cleanup ROI",
         "CRO": "reduces risk in most-touched code"
       },
+      "soWhat": "Debt hurts most where code churns. Sell prioritizing paydown there for the biggest velocity return.",
       "version": 1,
       "active": true
     },
@@ -3891,6 +4074,7 @@
         "CFO": "avoids crisis-driven remediation cost",
         "CRO": "prevents debt-driven incidents"
       },
+      "soWhat": "Invisible work loses the budget fight. Sell debt paydown that's continuous and cheap, so it never competes with features.",
       "version": 1,
       "active": true
     },
@@ -3912,6 +4096,7 @@
         "CFO": "protects prior design investment",
         "CRO": "keeps design decisions with humans"
       },
+      "soWhat": "Architects fear losing pattern control. Sell the agent conforming to their target patterns and flagging conflicts.",
       "version": 1,
       "active": true
     },
@@ -3933,6 +4118,7 @@
         "CFO": "reduces debugging cost",
         "CRO": "improves incident-response evidence"
       },
+      "soWhat": "Broken logging means you're operating blind. Sell standardizing it so observability actually works.",
       "version": 1,
       "active": true
     },
@@ -3954,6 +4140,7 @@
         "CFO": "reduces cost of ballooning changes",
         "CRO": "reduces cascade-failure risk"
       },
+      "soWhat": "Coupling makes every change cascade. Sell identifying and reducing it so changes stay contained.",
       "version": 1,
       "active": true
     },
@@ -3975,6 +4162,7 @@
         "CFO": "protects the cleanup investment",
         "CRO": "keeps risk trending down"
       },
+      "soWhat": "Debt sprints never keep up. Sell continuous paydown instead of a periodic effort that always loses ground.",
       "version": 1,
       "active": true
     },
@@ -3996,6 +4184,7 @@
         "CFO": "reduces storage and maintenance cost",
         "CRO": "reduces risk of confusing data"
       },
+      "soWhat": "Schema accretes unused cruft. Sell usage analysis that identifies and safely retires it.",
       "version": 1,
       "active": true
     },
@@ -4017,6 +4206,7 @@
         "CFO": "starts ROI on a bounded slice",
         "CRO": "begins reducing concentrated risk"
       },
+      "soWhat": "Debt fatalism breaks with proof. Sell fixing one painful, high-churn area so the team sees improvement is possible.",
       "version": 1,
       "active": true
     },
@@ -4038,6 +4228,7 @@
         "CFO": "reduces wasted re-run cycles",
         "CRO": "stops real failures hiding in noise"
       },
+      "soWhat": "Flaky tests destroy CI trust. Sell diagnosing and fixing them so green means green again.",
       "version": 1,
       "active": true
     },
@@ -4059,6 +4250,7 @@
         "CFO": "reduces infra cost from inefficiency",
         "CRO": "reduces risk of performance incidents"
       },
+      "soWhat": "Performance debt is death by a thousand cuts. Sell systematically finding and fixing the small inefficiencies.",
       "version": 1,
       "active": true
     },
@@ -4080,6 +4272,7 @@
         "CFO": "reduces cost of misled changes",
         "CRO": "reduces risk from wrong guidance"
       },
+      "soWhat": "Docs drifting from code mislead everyone. Sell reconciling them with real behavior and keeping them current.",
       "version": 1,
       "active": true
     },
@@ -4101,6 +4294,7 @@
         "CFO": "reduces maintenance friction",
         "CRO": "reduces inconsistency risk"
       },
+      "soWhat": "Convention drift fragments a codebase. Sell converging it on the current standard consistently.",
       "version": 1,
       "active": true
     },
@@ -4122,6 +4316,7 @@
         "CFO": "reduces cost of manual infra work",
         "CRO": "reduces infra-drift risk"
       },
+      "soWhat": "IaC that doesn't match reality is dangerous. Sell reconciling it so it becomes trustworthy again.",
       "version": 1,
       "active": true
     },
@@ -4143,6 +4338,7 @@
         "CFO": "reduces maintenance overhead",
         "CRO": "reduces risk of stale-flag surprises"
       },
+      "soWhat": "Stale feature flags hide dead branches. Sell identifying and removing them safely.",
       "version": 1,
       "active": true
     },
@@ -4164,6 +4360,7 @@
         "VPE": "recovers measurable velocity",
         "CRO": "reduces cost of unmanaged risk"
       },
+      "soWhat": "Reframe debt paydown as recovered delivery capacity — measurable velocity that funds itself.",
       "version": 1,
       "active": true
     },
@@ -4185,6 +4382,7 @@
         "CFO": "controls rising delivery cost",
         "CRO": "reduces risk in an aging codebase"
       },
+      "soWhat": "Rising feature cost is debt in disguise. Sell reducing it to restore predictable delivery.",
       "version": 1,
       "active": true
     },
@@ -4206,6 +4404,7 @@
         "CFO": "reduces latent maintenance cost",
         "CRO": "closes known-issue risk"
       },
+      "soWhat": "A deferred-fix backlog is known, scoped work. Sell working through it systematically to clear it.",
       "version": 1,
       "active": true
     },
@@ -4227,6 +4426,7 @@
         "CFO": "reduces multiplied maintenance",
         "CRO": "reduces inconsistent-fix risk"
       },
+      "soWhat": "Cross-service duplication means fixing the same bug N times. Sell consolidating or propagating fixes consistently.",
       "version": 1,
       "active": true
     },
@@ -4248,6 +4448,7 @@
         "CFO": "maximizes cleanup ROI",
         "CRO": "targets the riskiest debt first"
       },
+      "soWhat": "Not all debt matters equally. Sell assessing it by churn, complexity, and risk to prioritize what actually counts.",
       "version": 1,
       "active": true
     },
@@ -4269,6 +4470,7 @@
         "CFO": "reduces risk of ignored issues",
         "CRO": "surfaces real warnings"
       },
+      "soWhat": "Warning blindness buries real signals. Sell clearing the backlog so new warnings get noticed and fixed.",
       "version": 1,
       "active": true
     },
@@ -4290,6 +4492,7 @@
         "CFO": "reduces cost of rare hard bugs",
         "CRO": "reduces risk of concurrency failures"
       },
+      "soWhat": "Concurrency debt causes the scariest bugs. Sell documenting the patterns and adding tests around them.",
       "version": 1,
       "active": true
     },
@@ -4311,6 +4514,7 @@
         "CTO": "clears mandated work without derailing the roadmap",
         "VPE": "spares the team a forced manual slog"
       },
+      "soWhat": "Compliance work is mandatory and low-glory. Sell making it dramatically cheaper and faster than doing it by hand.",
       "version": 1,
       "active": true
     },
@@ -4332,6 +4536,7 @@
         "VPE": "spares the team a forced manual slog",
         "CFO": "minimizes unavoidable compliance spend"
       },
+      "soWhat": "Traceability mandates need evidence across systems. Sell analyzing and documenting the data flows to produce it.",
       "version": 1,
       "active": true
     },
@@ -4353,6 +4558,7 @@
         "CTO": "clears mandated work without derailing roadmap",
         "CFO": "minimizes unavoidable compliance spend"
       },
+      "soWhat": "Accountability isn't lost to automation. Sell the agent proposing and a named human approving through existing control.",
       "version": 1,
       "active": true
     },
@@ -4374,6 +4580,7 @@
         "CRO": "reduces integration risk",
         "VPE": "spares the team a forced manual slog"
       },
+      "soWhat": "M&A integration runs on an unforgiving clock. Sell documenting the unfamiliar codebase and accelerating the work.",
       "version": 1,
       "active": true
     },
@@ -4395,6 +4602,7 @@
         "VPE": "spares the team a soul-crushing manual slog",
         "CTO": "clears mandated work without derailing roadmap"
       },
+      "soWhat": "A regulatory retrofit across hundreds of screens is repetitive at scale — sell applying it consistently in parallel.",
       "version": 1,
       "active": true
     },
@@ -4416,6 +4624,7 @@
         "CTO": "clears mandated work without derailing the roadmap",
         "VPE": "spares the team a manual audit slog"
       },
+      "soWhat": "PCI scope is every system touching card data. Sell inventorying them all and applying the changes consistently.",
       "version": 1,
       "active": true
     },
@@ -4437,6 +4646,7 @@
         "CTO": "clears mandated work without derailing roadmap",
         "VPE": "ends the manual evidence scramble"
       },
+      "soWhat": "SOX needs traceability you can evidence. Sell implementing it and generating the audit proof the controls require.",
       "version": 1,
       "active": true
     },
@@ -4458,6 +4668,7 @@
         "CTO": "makes data governance enforceable",
         "VPE": "spares the team a manual data hunt"
       },
+      "soWhat": "Right-to-erasure means knowing where personal data lives. Sell mapping it across systems and implementing compliant deletion.",
       "version": 1,
       "active": true
     },
@@ -4479,6 +4690,7 @@
         "CTO": "makes resilience demonstrable",
         "VPE": "spares the team a manual mapping slog"
       },
+      "soWhat": "DORA demands resilience you can document. Sell mapping dependencies and implementing the evidence it requires.",
       "version": 1,
       "active": true
     },
@@ -4500,6 +4712,7 @@
         "CTO": "makes compliance evidence systematic",
         "VPE": "frees the team from audit grind"
       },
+      "soWhat": "Manual evidence assembly repeats every cycle. Sell generating it directly from the systems so audits get cheap.",
       "version": 1,
       "active": true
     },
@@ -4521,6 +4734,7 @@
         "CFO": "reduces unknown compliance exposure",
         "VPE": "spares a manual reverse-engineering effort"
       },
+      "soWhat": "You can't assess compliance on opaque code. Sell documenting the systems first, then remediating the gaps.",
       "version": 1,
       "active": true
     },
@@ -4542,6 +4756,7 @@
         "CFO": "avoids missed-deadline penalties",
         "VPE": "gives the team time to actually remediate"
       },
+      "soWhat": "A deadline gated by understanding slips. Sell compressing the understanding phase so remediation starts sooner.",
       "version": 1,
       "active": true
     },
@@ -4563,6 +4778,7 @@
         "CFO": "reduces per-mandate cost",
         "VPE": "ends the recurring fire drills"
       },
+      "soWhat": "Each mandate becomes a fresh fire drill. Sell a reusable remediation capability so the next one isn't.",
       "version": 1,
       "active": true
     },
@@ -4584,6 +4800,7 @@
         "CFO": "reduces recurring audit-finding cost",
         "VPE": "adds controls without disruption"
       },
+      "soWhat": "Segregation of duties must be demonstrable. Sell documenting and implementing the controls that prove it.",
       "version": 1,
       "active": true
     },
@@ -4605,6 +4822,7 @@
         "CFO": "reduces manual compliance cost",
         "VPE": "removes toil while keeping oversight"
       },
+      "soWhat": "'Only humans can be trusted' still holds — sell the agent proposing while a named human approves through existing controls.",
       "version": 1,
       "active": true
     },
@@ -4626,6 +4844,7 @@
         "CTO": "leaves systems more maintainable",
         "VPE": "reduces future compliance toil"
       },
+      "soWhat": "Compliance framed as pure cost loses. Sell the dramatic savings plus reuse of the modernized systems beyond compliance.",
       "version": 1,
       "active": true
     },
@@ -4647,6 +4866,7 @@
         "CFO": "avoids residency-violation penalties",
         "VPE": "spares a manual data-tracing effort"
       },
+      "soWhat": "Data residency means knowing where data actually sits. Sell tracing flows and flagging non-compliant placement.",
       "version": 1,
       "active": true
     },
@@ -4668,6 +4888,7 @@
         "CRO": "achieves compliant market access",
         "VPE": "delivers the remediation efficiently"
       },
+      "soWhat": "Certification is the price of market access. Sell remediating the codebase to meet it faster.",
       "version": 1,
       "active": true
     },
@@ -4689,6 +4910,7 @@
         "CFO": "reduces cost and risk each cycle",
         "VPE": "ends unsustainable crunch"
       },
+      "soWhat": "Annual heroic compliance isn't sustainable. Sell making it a repeatable, automated process instead.",
       "version": 1,
       "active": true
     },
@@ -4710,6 +4932,7 @@
         "CFO": "minimizes forced-remediation cost",
         "VPE": "spares a manual store-by-store slog"
       },
+      "soWhat": "An encryption mandate means finding every unencrypted store. Sell identifying and encrypting them across the estate.",
       "version": 1,
       "active": true
     },
@@ -4731,6 +4954,7 @@
         "CFO": "avoids bespoke control cost",
         "VPE": "keeps the pipeline's gates intact"
       },
+      "soWhat": "The agent isn't a new compliance surface. Sell it operating within existing controls as a scoped, auditable identity.",
       "version": 1,
       "active": true
     },
@@ -4752,6 +4976,7 @@
         "CFO": "reduces cost of jurisdictional work",
         "VPE": "removes error-prone repetition"
       },
+      "soWhat": "Multi-jurisdiction rule changes multiply the work. Sell applying each consistently across every variant and verifying.",
       "version": 1,
       "active": true
     },
@@ -4773,6 +4998,7 @@
         "CFO": "avoids non-compliance penalties",
         "VPE": "removes manual usage-hunting"
       },
+      "soWhat": "A protocol deprecation is a hard cutoff. Sell finding every use and migrating to the compliant replacement.",
       "version": 1,
       "active": true
     },
@@ -4794,6 +5020,7 @@
         "CFO": "reduces audit-failure cost",
         "VPE": "spares a system-by-system logging slog"
       },
+      "soWhat": "Inconsistent audit logging leaves gaps. Sell standardizing it across systems to close them.",
       "version": 1,
       "active": true
     },
@@ -4815,6 +5042,7 @@
         "CFO": "avoids downtime cost",
         "VPE": "keeps the business running during remediation"
       },
+      "soWhat": "Disruption-averse leaders fear compliance change. Sell incremental, verified work that lands without breaking the business.",
       "version": 1,
       "active": true
     },
@@ -4836,6 +5064,7 @@
         "CFO": "avoids compliance penalties",
         "VPE": "spares the team a documentation slog"
       },
+      "soWhat": "Model-risk rules demand documented behavior. Sell documenting the models' logic to satisfy them.",
       "version": 1,
       "active": true
     },
@@ -4857,6 +5086,7 @@
         "CFO": "defensible and cheaper",
         "VPE": "consistent controls without toil"
       },
+      "soWhat": "Automated, auditable controls are more rigorous than manual effort — sell that as the opposite of cutting corners.",
       "version": 1,
       "active": true
     },
@@ -4878,6 +5108,7 @@
         "CFO": "avoids supply-chain penalties",
         "VPE": "spares a manual dependency audit"
       },
+      "soWhat": "Supply-chain compliance starts with an inventory. Sell cataloguing dependencies, assessing status, and remediating.",
       "version": 1,
       "active": true
     },
@@ -4899,6 +5130,7 @@
         "CFO": "reduces cost of backlog growth",
         "VPE": "relieves an overwhelmed team"
       },
+      "soWhat": "A compliance backlog outpacing the team is a capacity problem. Sell adding remediation capacity so it stops growing.",
       "version": 1,
       "active": true
     },
@@ -4920,6 +5152,7 @@
         "CTO": "remediates at scale",
         "VPE": "spares a soul-crushing manual slog"
       },
+      "soWhat": "Accessibility is now a legal mandate. Sell remediating the failures across all pages consistently and at scale.",
       "version": 1,
       "active": true
     },
@@ -4941,6 +5174,7 @@
         "CFO": "avoids non-compliance penalties",
         "VPE": "spares a manual retrofit slog"
       },
+      "soWhat": "Access-logging mandates need consistency. Sell implementing uniform logging and retention across systems in scope.",
       "version": 1,
       "active": true
     },
@@ -4962,6 +5196,7 @@
         "CFO": "reduces false-assurance risk",
         "VPE": "confirms enforcement efficiently"
       },
+      "soWhat": "Paper controls that aren't enforced fail audits. Sell verifying each documented control is genuinely in the code.",
       "version": 1,
       "active": true
     },
@@ -4983,6 +5218,7 @@
         "CFO": "avoids privacy penalties",
         "VPE": "spares a per-app slog"
       },
+      "soWhat": "Consent management must be consistent across apps. Sell implementing capture and enforcement uniformly.",
       "version": 1,
       "active": true
     },
@@ -5004,6 +5240,7 @@
         "CFO": "reduces cost per compliant change",
         "VPE": "removes per-change friction"
       },
+      "soWhat": "Sign-off overhead multiplies with changes. Sell batching similar ones for a single review to amortize approval.",
       "version": 1,
       "active": true
     },
@@ -5025,6 +5262,7 @@
         "CFO": "avoids lineage-related penalties",
         "VPE": "spares a manual tracing effort"
       },
+      "soWhat": "Data-lineage mandates need the flow traced end to end. Sell tracing it and producing the required documentation.",
       "version": 1,
       "active": true
     },
@@ -5046,6 +5284,7 @@
         "CFO": "cuts reliance on scarce, expensive legacy skills",
         "CRO": "arrests institutional-knowledge-loss risk"
       },
+      "soWhat": "Talent flees legacy grind. Sell agents carrying the maintenance load so scarce humans do work they actually want.",
       "version": 1,
       "active": true
     },
@@ -5067,6 +5306,7 @@
         "CFO": "cuts reliance on scarce, expensive skills",
         "CRO": "arrests institutional-knowledge-loss risk"
       },
+      "soWhat": "Seniors doing maintenance is misallocated talent. Sell agents absorbing it so they return to high-value creation.",
       "version": 1,
       "active": true
     },
@@ -5088,6 +5328,7 @@
         "VPE": "relieves an overstretched, aging team",
         "CFO": "cuts reliance on scarce, expensive skills"
       },
+      "soWhat": "Attrition erodes institutional knowledge. Sell capturing and documenting it before more walks out the door.",
       "version": 1,
       "active": true
     },
@@ -5109,6 +5350,7 @@
         "CRO": "avoids the political headcount landmine",
         "CFO": "cuts reliance on scarce, expensive skills"
       },
+      "soWhat": "Replacement fear kills adoption. Frame agents as leverage on the engineers you keep — toil to them, judgment to humans.",
       "version": 1,
       "active": true
     },
@@ -5130,6 +5372,7 @@
         "CFO": "reduces cost of prolonged openings",
         "CRO": "reduces delivery risk from understaffing"
       },
+      "soWhat": "Delivery shouldn't wait on hard-to-fill hires. Sell agents adding capacity now, in parallel with recruiting.",
       "version": 1,
       "active": true
     },
@@ -5151,6 +5394,7 @@
         "CFO": "protects hiring investment",
         "CRO": "reduces churn-driven risk"
       },
+      "soWhat": "Juniors churn when stuck on legacy. Sell agents carrying maintenance so juniors get growth-worthy problems.",
       "version": 1,
       "active": true
     },
@@ -5172,6 +5416,7 @@
         "CFO": "reduces cost of failed hiring",
         "CRO": "reduces reliance on scarce skills"
       },
+      "soWhat": "A dated stack loses candidates before the interview. Sell modernizing it and carrying the legacy work.",
       "version": 1,
       "active": true
     },
@@ -5193,6 +5438,7 @@
         "VPE": "adds capacity without headcount lag",
         "CRO": "reduces growth-execution risk"
       },
+      "soWhat": "Growth capped by hiring is a solvable ceiling. Sell scaling engineering capacity without the hiring bottleneck.",
       "version": 1,
       "active": true
     },
@@ -5214,6 +5460,7 @@
         "CFO": "reduces cost of delivery disruption",
         "CRO": "reduces single-absence risk"
       },
+      "soWhat": "A team with no slack is one absence from crisis. Sell agents as buffer capacity that absorbs the shock.",
       "version": 1,
       "active": true
     },
@@ -5235,6 +5482,7 @@
         "VPE": "bridges the backfill gap",
         "CFO": "reduces cost of lost knowledge"
       },
+      "soWhat": "Attrition takes knowledge with it. Sell documenting what leavers knew and carrying the work until backfill lands.",
       "version": 1,
       "active": true
     },
@@ -5256,6 +5504,7 @@
         "VPE": "delivers more with fewer hires",
         "CRO": "reduces talent-war exposure"
       },
+      "soWhat": "You can't win every salary battle. Sell a smaller team achieving more so you depend less on out-paying rivals.",
       "version": 1,
       "active": true
     },
@@ -5277,6 +5526,7 @@
         "CFO": "gets more value from expensive people",
         "CRO": "reduces flight risk"
       },
+      "soWhat": "Toil drives your best people out. Sell agents absorbing it so engineers spend time on the work that keeps them.",
       "version": 1,
       "active": true
     },
@@ -5298,6 +5548,7 @@
         "CFO": "reduces hiring-dependency risk",
         "CRO": "reduces execution risk from thin staffing"
       },
+      "soWhat": "You can't out-hire the giants. Sell agents giving a small team outsized capacity instead.",
       "version": 1,
       "active": true
     },
@@ -5319,6 +5570,7 @@
         "CRO": "avoids the headcount-fear landmine",
         "CFO": "gets more from the current team"
       },
+      "soWhat": "Headcount-threat perception stalls buy-in. Frame agents as relief and leverage for a stretched team, not replacement.",
       "version": 1,
       "active": true
     },
@@ -5340,6 +5592,7 @@
         "VPE": "relief now, not in six months",
         "CRO": "reduces reliance on slow hiring"
       },
+      "soWhat": "Hiring alone is too slow. Sell agents adding capacity immediately, complementing recruiting rather than waiting on it.",
       "version": 1,
       "active": true
     },
@@ -5361,6 +5614,7 @@
         "CRO": "reduces key-person flight risk",
         "CFO": "protects your most valuable people"
       },
+      "soWhat": "Experts carrying the load alone burn out. Sell agents sharing it to ease the pressure before you lose them.",
       "version": 1,
       "active": true
     },
@@ -5382,6 +5636,7 @@
         "CFO": "recovers capacity from maintenance",
         "CRO": "reduces over-allocation risk"
       },
+      "soWhat": "Keep-the-lights-on saturates the team. Sell agents taking that load so people are freed for new projects.",
       "version": 1,
       "active": true
     },
@@ -5403,6 +5658,7 @@
         "VPE": "protects product continuity",
         "CFO": "reduces single-person exposure"
       },
+      "soWhat": "Rare-skill concentration is dangerous. Sell agents documenting and carrying the niche work to break it.",
       "version": 1,
       "active": true
     },
@@ -5424,6 +5680,7 @@
         "CFO": "reduces early-attrition cost",
         "CRO": "reduces onboarding-loss risk"
       },
+      "soWhat": "Demoralizing onboarding drives early attrition. Sell generated docs that make ramping faster and less painful.",
       "version": 1,
       "active": true
     },
@@ -5445,6 +5702,7 @@
         "CFO": "increases the value of your people",
         "CRO": "retains and elevates talent"
       },
+      "soWhat": "Skill-atrophy fear is backwards. Sell engineers growing into architecture and direction — higher-order, not atrophied.",
       "version": 1,
       "active": true
     },
@@ -5466,6 +5724,7 @@
         "VPE": "adds sustainable capacity",
         "CRO": "reduces reliance on external staff"
       },
+      "soWhat": "Premium contractors are a rented crutch. Sell sustainable agent capacity that reduces the dependency.",
       "version": 1,
       "active": true
     },
@@ -5487,6 +5746,7 @@
         "CFO": "reduces cost of unstaffable teams",
         "CRO": "reduces legacy-team continuity risk"
       },
+      "soWhat": "The legacy team carries a stigma. Sell agents doing the grind so those roles become modernization, not dead ends.",
       "version": 1,
       "active": true
     },
@@ -5508,6 +5768,7 @@
         "CFO": "reduces long-term hiring dependence",
         "CRO": "reduces knowledge-concentration risk"
       },
+      "soWhat": "Firefighting starves mentorship. Sell agents reducing the load so seniors mentor and juniors grow.",
       "version": 1,
       "active": true
     },
@@ -5529,6 +5790,7 @@
         "CFO": "reduces reorg-driven capacity loss",
         "CRO": "reduces organizational-churn risk"
       },
+      "soWhat": "Reorgs erode capacity. Sell agents as a stable capacity floor organizational churn can't wipe out.",
       "version": 1,
       "active": true
     },
@@ -5550,6 +5812,7 @@
         "CFO": "improves hiring efficiency",
         "CRO": "reduces attrition risk"
       },
+      "soWhat": "Your employer brand is what engineers do all day. Sell agents doing the toil so yours is where the meaningful work is.",
       "version": 1,
       "active": true
     },
@@ -5571,6 +5834,7 @@
         "CFO": "reduces cost of delayed initiatives",
         "CRO": "reduces under-resourcing risk"
       },
+      "soWhat": "Initiatives shouldn't wait on hiring lead time. Sell agents providing immediate ramp capacity.",
       "version": 1,
       "active": true
     },
@@ -5592,6 +5856,7 @@
         "CFO": "avoids burnout-driven attrition cost",
         "CRO": "reduces overload risk"
       },
+      "soWhat": "Flat headcount against growing load is a widening gap. Sell agents closing it.",
       "version": 1,
       "active": true
     },
@@ -5613,6 +5878,7 @@
         "CFO": "reduces cost of a capability gap",
         "CRO": "reduces sudden-loss risk"
       },
+      "soWhat": "Sudden capacity loss leaves a hole. Sell agents backstopping the depleted team's workload while you rebuild.",
       "version": 1,
       "active": true
     },
@@ -5634,6 +5900,7 @@
         "CFO": "delivers higher-value work",
         "CRO": "reduces under-delivery risk"
       },
+      "soWhat": "A roadmap gated by staffing follows the wrong master. Sell capacity so it can follow priority instead.",
       "version": 1,
       "active": true
     },
@@ -5655,6 +5922,7 @@
         "CFO": "reduces cost of cross-team stalls",
         "CRO": "reduces bottleneck risk"
       },
+      "soWhat": "Specialists queued on routine work is waste. Sell agents handling the routine so the queue shrinks and they focus.",
       "version": 1,
       "active": true
     },
@@ -5676,6 +5944,7 @@
         "CFO": "improves output of a good team",
         "CRO": "reduces adoption-resistance risk"
       },
+      "soWhat": "'Needing agents admits failure' is the wrong frame. Sell them as leverage that scales a good team, like any tooling.",
       "version": 1,
       "active": true
     },
@@ -5697,6 +5966,7 @@
         "CFO": "reduces on-call attrition cost",
         "CRO": "reduces thin-coverage risk"
       },
+      "soWhat": "Thin on-call burns people out. Sell documented systems and diagnosis help so more people can respond.",
       "version": 1,
       "active": true
     },
@@ -5718,6 +5988,7 @@
         "CFO": "invests in future capability",
         "CRO": "reduces stagnation risk"
       },
+      "soWhat": "No innovation capacity means no future. Sell agents freeing delivery capacity so some of the team can innovate.",
       "version": 1,
       "active": true
     },
@@ -5739,6 +6010,7 @@
         "CFO": "improves hiring yield",
         "CRO": "reduces mismatch-driven attrition"
       },
+      "soWhat": "Talent avoids the legacy work. Sell agents doing it so hires focus on what drew them in.",
       "version": 1,
       "active": true
     },
@@ -5760,6 +6032,7 @@
         "VPE": "clears a relentless patch backlog",
         "CFO": "reduces breach and audit cost exposure"
       },
+      "soWhat": "A patch backlog is remediation at scale. Sell parallel fixes — the Itaú pattern of auto-resolving most findings.",
       "version": 1,
       "active": true
     },
@@ -5781,6 +6054,7 @@
         "VPE": "clears a relentless patch backlog",
         "CFO": "reduces breach and audit cost exposure"
       },
+      "soWhat": "You can't remediate what you haven't mapped. Sell inventorying security debt, then fixing where it matters most.",
       "version": 1,
       "active": true
     },
@@ -5802,6 +6076,7 @@
         "VPE": "clears a relentless patch backlog",
         "CFO": "reduces breach and audit cost exposure"
       },
+      "soWhat": "Trust doesn't rest on the model. Sell agent output passing the same deterministic security gates as any contributor's.",
       "version": 1,
       "active": true
     },
@@ -5823,6 +6098,7 @@
         "VPE": "clears a relentless patch backlog",
         "CFO": "reduces breach and audit cost exposure"
       },
+      "soWhat": "A board security mandate needs an audit trail. Sell continuous remediation with evidence of the hardening.",
       "version": 1,
       "active": true
     },
@@ -5844,6 +6120,7 @@
         "VPE": "clears a relentless patch backlog",
         "CFO": "reduces breach and audit cost exposure"
       },
+      "soWhat": "Inherited code carries unknown risk. Sell auditing it, surfacing the risks, and remediating with a trail.",
       "version": 1,
       "active": true
     },
@@ -5865,6 +6142,7 @@
         "CTO": "outpaces the CVE inflow",
         "CFO": "reduces breach-cost exposure"
       },
+      "soWhat": "A CVE backlog is parallel work. Sell working it at scale, patching and verifying, not one ticket at a time.",
       "version": 1,
       "active": true
     },
@@ -5886,6 +6164,7 @@
         "VPE": "patches everywhere at once",
         "CFO": "reduces breach-window cost"
       },
+      "soWhat": "Unknown blast radius is the real danger. Sell rapidly finding every affected location and patching it — the Log4Shell model.",
       "version": 1,
       "active": true
     },
@@ -5907,6 +6186,7 @@
         "VPE": "removes the patch-versus-stability trap",
         "CFO": "reduces breach exposure"
       },
+      "soWhat": "Frozen-but-vulnerable dependencies are a standing risk. Sell upgrading them and fixing the breakage under test.",
       "version": 1,
       "active": true
     },
@@ -5928,6 +6208,7 @@
         "VPE": "fixes patterns, not just CVEs",
         "CFO": "reduces breach likelihood"
       },
+      "soWhat": "Tracked CVEs miss insecure-by-design patterns. Sell finding and remediating those across the codebase too.",
       "version": 1,
       "active": true
     },
@@ -5949,6 +6230,7 @@
         "VPE": "avoids wasted patch effort",
         "CFO": "maximizes security ROI"
       },
+      "soWhat": "Not every vulnerability is urgent. Sell assessing them in context to prioritize the ones that truly matter.",
       "version": 1,
       "active": true
     },
@@ -5970,6 +6252,7 @@
         "VPE": "stops repeat patch work",
         "CFO": "reduces recurring breach risk"
       },
+      "soWhat": "Fixing reported instances leaves the pattern. Sell fixing the root everywhere it occurs.",
       "version": 1,
       "active": true
     },
@@ -5991,6 +6274,7 @@
         "VPE": "ends repeat remediation work",
         "CFO": "reduces recurring audit cost"
       },
+      "soWhat": "Findings that reopen aren't fixed. Sell remediating comprehensively so they close and stay closed.",
       "version": 1,
       "active": true
     },
@@ -6012,6 +6296,7 @@
         "VPE": "removes a pervasive weakness",
         "CFO": "reduces credential-breach risk"
       },
+      "soWhat": "Hardcoded secrets are exposure waiting to happen. Sell finding every one and moving them to proper management.",
       "version": 1,
       "active": true
     },
@@ -6033,6 +6318,7 @@
         "VPE": "responds at full breadth fast",
         "CFO": "reduces breach-incident cost"
       },
+      "soWhat": "Active exploitation is a race against the clock. Sell parallelizing the patch to shrink the exposure window.",
       "version": 1,
       "active": true
     },
@@ -6054,6 +6340,7 @@
         "VPE": "speeds remediation within process",
         "CFO": "reduces manual remediation cost"
       },
+      "soWhat": "Security gatekeeping isn't bypassed. Sell agent changes going through the same review and approval as any engineer.",
       "version": 1,
       "active": true
     },
@@ -6075,6 +6362,7 @@
         "CTO": "closes exposure before exploitation",
         "VPE": "avoids emergency breach response"
       },
+      "soWhat": "Reactive security fixes exposure after it's exploited. Sell proactive remediation cheap enough to do it before.",
       "version": 1,
       "active": true
     },
@@ -6096,6 +6384,7 @@
         "VPE": "covers every entry point",
         "CFO": "reduces breach likelihood"
       },
+      "soWhat": "Inconsistent input validation is an open door. Sell auditing and standardizing it across every entry point.",
       "version": 1,
       "active": true
     },
@@ -6117,6 +6406,7 @@
         "VPE": "makes the migration tractable",
         "CFO": "reduces breach exposure"
       },
+      "soWhat": "Unsupported systems are exposure with no patch coming. Sell migrating off or hardening them.",
       "version": 1,
       "active": true
     },
@@ -6138,6 +6428,7 @@
         "CFO": "unblocks trust-gated deals",
         "VPE": "produces the evidence efficiently"
       },
+      "soWhat": "Supply-chain assurance needs evidence. Sell inventorying it, remediating issues, and producing the proof.",
       "version": 1,
       "active": true
     },
@@ -6159,6 +6450,7 @@
         "VPE": "safely tightens permissions",
         "CFO": "reduces over-privilege breach risk"
       },
+      "soWhat": "Access drifts toward over-privilege. Sell mapping effective access and remediating toward least privilege.",
       "version": 1,
       "active": true
     },
@@ -6180,6 +6472,7 @@
         "VPE": "safe remediation with review",
         "CFO": "reduces risk of a bad fix"
       },
+      "soWhat": "'The fix might introduce risk' is why you gate it. Sell fixes going through security tests and review before release.",
       "version": 1,
       "active": true
     },
@@ -6201,6 +6494,7 @@
         "VPE": "covers every store",
         "CFO": "reduces breach-impact cost"
       },
+      "soWhat": "Plaintext sensitive data is a breach headline waiting. Sell finding it and implementing encryption across stores.",
       "version": 1,
       "active": true
     },
@@ -6222,6 +6516,7 @@
         "VPE": "modernizes auth safely",
         "CFO": "reduces account-breach risk"
       },
+      "soWhat": "Outdated auth is a soft target. Sell modernizing it to current standards, verified against attacks.",
       "version": 1,
       "active": true
     },
@@ -6243,6 +6538,7 @@
         "VPE": "catches recurrence automatically",
         "CFO": "reduces repeat-breach risk"
       },
+      "soWhat": "A fix without a regression test invites recurrence. Sell adding checks that catch the class if it returns.",
       "version": 1,
       "active": true
     },
@@ -6264,6 +6560,7 @@
         "VPE": "clears the remediation backlog",
         "CFO": "reduces known-exposure cost"
       },
+      "soWhat": "Pen-test findings that aren't closed are just a to-do list. Sell remediating them in parallel so they actually close.",
       "version": 1,
       "active": true
     },
@@ -6285,6 +6582,7 @@
         "VPE": "scales remediation under direction",
         "CFO": "reduces cost of manual-only security"
       },
+      "soWhat": "Judgment stays with your CISO. Sell the agent handling the scale-out remediation under that direction.",
       "version": 1,
       "active": true
     },
@@ -6306,6 +6604,7 @@
         "VPE": "remediates deep dependencies",
         "CFO": "reduces hidden breach risk"
       },
+      "soWhat": "Transitive dependencies are a blind spot. Sell mapping the full tree and remediating vulnerable components deep in it.",
       "version": 1,
       "active": true
     },
@@ -6327,6 +6626,7 @@
         "CFO": "protects customer trust",
         "VPE": "keeps releases clean"
       },
+      "soWhat": "Customers finding your exposure is the worst case. Sell continuous scanning and remediation so you catch it first.",
       "version": 1,
       "active": true
     },
@@ -6348,6 +6648,7 @@
         "CTO": "implements controls at scale",
         "VPE": "produces the evidence efficiently"
       },
+      "soWhat": "Insurance-mandated controls need evidence. Sell implementing and evidencing them across the estate.",
       "version": 1,
       "active": true
     },
@@ -6369,6 +6670,7 @@
         "VPE": "covers every usage",
         "CFO": "reduces data-breach risk"
       },
+      "soWhat": "Weak crypto is exposure hiding in plain sight. Sell finding it and migrating to strong, current algorithms.",
       "version": 1,
       "active": true
     },
@@ -6390,6 +6692,7 @@
         "VPE": "ends alert fatigue",
         "CFO": "reduces missed-threat risk"
       },
+      "soWhat": "Alert fatigue numbs response to real threats. Sell triaging and remediating the noise so genuine ones stand out.",
       "version": 1,
       "active": true
     },
@@ -6411,6 +6714,7 @@
         "VPE": "removes release-process drag",
         "CFO": "reduces breach-window cost"
       },
+      "soWhat": "A slow release path delays security fixes. Sell streamlining it so fixes ship quickly and safely.",
       "version": 1,
       "active": true
     },
@@ -6432,6 +6736,7 @@
         "VPE": "fixes a pervasive pattern",
         "CFO": "reduces breach risk"
       },
+      "soWhat": "Injection-prone queries are a classic breach. Sell converting them to parameterized ones across the codebase.",
       "version": 1,
       "active": true
     },
@@ -6453,6 +6758,7 @@
         "CTO": "outcomes over tooling",
         "VPE": "closes vulnerabilities, not tickets"
       },
+      "soWhat": "'We're covered' assumes, not measures. Sell converting spend into measurably reduced exposure, not more tools.",
       "version": 1,
       "active": true
     },
@@ -6474,6 +6780,7 @@
         "VPE": "applies the baseline everywhere",
         "CFO": "reduces uneven-exposure risk"
       },
+      "soWhat": "Inconsistent posture across services is a weakest-link problem. Sell applying consistent controls everywhere.",
       "version": 1,
       "active": true
     },
@@ -6495,6 +6802,7 @@
         "VPE": "tightens permissions safely",
         "CFO": "reduces compromise-impact cost"
       },
+      "soWhat": "Cloud over-permissioning is silent risk. Sell analyzing effective permissions and tightening toward least privilege.",
       "version": 1,
       "active": true
     },
@@ -6516,6 +6824,7 @@
         "VPE": "removes cost-panic firefighting",
         "CRO": "reduces uncontrolled-spend risk"
       },
+      "soWhat": "Runaway spend traces back to code and resources. Sell finding the drivers and remediating the biggest wasters.",
       "version": 1,
       "active": true
     },
@@ -6537,6 +6846,7 @@
         "VPE": "automates capacity management",
         "CRO": "reduces over-provisioning waste"
       },
+      "soWhat": "Over-provisioned compute is money on idle. Sell right-sizing and autoscaling so you pay for what you use.",
       "version": 1,
       "active": true
     },
@@ -6558,6 +6868,7 @@
         "VPE": "clarifies team cost ownership",
         "CRO": "reduces unaccountable-spend risk"
       },
+      "soWhat": "No cost attribution means no accountability. Sell tagging and mapping resources to owners so cost has a home.",
       "version": 1,
       "active": true
     },
@@ -6579,6 +6890,7 @@
         "VPE": "frees the team from cost rewrites",
         "CRO": "reduces structural cost risk"
       },
+      "soWhat": "Inefficient code is a recurring bill. Sell refactoring the hot, wasteful paths so the same work costs less.",
       "version": 1,
       "active": true
     },
@@ -6600,6 +6912,7 @@
         "VPE": "avoids a second migration project",
         "CRO": "reduces stranded-cost risk"
       },
+      "soWhat": "Lift-and-shift rarely saves. Sell incrementally re-architecting toward cloud-native patterns that actually do.",
       "version": 1,
       "active": true
     },
@@ -6621,6 +6934,7 @@
         "VPE": "removes wasteful data patterns",
         "CRO": "reduces surprise-cost risk"
       },
+      "soWhat": "Egress costs hide in data movement. Sell finding the costly patterns and refactoring them to cut transfer fees.",
       "version": 1,
       "active": true
     },
@@ -6642,6 +6956,7 @@
         "VPE": "reduces commitment waste",
         "CRO": "reduces mis-commitment risk"
       },
+      "soWhat": "Stranded commitments are prepaid waste. Sell aligning workloads to them and flagging mismatches before renewal.",
       "version": 1,
       "active": true
     },
@@ -6663,6 +6978,7 @@
         "VPE": "automates cluster right-sizing",
         "CRO": "reduces over-provisioning risk"
       },
+      "soWhat": "Kubernetes defaults over-provision. Sell tuning requests, limits, and scaling to real utilization, verified under load.",
       "version": 1,
       "active": true
     },
@@ -6684,6 +7000,7 @@
         "VPE": "makes the estate manageable",
         "CRO": "reduces orphaned-resource risk"
       },
+      "soWhat": "Orphaned resources bleed money quietly. Sell inventorying the estate and safely decommissioning idle ones.",
       "version": 1,
       "active": true
     },
@@ -6705,6 +7022,7 @@
         "VPE": "protects roadmap velocity",
         "CRO": "reduces cost-delivery tradeoff risk"
       },
+      "soWhat": "Cost work shouldn't stall the roadmap. Sell doing the optimization in parallel so both move.",
       "version": 1,
       "active": true
     },
@@ -6726,6 +7044,7 @@
         "VPE": "clears the recommendation backlog",
         "CRO": "reduces unrealized-savings risk"
       },
+      "soWhat": "A dashboard reports; it doesn't save. Sell agents implementing the recommendations it only surfaces.",
       "version": 1,
       "active": true
     },
@@ -6747,6 +7066,7 @@
         "VPE": "removes accepted inefficiency",
         "CRO": "reduces normalized-waste risk"
       },
+      "soWhat": "'Cost is just scale' hides waste. Sell separating real scale cost from waste and recovering the waste at scale.",
       "version": 1,
       "active": true
     },
@@ -6768,6 +7088,7 @@
         "VPE": "ends data-reconciliation firefighting",
         "CRO": "reduces conflicting-data risk"
       },
+      "soWhat": "Data silos mean no single truth. Sell mapping lineage and consolidating toward a governed source.",
       "version": 1,
       "active": true
     },
@@ -6789,6 +7110,7 @@
         "VPE": "upgrades pipelines incrementally",
         "CRO": "reduces stale-data decision risk"
       },
+      "soWhat": "Stale batch analytics lag the business. Sell modernizing pipelines toward streaming where it matters.",
       "version": 1,
       "active": true
     },
@@ -6810,6 +7132,7 @@
         "VPE": "frees analysts for real analysis",
         "CRO": "reduces slow-insight risk"
       },
+      "soWhat": "Manual data wrangling wastes analysts. Sell building the transform and cleaning pipelines so they start from clean data.",
       "version": 1,
       "active": true
     },
@@ -6831,6 +7154,7 @@
         "VPE": "makes queries straightforward",
         "CRO": "reduces model-mismatch risk"
       },
+      "soWhat": "A legacy data model fights current needs. Sell evolving the schema with safe, verified migrations.",
       "version": 1,
       "active": true
     },
@@ -6852,6 +7176,7 @@
         "VPE": "ends metric disputes",
         "CRO": "reduces reporting-trust risk"
       },
+      "soWhat": "Untrusted metrics undermine every decision. Sell documenting and standardizing definitions so numbers are defensible.",
       "version": 1,
       "active": true
     },
@@ -6873,6 +7198,7 @@
         "VPE": "stops bad-data firefighting",
         "CRO": "reduces data-corruption risk"
       },
+      "soWhat": "Data-quality debt spreads downstream. Sell adding quality checks and remediation across the pipelines.",
       "version": 1,
       "active": true
     },
@@ -6894,6 +7220,7 @@
         "VPE": "clears the migration backlog",
         "CRO": "reduces stalled-migration risk"
       },
+      "soWhat": "A stalled platform migration wastes the investment. Sell porting and validating pipelines in parallel to finish it.",
       "version": 1,
       "active": true
     },
@@ -6915,6 +7242,7 @@
         "VPE": "frees the data team to build",
         "CRO": "reduces pipeline-fragility risk"
       },
+      "soWhat": "Pipeline firefighting eats the team. Sell hardening the fragile ones and handling routine breaks so they can build.",
       "version": 1,
       "active": true
     },
@@ -6936,6 +7264,7 @@
         "CFO": "avoids compliance penalties",
         "VPE": "spares a manual tracing effort"
       },
+      "soWhat": "A governance gap fails audits and erodes trust. Sell instrumenting lineage and governance with the evidence.",
       "version": 1,
       "active": true
     },
@@ -6957,6 +7286,7 @@
         "VPE": "removes the data bottleneck",
         "CFO": "reduces key-person cost exposure"
       },
+      "soWhat": "Pipelines only the data team understands is bus-factor risk. Sell documenting them under that team's direction.",
       "version": 1,
       "active": true
     },
@@ -6978,6 +7308,7 @@
         "VPE": "handles the porting workload",
         "CRO": "reduces failed-platform risk"
       },
+      "soWhat": "A new platform still needs the migration done. Sell the cleanup and porting work any purchase can't skip.",
       "version": 1,
       "active": true
     },
@@ -6999,6 +7330,7 @@
         "CFO": "protects AI investment",
         "CRO": "reduces unready-adoption risk"
       },
+      "soWhat": "AI needs a foundation to build on. Sell documenting and modernizing it so initiatives have something to stand on.",
       "version": 1,
       "active": true
     },
@@ -7020,6 +7352,7 @@
         "CFO": "realizes value from ML work",
         "CRO": "reduces stranded-model risk"
       },
+      "soWhat": "Models stuck in notebooks deliver nothing. Sell the productionization path — packaging, serving, monitoring.",
       "version": 1,
       "active": true
     },
@@ -7041,6 +7374,7 @@
         "CFO": "unblocks stalled AI spend",
         "CRO": "reduces data-readiness risk"
       },
+      "soWhat": "AI is only as good as its data. Sell building the cleaning and preparation pipelines it depends on.",
       "version": 1,
       "active": true
     },
@@ -7062,6 +7396,7 @@
         "CFO": "makes AI actually usable",
         "CRO": "reduces integration-failure risk"
       },
+      "soWhat": "A model that doesn't connect to workflows is a demo. Sell the integrations that put it to work.",
       "version": 1,
       "active": true
     },
@@ -7083,6 +7418,7 @@
         "VPE": "makes AI safe to run",
         "CFO": "reduces AI-liability risk"
       },
+      "soWhat": "AI without observability runs blind. Sell testing, monitoring, and guardrails so it runs with oversight.",
       "version": 1,
       "active": true
     },
@@ -7104,6 +7440,7 @@
         "VPE": "keeps teams moving safely",
         "CFO": "reduces ungoverned-AI risk"
       },
+      "soWhat": "Ungoverned AI sprawl is risk multiplying. Sell consistent usage standards and guardrails across teams.",
       "version": 1,
       "active": true
     },
@@ -7125,6 +7462,7 @@
         "VPE": "unblocks AI on real data",
         "CFO": "reduces stalled-initiative cost"
       },
+      "soWhat": "Security won't approve AI without data controls. Sell implementing the access controls and governance they need.",
       "version": 1,
       "active": true
     },
@@ -7146,6 +7484,7 @@
         "VPE": "automates drift and retraining",
         "CFO": "reduces bad-decision risk"
       },
+      "soWhat": "Undetected model drift degrades silently. Sell drift detection and retraining pipelines that catch it early.",
       "version": 1,
       "active": true
     },
@@ -7167,6 +7506,7 @@
         "VPE": "prioritizes real AI work",
         "CRO": "reduces infeasible-project risk"
       },
+      "soWhat": "Not every AI ask is viable. Sell assessing feasibility against real data and systems to focus on what works.",
       "version": 1,
       "active": true
     },
@@ -7188,6 +7528,7 @@
         "CFO": "raises output per engineer",
         "CRO": "reduces adoption-resistance risk"
       },
+      "soWhat": "'AI replaces us' fear stalls adoption. Sell agents taking toil so engineers do higher-value work — amplify, not replace.",
       "version": 1,
       "active": true
     },
@@ -7209,6 +7550,7 @@
         "VPE": "delivers a provable AI win",
         "CRO": "reduces speculative-spend risk"
       },
+      "soWhat": "AI ROI skepticism is fair. Sell small, measurable pilots that prove value before anyone scales.",
       "version": 1,
       "active": true
     },
@@ -7230,6 +7572,7 @@
         "CFO": "recovers lost ramp time",
         "CRO": "reduces setup key-person risk"
       },
+      "soWhat": "A broken local setup taxes every new hire. Sell fixing, documenting, and containerizing it for one-command onboarding.",
       "version": 1,
       "active": true
     },
@@ -7251,6 +7594,7 @@
         "CFO": "recovers lost engineering hours",
         "CRO": "reduces velocity-drag risk"
       },
+      "soWhat": "Slow builds waste the whole team daily. Sell optimizing them — caching, parallelization — to cut the wait.",
       "version": 1,
       "active": true
     },
@@ -7272,6 +7616,7 @@
         "CFO": "improves engineering efficiency",
         "CRO": "reduces fragmentation risk"
       },
+      "soWhat": "Inconsistent tooling fragments the org. Sell standardizing it across repos, applying the changes consistently.",
       "version": 1,
       "active": true
     },
@@ -7293,6 +7638,7 @@
         "CFO": "recovers diffuse productivity loss",
         "CRO": "reduces hidden-drag risk"
       },
+      "soWhat": "Small friction points add up to real drag. Sell systematically removing the ones each too minor to fix alone.",
       "version": 1,
       "active": true
     },
@@ -7314,6 +7660,7 @@
         "CFO": "reduces wasted re-run time",
         "CRO": "reduces missed-failure risk"
       },
+      "soWhat": "Flaky CI erodes trust in the signal. Sell hunting down the instability so green means green.",
       "version": 1,
       "active": true
     },
@@ -7335,6 +7682,7 @@
         "CFO": "reduces key-person cost exposure",
         "CRO": "reduces bespoke-tooling risk"
       },
+      "soWhat": "Bespoke tooling lock-in is hidden risk. Sell documenting it and modernizing or replacing it with maintainable options.",
       "version": 1,
       "active": true
     },
@@ -7356,6 +7704,7 @@
         "CFO": "improves output per engineer",
         "CRO": "reduces velocity-tax risk"
       },
+      "soWhat": "Environment problems are a recurring velocity tax. Sell fixing them so time goes back to building.",
       "version": 1,
       "active": true
     },
@@ -7377,6 +7726,7 @@
         "CFO": "captures deferred efficiency gains",
         "CRO": "reduces compounding-friction risk"
       },
+      "soWhat": "DevEx always loses to features. Sell doing the improvements in parallel so they don't compete.",
       "version": 1,
       "active": true
     },
@@ -7398,6 +7748,7 @@
         "CFO": "reduces knowledge-loss cost",
         "CRO": "reduces undocumented-knowledge risk"
       },
+      "soWhat": "Stale dev docs mislead the team. Sell regenerating accurate ones from the code and keeping them current.",
       "version": 1,
       "active": true
     },
@@ -7419,6 +7770,7 @@
         "CFO": "improves senior-engineer leverage",
         "CRO": "reduces neglected-foundation risk"
       },
+      "soWhat": "'DevEx is menial' misses who benefits. Sell agents doing the groundwork so seniors get the payoff without the grind.",
       "version": 1,
       "active": true
     },
@@ -7440,6 +7792,7 @@
         "CTO": "makes DevEx gains cheap",
         "CRO": "reduces unaddressed-friction risk"
       },
+      "soWhat": "DevEx skeptics want ROI. Sell cheap improvements tied to measurable time saved.",
       "version": 1,
       "active": true
     },
@@ -7461,6 +7814,7 @@
         "CFO": "reduces integration-breakage cost",
         "CRO": "reduces unmapped-dependency risk"
       },
+      "soWhat": "Integration spaghetti makes every change risky. Sell mapping the web and documenting each connection first.",
       "version": 1,
       "active": true
     },
@@ -7482,6 +7836,7 @@
         "CFO": "reduces integration cost",
         "CRO": "reduces inconsistency risk"
       },
+      "soWhat": "Inconsistent API design confuses consumers. Sell standardizing conventions and adding consistent wrappers.",
       "version": 1,
       "active": true
     },
@@ -7503,6 +7858,7 @@
         "CFO": "reduces outage cost",
         "CRO": "reduces external-dependency risk"
       },
+      "soWhat": "A fragile external dependency propagates its breakage. Sell an adapter layer and monitoring that absorbs the shock.",
       "version": 1,
       "active": true
     },
@@ -7524,6 +7880,7 @@
         "CFO": "cuts cost of dead integrations",
         "CRO": "reduces zombie-integration risk"
       },
+      "soWhat": "You can't retire integrations you can't see. Sell instrumenting usage, then safely killing the dead ones.",
       "version": 1,
       "active": true
     },
@@ -7545,6 +7902,7 @@
         "CFO": "reduces defect-handling cost",
         "CRO": "reduces data-integrity risk"
       },
+      "soWhat": "Format-mismatch bugs live at the boundaries. Sell standardizing the data contracts and validating at the edges.",
       "version": 1,
       "active": true
     },
@@ -7566,6 +7924,7 @@
         "CFO": "reduces high-risk-change cost",
         "CRO": "reduces cascade-failure risk"
       },
+      "soWhat": "Tight coupling turns one change into a cascade. Sell decoupling with interfaces so changes stay contained.",
       "version": 1,
       "active": true
     },
@@ -7587,6 +7946,7 @@
         "CFO": "unblocks API-driven revenue",
         "CRO": "reduces un-integrable-system risk"
       },
+      "soWhat": "No integration surface blocks every partner. Sell building an API layer over existing systems without a rewrite.",
       "version": 1,
       "active": true
     },
@@ -7608,6 +7968,7 @@
         "CFO": "reduces integration cost",
         "CRO": "reduces misintegration risk"
       },
+      "soWhat": "Undocumented APIs are guesswork for consumers. Sell generating accurate docs and specs from real behavior.",
       "version": 1,
       "active": true
     },
@@ -7629,6 +7990,7 @@
         "CFO": "cuts duplicate-maintenance cost",
         "CRO": "reduces version-sprawl risk"
       },
+      "soWhat": "Integration version sprawl fragments consumers. Sell migrating them to the current version and retiring the old.",
       "version": 1,
       "active": true
     },
@@ -7650,6 +8012,7 @@
         "VPE": "handles the integration porting",
         "CRO": "reduces failed-platform risk"
       },
+      "soWhat": "A platform still needs the integration work done. Sell the mapping, migration, and cleanup any purchase can't skip.",
       "version": 1,
       "active": true
     },
@@ -7671,6 +8034,7 @@
         "CFO": "reduces outage-driven paralysis cost",
         "CRO": "reduces change-fear risk"
       },
+      "soWhat": "Integration change feels like a gamble. Sell mapping dependencies and staging changes with verification.",
       "version": 1,
       "active": true
     },
@@ -7692,6 +8056,7 @@
         "CFO": "protects customer trust",
         "CRO": "reduces undetected-failure risk"
       },
+      "soWhat": "Customers finding your outages first is the worst signal. Sell monitoring that detects issues before they do.",
       "version": 1,
       "active": true
     },
@@ -7713,6 +8078,7 @@
         "CFO": "reduces outage cost",
         "CRO": "reduces unexplained-failure risk"
       },
+      "soWhat": "No diagnostic visibility means slow incidents. Sell structured logging and tracing that make causes findable fast.",
       "version": 1,
       "active": true
     },
@@ -7734,6 +8100,7 @@
         "CFO": "reduces missed-incident cost",
         "CRO": "reduces alert-fatigue risk"
       },
+      "soWhat": "Alert noise numbs the response. Sell tuning alerting to be meaningful so signals get the attention they deserve.",
       "version": 1,
       "active": true
     },
@@ -7755,6 +8122,7 @@
         "CFO": "reduces prolonged-outage cost",
         "CRO": "reduces blind-spot risk"
       },
+      "soWhat": "You can't follow an issue across services without tracing. Sell distributed tracing that spans the boundaries.",
       "version": 1,
       "active": true
     },
@@ -7776,6 +8144,7 @@
         "CFO": "reduces repeat-incident cost",
         "CRO": "reduces recurrence risk"
       },
+      "soWhat": "Unaddressed root causes mean incidents recur. Sell finding and fixing the underlying causes so they stop.",
       "version": 1,
       "active": true
     },
@@ -7797,6 +8166,7 @@
         "CFO": "ties reliability to outcomes",
         "CRO": "reduces unmeasured-reliability risk"
       },
+      "soWhat": "Unmeasured reliability can't be managed. Sell instrumenting SLOs so you run on evidence, not vibes.",
       "version": 1,
       "active": true
     },
@@ -7818,6 +8188,7 @@
         "CFO": "reduces incident-handling cost",
         "CRO": "reduces on-call attrition risk"
       },
+      "soWhat": "Manual incident toil burns the on-call. Sell runbooks, diagnostic tooling, and triage help that cut it.",
       "version": 1,
       "active": true
     },
@@ -7839,6 +8210,7 @@
         "CFO": "reduces first-failure cost",
         "CRO": "reduces unknown-failure risk"
       },
+      "soWhat": "Unknown failure modes surface at the worst time. Sell resilience testing that finds the weaknesses first.",
       "version": 1,
       "active": true
     },
@@ -7860,6 +8232,7 @@
         "CFO": "reduces tool-sprawl cost",
         "CRO": "reduces fragmented-visibility risk"
       },
+      "soWhat": "Fragmented observability hides the picture. Sell consolidating telemetry into one coherent view.",
       "version": 1,
       "active": true
     },
@@ -7881,6 +8254,7 @@
         "VPE": "avoids outage-driven scramble",
         "CRO": "reduces reactive-posture risk"
       },
+      "soWhat": "A reactive reliability stance pays after the outage. Sell cheap observability so you invest before it.",
       "version": 1,
       "active": true
     },
@@ -7902,6 +8276,7 @@
         "CFO": "reduces incident cost",
         "CRO": "reduces opacity risk"
       },
+      "soWhat": "'Observability is clutter' until the next incident. Sell clean, consistent instrumentation that pays for itself then.",
       "version": 1,
       "active": true
     }
