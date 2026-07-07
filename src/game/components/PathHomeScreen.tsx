@@ -14,7 +14,6 @@ import {
 } from "../engine/curriculum";
 import { useSessionHistory } from "../store/useSessionHistory";
 import { useCurriculum } from "../store/useCurriculum";
-import { usePortfolio } from "../store/usePortfolio";
 import { useSettings } from "../store/useSettings";
 import { useStreak } from "../store/useStreak";
 import { SessionHistory } from "./SessionHistory";
@@ -24,7 +23,6 @@ interface PathHomeScreenProps {
   seed: Seed;
   onStart: (mode: SessionMode, focusFamily?: Family) => void;
   onStartLesson: (lessonId: string) => void;
-  onOpenPortfolio: () => void;
 }
 
 interface PathNode {
@@ -39,13 +37,11 @@ export function PathHomeScreen({
   seed,
   onStart,
   onStartLesson,
-  onOpenPortfolio,
 }: PathHomeScreenProps) {
   const [showFamilyPicker, setShowFamilyPicker] = useState(false);
   const [showPractice, setShowPractice] = useState(false);
   const { sessions } = useSessionHistory();
   const completed = useCurriculum((s) => s.completed);
-  const portfolioCount = usePortfolio((s) => s.pitches.length);
   const { haptics, sound, toggleHaptics, toggleSound } = useSettings();
   const { count: dayStreak, atRisk, freezes } = useStreak();
 
@@ -124,8 +120,6 @@ export function PathHomeScreen({
   // The one unit the hero ring visualises: the unit you're working through, or
   // the last unit once everything is done.
   const heroUnit = currentUnit ?? (nodes.length ? nodes[nodes.length - 1].unit : null);
-  // Where you are in the 14-unit journey (1-based). The single "journey" number.
-  const journeyPos = currentIdx >= 0 ? currentIdx + 1 : families.length;
 
   return (
     <div className="mx-auto w-full max-w-md space-y-5">
@@ -170,21 +164,22 @@ export function PathHomeScreen({
             {FAMILY_LABELS[heroUnit.family]}
           </p>
 
-          {/* One status line: how close to the next milestone. */}
+          {/* One tight status line: how close to the next milestone. */}
           {heroUnit.complete ? (
             <p className="mt-1 text-center text-sm font-semibold text-[var(--success)]">
               Mastered · {heroUnit.stars}/{heroUnit.maxStars} &#9733;
             </p>
           ) : heroUnit.clearedNext ? (
             <p className="mt-1 text-center text-sm font-medium text-[var(--success)]">
-              &#x2713; {nextUnitLabel ? `${nextUnitLabel} unlocked` : "Next unit unlocked"} ·{" "}
-              {heroUnit.total - heroUnit.done} more to master
+              &#x2713; Unlocked · {heroUnit.total - heroUnit.done} to master
+            </p>
+          ) : nextUnitLabel ? (
+            <p className="mt-1 text-center text-sm font-medium text-[var(--text-dim)]">
+              <span aria-hidden="true">&#x1F513;</span> {heroUnit.lessonsUntilUnlock} to unlock
             </p>
           ) : (
             <p className="mt-1 text-center text-sm font-medium text-[var(--text-dim)]">
-              <span aria-hidden="true">&#x1F513;</span>{" "}
-              {heroUnit.lessonsUntilUnlock} more {heroUnit.lessonsUntilUnlock === 1 ? "lesson" : "lessons"}
-              {nextUnitLabel ? ` to unlock ${nextUnitLabel}` : " to finish"}
+              {heroUnit.lessonsUntilUnlock} to finish
             </p>
           )}
 
@@ -192,6 +187,7 @@ export function PathHomeScreen({
           <button
             type="button"
             onClick={handleContinue}
+            data-testid="continue-cta"
             disabled={!continueLesson}
             className="mt-5 w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.97] min-h-[44px] disabled:opacity-50"
             style={{ transitionTimingFunction: "var(--ease-spring)" }}
@@ -208,11 +204,6 @@ export function PathHomeScreen({
               </span>
             )}
           </button>
-
-          {/* The one journey line */}
-          <p className="mt-3 font-telemetry text-xs text-[var(--text-faint)]">
-            Unit {journeyPos} of {families.length}
-          </p>
         </div>
       )}
 
@@ -263,24 +254,6 @@ export function PathHomeScreen({
           </div>
         )}
       </div>
-
-      {/* Pitch Portfolio — the Investment loop */}
-      <button
-        type="button"
-        onClick={onOpenPortfolio}
-        className="flex w-full items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-left transition-all hover:border-[var(--accent)] active:scale-[0.98] min-h-[44px]"
-        style={{ transitionTimingFunction: "var(--ease-standard)" }}
-      >
-        <div>
-          <p className="text-sm font-bold text-[var(--ink)]">Pitch Portfolio</p>
-          <p className="text-xs text-[var(--text-dim)]">
-            The reads you&rsquo;ve mastered, yours to keep &amp; share
-          </p>
-        </div>
-        <span className="ml-3 shrink-0 rounded-full bg-[var(--accent-bg)] px-2.5 py-1 text-xs font-telemetry font-bold text-[var(--accent-ink)]">
-          {portfolioCount}
-        </span>
-      </button>
 
       {/* Family picker */}
       {showFamilyPicker && (

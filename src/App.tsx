@@ -72,7 +72,6 @@ function App() {
           seed={seed}
           onStart={(mode, focusFamily) => game.prepareSession(mode, focusFamily)}
           onStartLesson={(lessonId) => game.startLesson(seed, lessonId)}
-          onOpenPortfolio={() => game.openPortfolio()}
         />
       </main>
     );
