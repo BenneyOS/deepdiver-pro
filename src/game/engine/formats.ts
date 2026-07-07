@@ -12,14 +12,12 @@ import type { AnswerOption } from "./session";
 export type ExerciseFormat =
   | "classic"
   | "whos-speaking"
-  | "spot-weak"
-  | "build-reframe";
+  | "spot-weak";
 
 export const FORMAT_LABELS: Record<ExerciseFormat, string> = {
   classic: "Read the room",
   "whos-speaking": "Who's speaking?",
   "spot-weak": "Spot the weak answer",
-  "build-reframe": "Build the reframe",
 };
 
 const PERSONAS: Persona[] = ["CTO", "VPE", "CFO", "CRO"];
@@ -103,45 +101,6 @@ export function buildReframeOptions(
   return seededShuffle(options, rand);
 }
 
-export interface ReframeToken {
-  text: string;
-  isDistractor: boolean;
-}
-
-// Split a reframe into ordered clause fragments on sentence/clause boundaries.
-export function tokenizeReframe(reframe: string): string[] {
-  return reframe
-    .split(/(?<=[.!?])\s+|\s+[—–]\s+|,\s+/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
-// Assemble the reframe from shuffled fragments. Distractor fragments from other
-// cards' reframes raise difficulty. Trains recall over recognition.
-export function buildReframeAssembly(
-  card: Card,
-  allCards: Card[],
-  rand: () => number = Math.random,
-): { format: "build-reframe"; correctOrder: string[]; shuffled: ReframeToken[] } {
-  const correctOrder = tokenizeReframe(card.reframe);
-  const otherFragments = allCards
-    .filter((c) => c.id !== card.id)
-    .flatMap((c) => tokenizeReframe(c.reframe));
-  const distractorCount = correctOrder.length <= 3 ? 1 : 2;
-  const distractors = pickDistinct(
-    otherFragments,
-    distractorCount,
-    new Set(correctOrder),
-    rand,
-  ).map((text) => ({ text, isDistractor: true }));
-  const real = correctOrder.map((text) => ({ text, isDistractor: false }));
-  return {
-    format: "build-reframe",
-    correctOrder,
-    shuffled: seededShuffle([...real, ...distractors], rand),
-  };
-}
-
 // Format rotation. Spaced repetition selects WHICH cards appear; format is
 // layered on top. Rule: never serve the same format more than twice in a row.
 export function rotateFormats(
@@ -161,7 +120,7 @@ export function rotateFormats(
   return out;
 }
 
-// Tier-1 cards ask "which family?" — build-reframe/spot-weak still work on any
+// Tier-1 cards ask "which family?" — spot-weak/who's-speaking still work on any
 // tier since they use the reframe/persona fields present on every card.
 export function formatPoolForMode(mode: string): ExerciseFormat[] {
   switch (mode) {
@@ -170,10 +129,10 @@ export function formatPoolForMode(mode: string): ExerciseFormat[] {
       return ["classic", "spot-weak"];
     case "family-focus":
       // deep review formats
-      return ["build-reframe", "whos-speaking", "classic"];
+      return ["whos-speaking", "classic"];
     default:
       // quick drill mixes for variety
-      return ["classic", "whos-speaking", "spot-weak", "build-reframe"];
+      return ["classic", "whos-speaking", "spot-weak"];
   }
 }
 
