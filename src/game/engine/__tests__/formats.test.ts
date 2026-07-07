@@ -6,7 +6,7 @@ import {
   rotateFormats,
   formatPoolForMode,
   WEAK_REFRAMES,
-  weakReframeFor,
+  pickWeakReframe,
   type ExerciseFormat,
 } from "../formats";
 
@@ -68,26 +68,28 @@ describe("buildSpotWeak", () => {
     expect(WEAK_REFRAMES).toContain(correct[0].text);
   });
 
-  it("uses a card-specific weak line: stable per card, varied across cards", () => {
-    // Same card → same line every time (stable, learnable).
-    const c = makeCard("A17");
-    expect(weakReframeFor(c)).toBe(weakReframeFor(c));
-    expect(WEAK_REFRAMES).toContain(weakReframeFor(c));
+  it("picks weak lines with variety and avoids recently-shown ones", () => {
+    // Over many random picks we should see a broad spread, not one line.
+    const seen = new Set(
+      Array.from({ length: 200 }, () => pickWeakReframe(Math.random)),
+    );
+    expect(seen.size).toBeGreaterThanOrEqual(8);
 
-    // A spread of cards should hit many different weak lines, not repeat one.
-    const ids = Array.from({ length: 60 }, (_, i) => `X${i}`);
-    const picked = new Set(ids.map((id) => weakReframeFor(makeCard(id))));
-    expect(picked.size).toBeGreaterThanOrEqual(8);
+    // Recency: a line in the recent list is never re-picked while alternatives
+    // remain, so consecutive spot-weak rounds don't repeat the same weak line.
+    const recent = WEAK_REFRAMES.slice(0, WEAK_REFRAMES.length - 1);
+    for (let i = 0; i < 50; i++) {
+      expect(recent).not.toContain(pickWeakReframe(Math.random, recent));
+    }
   });
 });
 
 describe("rotateFormats", () => {
-  it("never serves the same format more than twice in a row", () => {
+  it("never serves the same format twice in a row", () => {
     const pool: ExerciseFormat[] = ["classic", "whos-speaking", "spot-weak"];
     const seqOut = rotateFormats(200, pool, Math.random);
-    for (let i = 2; i < seqOut.length; i++) {
-      const threeSame = seqOut[i] === seqOut[i - 1] && seqOut[i] === seqOut[i - 2];
-      expect(threeSame).toBe(false);
+    for (let i = 1; i < seqOut.length; i++) {
+      expect(seqOut[i] === seqOut[i - 1]).toBe(false);
     }
   });
 

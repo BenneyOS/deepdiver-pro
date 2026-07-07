@@ -25,6 +25,7 @@ import {
   nextLessonOverall,
   nextLessonInUnit,
   isUnitUnlocked,
+  focusedUnitIndex,
 } from "./game/engine/curriculum";
 import { useCurriculum } from "./game/store/useCurriculum";
 
@@ -147,9 +148,17 @@ function App() {
       ? (game.activeLessonId!.split("-L")[0] as Family)
       : null;
 
-    // "Continue" plays the next incomplete lesson anywhere on the path.
+    // "Continue" keeps you in the unit you're actually progressing (the one the
+    // hero ring tracks), not the first-incomplete unit anywhere — otherwise it
+    // drags you back to an earlier, unfinished module like COBOL. Fall back to
+    // the next lesson anywhere only if the focused unit has none left.
+    const focusedFamily = isLesson
+      ? (allFamilies[focusedUnitIndex(seed.cards, allFamilies, completed)] ?? null)
+      : null;
     const continueLesson = isLesson
-      ? nextLessonOverall(seed.cards, allFamilies, completed)
+      ? (focusedFamily
+          ? nextLessonInUnit(seed.cards, focusedFamily, completed)
+          : null) ?? nextLessonOverall(seed.cards, allFamilies, completed)
       : null;
     const continueLabel = continueLesson
       ? continueLesson.family === currentFamily

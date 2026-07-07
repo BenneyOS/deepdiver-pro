@@ -54,6 +54,8 @@ interface GameState {
   mode: SessionMode;
   queue: Card[];
   formats: ExerciseFormat[];
+  /** Recently-shown weak reframes, so spot-the-weak lines don't repeat. */
+  recentWeak: string[];
   currentIndex: number;
   currentRound: Round | null;
   selectedAnswer: number | null;
@@ -90,6 +92,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   mode: "quick-drill",
   queue: [],
   formats: [],
+  recentWeak: [],
   currentIndex: 0,
   currentRound: null,
   selectedAnswer: null,
@@ -144,6 +147,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       mode: "lesson",
       queue,
       formats,
+      recentWeak: trackWeak([], firstRound),
       currentRound: firstRound,
       allCards: seed.cards,
       focusFamily: lesson.family,
@@ -202,6 +206,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       queue.length > 0
         ? buildRound(queue[0], allCards, formats[0], Math.random, boxFor(queue[0].id))
         : null;
+    const firstRecentWeak = trackWeak([], firstRound);
 
     trackEvent({
       event: "session_started",
@@ -214,6 +219,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       mode,
       queue,
       formats,
+      recentWeak: firstRecentWeak,
       currentIndex: 0,
       currentRound: firstRound,
       selectedAnswer: null,
@@ -365,12 +371,14 @@ export const useGameStore = create<GameState>((set, get) => ({
       state.formats[nextIndex],
       Math.random,
       boxFor(nextCard.id),
+      state.recentWeak,
     );
 
     set({
       phase: "answer",
       currentIndex: nextIndex,
       currentRound: nextRound,
+      recentWeak: trackWeak(state.recentWeak, nextRound),
       selectedAnswer: null,
       selectedWager: null,
       isCorrect: null,
@@ -402,10 +410,23 @@ export const useGameStore = create<GameState>((set, get) => ({
 }));
 
 // Reset fields shared by every session start.
+// Cap on how many recent weak reframes we remember when de-duping.
+const WEAK_RECENCY = 6;
+
+// Append the weak reframe just shown (if this was a spot-the-weak round) to the
+// recency list so the next spot-the-weak round avoids it.
+function trackWeak(recent: string[], round: Round | null): string[] {
+  if (!round || round.format !== "spot-weak") return recent;
+  const weak = round.options.find((o) => o.correct)?.text;
+  if (!weak) return recent;
+  return [...recent, weak].slice(-WEAK_RECENCY);
+}
+
 function freshSessionState(): Partial<GameState> {
   return {
     focusFamily: null,
     formats: [],
+    recentWeak: [],
     currentIndex: 0,
     currentRound: null,
     selectedAnswer: null,
