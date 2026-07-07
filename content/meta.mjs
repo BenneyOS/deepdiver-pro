@@ -3,23 +3,23 @@
 // by scripts/generate-seed.mjs. Bump contentVersion when content changes so
 // clients refetch.
 export const schemaVersion = 1;
-export const contentVersion = 3;
+export const contentVersion = 4;
 
 export const families = {
-  A: "Mainframe / COBOL core",
-  B: "Framework version lag",
-  C: "Language / platform migration",
-  D: "Undocumented tribal knowledge",
-  E: "Technical-debt drag",
-  F: "Compliance-forced modernization",
-  G: "Talent & hiring pressure",
-  H: "Security & vulnerability exposure",
-  I: "Cloud cost & FinOps pressure",
-  J: "Data & analytics modernization",
-  K: "AI/ML adoption & readiness",
-  L: "Developer experience & tooling",
-  M: "Integration & API sprawl",
-  N: "Observability & reliability gaps",
+  A: "Mainframe / COBOL Core",
+  B: "Framework Version Lag",
+  C: "Language / Platform Migration",
+  D: "Undocumented Tribal Knowledge",
+  E: "Technical-Debt Drag",
+  F: "Compliance-Forced Modernization",
+  G: "Talent & Hiring Pressure",
+  H: "Security & Vulnerability Exposure",
+  I: "Cloud Cost & FinOps Pressure",
+  J: "Data & Analytics Modernization",
+  K: "AI/ML Adoption & Readiness",
+  L: "Developer Experience & Tooling",
+  M: "Integration & API Sprawl",
+  N: "Observability & Reliability Gaps",
 };
 
 export const tiers = {

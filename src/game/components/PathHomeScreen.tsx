@@ -43,7 +43,7 @@ export function PathHomeScreen({
   const { sessions } = useSessionHistory();
   const completed = useCurriculum((s) => s.completed);
   const { haptics, sound, toggleHaptics, toggleSound } = useSettings();
-  const { count: dayStreak, atRisk, freezes } = useStreak();
+  const { count: dayStreak } = useStreak();
 
   const families = Object.keys(seed.families) as Family[];
   // The unit the hero ring focuses on. Follows the player down the path (deepest
@@ -207,25 +207,6 @@ export function PathHomeScreen({
         </div>
       )}
 
-      {/* Streak — with a protective freeze so one missed day doesn't reset it */}
-      {dayStreak > 0 && (
-        <div className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] px-4 py-3">
-          <span className="inline-flex items-center gap-1.5 text-sm font-bold text-[var(--streak)]">
-            <span aria-hidden="true">&#x1F525;</span>
-            {dayStreak}-day streak
-          </span>
-          <span className="text-xs text-[var(--text-dim)]">
-            {atRisk
-              ? freezes > 0
-                ? "At risk — a freeze has you covered"
-                : "At risk — play today to keep it"
-              : freezes > 0
-                ? "1 freeze banked"
-                : "Locked in"}
-          </span>
-        </div>
-      )}
-
       {/* Practice modes — collapsed by default so they don't compete with the
           hero CTA. One secondary toggle expands the extra-reps grid. */}
       <div>
@@ -302,11 +283,17 @@ export function PathHomeScreen({
               ? `${remainingInPrev} more ${remainingInPrev === 1 ? "lesson" : "lessons"} in ${prevNode.label} to unlock`
               : null;
 
+          const startNode = () => {
+            if (isLocked) return;
+            if (node.nextLesson) onStartLesson(node.nextLesson.id);
+            else if (unit.lessons[0]) onStartLesson(unit.lessons[0].id);
+          };
+
           return (
-            <div key={unit.family} className="relative flex items-center gap-4 py-2">
+            <div key={unit.family} className="relative py-1">
               {i > 0 && (
                 <div
-                  className="absolute left-[27px] -top-2 h-4 w-0.5"
+                  className="absolute left-[27px] top-0 h-4 w-0.5"
                   style={{
                     backgroundColor:
                       isComplete || isCurrent ? "var(--accent)" : "var(--border)",
@@ -315,34 +302,37 @@ export function PathHomeScreen({
                 />
               )}
 
-              <div className="relative flex-shrink-0">
-                <button
-                  type="button"
-                  disabled={isLocked}
-                  onClick={() => {
-                    if (node.nextLesson) onStartLesson(node.nextLesson.id);
-                    else if (unit.lessons[0]) onStartLesson(unit.lessons[0].id);
-                  }}
-                  className={`relative flex h-[58px] w-[58px] items-center justify-center rounded-full border-2 transition-all
+              {/* The whole row is one large tap target — tapping the icon OR the
+                  title enters the module (previously only the small circle did). */}
+              <button
+                type="button"
+                disabled={isLocked}
+                onClick={startNode}
+                className={`flex w-full items-center gap-4 rounded-2xl py-2 pr-2 text-left transition-colors ${
+                  isLocked ? "cursor-not-allowed" : "cursor-pointer hover:bg-[var(--card)] active:scale-[0.99]"
+                }`}
+                aria-label={`${node.label}: ${
+                  isComplete
+                    ? "mastered"
+                    : isCurrent
+                      ? "current — tap to start next lesson"
+                      : isUnlockedAhead
+                        ? "unlocked — tap to play"
+                        : "locked"
+                }, ${unit.done} of ${unit.total} lessons`}
+              >
+                <span
+                  className={`relative flex h-[58px] w-[58px] flex-shrink-0 items-center justify-center rounded-full border-2 transition-all
                     ${
                       isCurrent
-                        ? "animate-node-bob border-[var(--accent-strong)] bg-[var(--accent-strong)] text-[var(--ink)] shadow-md active:scale-[0.93] cursor-pointer"
+                        ? "animate-node-bob border-[var(--accent-strong)] bg-[var(--accent-strong)] text-[var(--ink)] shadow-md"
                         : isComplete
-                          ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)] cursor-pointer active:scale-[0.95]"
+                          ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)]"
                           : isUnlockedAhead
-                            ? "border-[var(--accent)] bg-[var(--card)] text-[var(--accent-ink)] cursor-pointer active:scale-[0.95]"
-                            : "border-[var(--border)] bg-[var(--card)] text-[var(--text-faint)] cursor-not-allowed opacity-60"
-                    }
-                    min-h-[44px]`}
-                  aria-label={`${node.label}: ${
-                    isComplete
-                      ? "mastered"
-                      : isCurrent
-                        ? "current — tap to start next lesson"
-                        : isUnlockedAhead
-                          ? "unlocked — tap to play"
-                          : "locked"
-                  }, ${unit.done} of ${unit.total} lessons`}
+                            ? "border-[var(--accent)] bg-[var(--card)] text-[var(--accent-ink)]"
+                            : "border-[var(--border)] bg-[var(--card)] text-[var(--text-faint)] opacity-60"
+                    }`}
+                  aria-hidden="true"
                 >
                   {isComplete ? (
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
@@ -354,44 +344,44 @@ export function PathHomeScreen({
                       <path d="M9 11V7a3 3 0 016 0v4" />
                     </svg>
                   ) : (
-                    <span className="text-2xl leading-none" aria-hidden="true">
+                    <span className="text-2xl leading-none">
                       {FAMILY_ICONS[unit.family]}
                     </span>
                   )}
-                </button>
-              </div>
+                </span>
 
-              <div className="flex-1 min-w-0">
-                <p
-                  className={`text-sm font-semibold ${
-                    isPlayable || isComplete ? "text-[var(--ink)]" : "text-[var(--text-faint)]"
-                  }`}
-                >
-                  {node.label}
-                </p>
-                {isCurrent && (
-                  <p className="font-telemetry text-xs text-[var(--text-dim)]">
-                    {unit.done} of {unit.total} lessons
-                    <StarRow stars={Math.round(unit.stars / Math.max(1, unit.done))} inline />
-                  </p>
-                )}
-                {isUnlockedAhead && (
-                  <p className="font-telemetry text-xs text-[var(--text-dim)]">
-                    {unit.done > 0 ? `${unit.done} of ${unit.total} lessons` : `Unlocked · ${unit.total} lessons`}
-                    {unit.done > 0 && (
+                <span className="flex-1 min-w-0">
+                  <span
+                    className={`block text-sm font-semibold ${
+                      isPlayable || isComplete ? "text-[var(--ink)]" : "text-[var(--text-faint)]"
+                    }`}
+                  >
+                    {node.label}
+                  </span>
+                  {isCurrent && (
+                    <span className="font-telemetry block text-xs text-[var(--text-dim)]">
+                      {unit.done} of {unit.total} lessons
                       <StarRow stars={Math.round(unit.stars / Math.max(1, unit.done))} inline />
-                    )}
-                  </p>
-                )}
-                {isComplete && (
-                  <p className="font-telemetry text-xs text-[var(--success)]">
-                    Mastered · {unit.stars}/{unit.maxStars} &#9733;
-                  </p>
-                )}
-                {isLocked && unlockText && (
-                  <p className="text-xs text-[var(--text-faint)]">{unlockText}</p>
-                )}
-              </div>
+                    </span>
+                  )}
+                  {isUnlockedAhead && (
+                    <span className="font-telemetry block text-xs text-[var(--text-dim)]">
+                      {unit.done > 0 ? `${unit.done} of ${unit.total} lessons` : `Unlocked · ${unit.total} lessons`}
+                      {unit.done > 0 && (
+                        <StarRow stars={Math.round(unit.stars / Math.max(1, unit.done))} inline />
+                      )}
+                    </span>
+                  )}
+                  {isComplete && (
+                    <span className="font-telemetry block text-xs text-[var(--success)]">
+                      Mastered · {unit.stars}/{unit.maxStars} &#9733;
+                    </span>
+                  )}
+                  {isLocked && unlockText && (
+                    <span className="block text-xs text-[var(--text-faint)]">{unlockText}</span>
+                  )}
+                </span>
+              </button>
             </div>
           );
         })}
