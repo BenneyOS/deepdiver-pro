@@ -50,7 +50,20 @@ export function PathHomeScreen({
   const { count: dayStreak, atRisk, freezes } = useStreak();
 
   const families = Object.keys(seed.families) as Family[];
-  const currentIdx = currentUnitIndex(seed.cards, families, completed);
+  // The unit the home screen focuses on. Prefer the DEEPEST unit you've actually
+  // engaged (played >=1 lesson) that isn't mastered yet, so the hero ring follows
+  // you down the path instead of freezing on Unit A until it's 100% complete.
+  // Falls back to the frontier (first unlocked, incomplete unit) before you've
+  // played anything.
+  const frontierIdx = currentUnitIndex(seed.cards, families, completed);
+  const engagedIdx = (() => {
+    for (let i = families.length - 1; i >= 0; i--) {
+      const u = unitState(seed.cards, families[i], completed);
+      if (u.done > 0 && !u.complete) return i;
+    }
+    return -1;
+  })();
+  const currentIdx = engagedIdx >= 0 ? engagedIdx : frontierIdx;
 
   const nodes: PathNode[] = families.map((fam, i) => {
     const unit = unitState(seed.cards, fam, completed);
