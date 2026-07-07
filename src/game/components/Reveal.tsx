@@ -271,14 +271,12 @@ export function Reveal({
 
         {breakdownOpen && (
           <div className="space-y-4 border-t border-[var(--border)] p-4">
-            <Section label="The pattern">
-              <p className="text-sm leading-relaxed text-[var(--ink)]">{card.pattern}</p>
-            </Section>
-
-            <Section label="Why it works">
-              <DiagField label="Root cause" value={card.rootCause} />
-              <DiagField label="Consequence" value={card.consequence} />
-              <DiagField label="Sharp question" value={card.diagnostic} />
+            {/* Trimmed to the two lines that are actually usable in the room:
+               the sharp question to ask, and the exact reframe to say. The
+               "so what" above carries the insight; root cause / consequence /
+               angle are intentionally omitted to cut cognitive load. */}
+            <Section label="Ask this">
+              <p className="text-sm leading-relaxed text-[var(--ink)]">{card.diagnostic}</p>
             </Section>
 
             <Section label="Say it like this">
@@ -287,7 +285,6 @@ export function Reveal({
                   &ldquo;{card.reframe}&rdquo;
                 </p>
               </div>
-              <DiagField label="Angle" value={card.angle} />
             </Section>
 
             <PersonaSection card={card} />
@@ -397,15 +394,3 @@ function PersonaCard({ lens }: { lens: ReturnType<typeof allPersonaLenses>[numbe
   );
 }
 
-function DiagField({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
-        {label}
-      </p>
-      <p className="text-sm leading-relaxed text-[var(--text-dim)]">
-        {value}
-      </p>
-    </div>
-  );
-}
