@@ -23,6 +23,7 @@ interface PathHomeScreenProps {
   seed: Seed;
   onStart: (mode: SessionMode, focusFamily?: Family) => void;
   onStartLesson: (lessonId: string) => void;
+  onOpenCaseFiles: () => void;
 }
 
 interface PathNode {
@@ -37,6 +38,7 @@ export function PathHomeScreen({
   seed,
   onStart,
   onStartLesson,
+  onOpenCaseFiles,
 }: PathHomeScreenProps) {
   const [showFamilyPicker, setShowFamilyPicker] = useState(false);
   const [showPractice, setShowPractice] = useState(false);
@@ -80,13 +82,6 @@ export function PathHomeScreen({
   const caseFilesUnit = families.includes(FEATURED_FAMILY)
     ? unitState(seed.cards, FEATURED_FAMILY, completed)
     : null;
-  const caseFilesNext = caseFilesUnit
-    ? nextLessonInUnit(seed.cards, FEATURED_FAMILY, completed)
-    : null;
-  const handleCaseFiles = () => {
-    const target = caseFilesNext ?? caseFilesUnit?.lessons[0] ?? null;
-    if (target) onStartLesson(target.id);
-  };
 
   // Fire a one-time "Unlocked!" toast when a new unit becomes playable. Baseline
   // is 1 (Unit A is always unlocked), persisted so it only fires once per unlock.
@@ -175,7 +170,7 @@ export function PathHomeScreen({
       {caseFilesUnit && (
         <button
           type="button"
-          onClick={handleCaseFiles}
+          onClick={onOpenCaseFiles}
           data-testid="case-files-featured"
           className="flex w-full items-center gap-4 rounded-3xl border border-[var(--accent)]/45 bg-[var(--accent-bg)] px-5 py-4 text-left shadow-sm transition-all hover:border-[var(--accent)] active:scale-[0.99] animate-card-deal"
           style={{ transitionTimingFunction: "var(--ease-spring)" }}
@@ -202,7 +197,7 @@ export function PathHomeScreen({
               {FAMILY_LABELS[FEATURED_FAMILY]}
             </span>
             <span className="block text-xs text-[var(--text-dim)]">
-              Diagnose real Devin customer wins &amp; pick the winning motion
+              Study guide · 7 winning plays, real customers &amp; proof
             </span>
           </span>
           <svg

@@ -16,6 +16,7 @@ import { MatchPairs } from "./game/components/MatchPairs";
 import { Reveal } from "./game/components/Reveal";
 import { Scorecard } from "./game/components/Scorecard";
 import { PitchPortfolio } from "./game/components/PitchPortfolio";
+import { CaseFilesGuide } from "./game/components/CaseFilesGuide";
 import { AgenticLog } from "./game/components/AgenticLog";
 import { Ada } from "./game/components/Ada";
 import {
@@ -73,6 +74,7 @@ function App() {
           seed={seed}
           onStart={(mode, focusFamily) => game.prepareSession(mode, focusFamily)}
           onStartLesson={(lessonId) => game.startLesson(seed, lessonId)}
+          onOpenCaseFiles={() => game.openCaseFiles()}
         />
       </main>
     );
@@ -82,6 +84,18 @@ function App() {
     return (
       <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8 animate-screen-in" aria-label="Pitch Portfolio">
         <PitchPortfolio onHome={() => game.goHome()} />
+      </main>
+    );
+  }
+
+  if (game.phase === "casefiles") {
+    return (
+      <main className="flex min-h-screen flex-col items-center bg-[var(--page)] px-4 py-8 animate-screen-in" aria-label="Case Files">
+        <CaseFilesGuide
+          seed={seed}
+          onHome={() => game.goHome()}
+          onDrill={(lessonId) => game.startLesson(seed, lessonId)}
+        />
       </main>
     );
   }

@@ -8,6 +8,7 @@ import {
   focusedUnitIndex,
   currentUnitIndex,
 } from "../curriculum";
+import { caseFileMotions } from "../caseFiles";
 
 const cards = seed.cards as Card[];
 const families = Object.keys(seed.families) as Family[];
@@ -26,6 +27,27 @@ describe("Case Files featured unit", () => {
     const oIdx = families.indexOf(FEATURED_FAMILY);
     expect(currentUnitIndex(cards, families, {})).not.toBe(oIdx);
     expect(focusedUnitIndex(cards, families, {})).not.toBe(oIdx);
+  });
+});
+
+describe("Case Files study guide (caseFileMotions)", () => {
+  const motions = caseFileMotions(cards);
+
+  it("produces one entry per lesson, each with a motion, cards and customers", () => {
+    expect(motions.length).toBe(oTier1.length); // one lesson per T1 motion
+    expect(motions.length).toBeGreaterThanOrEqual(7);
+    for (const m of motions) {
+      expect(m.motion.length).toBeGreaterThan(0);
+      expect(m.cards.length).toBeGreaterThan(0);
+      expect(m.customers.length).toBeGreaterThan(0);
+      expect(m.lessonId).toBe(`O-L${m.index}`);
+      // every case card carries the real-outcome proof metric
+      expect(m.cards.every((c) => Boolean(c.proofMetric))).toBe(true);
+    }
+  });
+
+  it("covers all seven distinct GTM motions", () => {
+    expect(new Set(motions.map((m) => m.motion)).size).toBeGreaterThanOrEqual(7);
   });
 });
 
