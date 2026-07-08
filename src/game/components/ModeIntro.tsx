@@ -20,32 +20,32 @@ function getCopy(mode: SessionMode, focusFamily: Family | null): ModeCopy {
   switch (mode) {
     case "boss-deals":
       return {
-        name: "Boss Deals",
-        desc: "The toughest reads, back to back. 12 deals weighted to the hardest tiers — sharp questions and live objections.",
+        name: "Championship Cup",
+        desc: "The toughest reads, back to back. 12 laps weighted to the hardest tiers — sharp questions and live objections.",
         points: [
-          "12 hard deals — mostly tier 3–4 (diagnostics + objections).",
-          "Streak matters — chain correct reads for bonus; one miss resets.",
-          "Earn your rank — score 9+ to hit Senior Seller.",
+          "12 hard laps — mostly tier 3–4 (diagnostics + objections).",
+          "Turbo boost — chain correct reads to fill the meter; one miss resets it.",
+          "Race for the podium — score 9+ to take Champion tier.",
         ],
       };
     case "speed-round":
       return {
-        name: "Speed Round",
-        desc: "60 seconds. Identify as many situation families as you can — fast reads only.",
+        name: "Time Trial",
+        desc: "60 seconds on the clock. Read as many circuits as you can — fast reads only.",
         points: [
           "60-second timer — answer as many as you can.",
-          "No wager — chain correct reads for a rising combo multiplier.",
-          "Every correct first read still clears the card on your path.",
+          "No wager — chain correct reads for a rising boost multiplier.",
+          "Every correct first read still clears the card on your map.",
         ],
       };
     case "objection-volley":
       return {
-        name: "Objection Volley",
-        desc: "Three tough objections from one family, back to back. Fire back with the strongest reframe — one miss ends the volley.",
+        name: "Versus",
+        desc: "Three tough objections from one circuit, head to head. Fire back with the strongest reframe — one miss ends the run.",
         points: [
-          "3 objections in a row from a single family.",
-          "Pick the strongest reframe each time — a miss breaks the volley.",
-          "Clear all three for a rising streak payoff.",
+          "3 objections in a row from a single circuit.",
+          "Pick the strongest reframe each time — a miss ends the run.",
+          "Clear all three for a rising boost payoff.",
         ],
       };
     case "match-pairs":
@@ -55,29 +55,29 @@ function getCopy(mode: SessionMode, focusFamily: Family | null): ModeCopy {
         points: [
           "Tap a symptom, then tap the root cause it maps to.",
           "Match all four, then check them at once.",
-          "Correct matches clear those cards on your path.",
+          "Correct matches clear those cards on your map.",
         ],
       };
     case "family-focus":
       return {
-        name: "Family Focus",
+        name: "Circuit Focus",
         desc: focusFamily
           ? `Drill ${FAMILY_LABELS[focusFamily]} until it's second nature.`
-          : "Drill one situation family until it's second nature.",
+          : "Drill one circuit until it's second nature.",
         points: [
-          "Every card from one family, in one sitting.",
-          "Streak matters — chain correct reads for bonus; one miss resets.",
+          "Every card from one circuit, in one sitting.",
+          "Turbo boost — chain correct reads to fill the meter; one miss resets it.",
           "Great for shoring up a weak spot fast.",
         ],
       };
     default:
       return {
-        name: "Quick Drill",
+        name: "Practice Lap",
         desc: "7 cards, picked to target your weak spots.",
         points: [
           "7 cards, chosen by spaced repetition to hit what you most need.",
-          "Streak matters — chain correct reads for bonus; one miss resets.",
-          "A fast, focused warm-up.",
+          "Turbo boost — chain correct reads to fill the meter; one miss resets it.",
+          "A fast, focused warm-up lap.",
         ],
       };
   }
@@ -91,7 +91,7 @@ export function ModeIntro({ mode, focusFamily, onStart, onCancel }: ModeIntroPro
       <div className="flex items-center gap-3">
         <Ada expression="neutral" size={44} />
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-[var(--ink)]">
+          <h1 className="font-display text-2xl font-black tracking-tight text-[var(--ink)]">
             {copy.name}
           </h1>
           <p className="text-sm text-[var(--text-dim)]">{copy.desc}</p>
@@ -125,10 +125,9 @@ export function ModeIntro({ mode, focusFamily, onStart, onCancel }: ModeIntroPro
         <button
           type="button"
           onClick={onStart}
-          className="w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.97] min-h-[44px]"
-          style={{ transitionTimingFunction: "var(--ease-spring)" }}
+          className="font-display w-full rounded-2xl border-2 border-[var(--ink)] bg-[var(--accent)] py-4 text-center font-bold uppercase tracking-wide text-white gp-shadow gp-press min-h-[44px]"
         >
-          Start
+          Start engines
         </button>
         <button
           type="button"

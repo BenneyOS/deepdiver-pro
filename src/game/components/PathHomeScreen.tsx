@@ -139,14 +139,14 @@ export function PathHomeScreen({
 
   return (
     <div className="mx-auto w-full max-w-md space-y-5">
-      {/* Header with Ada */}
+      {/* Header with Ace */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-[var(--ink)]">
+          <h1 className="font-display text-2xl font-black tracking-tight text-[var(--ink)]">
             Read the Room
           </h1>
-          <p className="text-sm text-[var(--text-dim)]">
-            Become the seller who reads any room
+          <p className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-[var(--race-red)]">
+            <span aria-hidden="true">&#127937;</span> Diagnostic Grand Prix
           </p>
         </div>
         <Ada expression={dayStreak >= 3 ? "pleased" : "neutral"} size={44} />
@@ -160,7 +160,7 @@ export function PathHomeScreen({
         >
           <span aria-hidden="true" className="text-lg">&#x1F513;</span>
           <span className="text-sm font-bold text-[var(--success)]">
-            New unit unlocked — {unlockToast}!
+            New circuit unlocked — {unlockToast}!
           </span>
         </div>
       )}
@@ -172,8 +172,7 @@ export function PathHomeScreen({
           type="button"
           onClick={onOpenCaseFiles}
           data-testid="case-files-featured"
-          className="flex w-full items-center gap-4 rounded-3xl border border-[var(--accent)]/45 bg-[var(--accent-bg)] px-5 py-4 text-left shadow-sm transition-all hover:border-[var(--accent)] active:scale-[0.99] animate-card-deal"
-          style={{ transitionTimingFunction: "var(--ease-spring)" }}
+          className="flex w-full items-center gap-4 rounded-3xl border-2 border-[var(--ink)] bg-[var(--accent-bg)] px-5 py-4 text-left gp-shadow gp-press animate-card-deal"
           aria-label={`Case Files: Real Customer Wins — ${caseFilesUnit.done} of ${caseFilesUnit.total} lessons done. ${
             caseFilesUnit.complete ? "Mastered" : "Play"
           }`}
@@ -213,14 +212,17 @@ export function PathHomeScreen({
           unit (lessons done / total) with the unlock point marked, the unit
           name, one status line, the Continue CTA, and one journey line. */}
       {heroUnit && (
-        <div className="flex flex-col items-center rounded-3xl border border-[var(--border)] bg-[var(--card)] px-5 py-6 animate-card-deal">
+        <div className="flex flex-col items-center rounded-3xl border-2 border-[var(--ink)] bg-[var(--card)] px-5 py-6 gp-shadow animate-card-deal">
+          <p className="mb-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--race-red)]">
+            <span aria-hidden="true">&#9679;</span> Current circuit
+          </p>
           <HeroRing
             done={heroUnit.done}
             total={heroUnit.total}
             complete={heroUnit.complete}
           />
 
-          <p className="mt-4 text-center text-lg font-extrabold leading-tight text-[var(--ink)]">
+          <p className="font-display mt-4 text-center text-lg font-black leading-tight text-[var(--ink)]">
             {FAMILY_LABELS[heroUnit.family]}
           </p>
 
@@ -249,18 +251,20 @@ export function PathHomeScreen({
             onClick={handleContinue}
             data-testid="continue-cta"
             disabled={!continueLesson}
-            className="mt-5 w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.97] min-h-[44px] disabled:opacity-50"
-            style={{ transitionTimingFunction: "var(--ease-spring)" }}
+            className="font-display mt-5 w-full rounded-2xl border-2 border-[var(--ink)] bg-[var(--accent)] py-4 text-center font-bold text-white gp-shadow gp-press animate-go-pulse min-h-[44px] disabled:opacity-50"
             aria-label={
               continueLesson
-                ? `Continue — ${FAMILY_LABELS[continueLesson.family]}, lesson ${continueNumber}`
-                : "Continue"
+                ? `Green light, go — ${FAMILY_LABELS[continueLesson.family]}, lesson ${continueNumber}`
+                : "Green light, go"
             }
           >
-            <span className="block text-lg leading-tight">Continue</span>
+            <span className="flex items-center justify-center gap-2 text-lg font-black leading-tight">
+              <span className="h-2.5 w-2.5 rounded-full bg-[var(--track-green)]" aria-hidden="true" />
+              Green light — Go
+            </span>
             {continueLesson && (
-              <span className="block text-xs font-medium text-white/85">
-                Next up · Lesson {continueNumber}
+              <span className="block text-xs font-medium text-white/90">
+                Next lap · Lesson {continueNumber}
               </span>
             )}
           </button>
@@ -276,7 +280,7 @@ export function PathHomeScreen({
           aria-expanded={showPractice}
           className="flex w-full items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-left transition-colors hover:border-[var(--text-dim)] min-h-[44px]"
         >
-          <span className="text-sm font-semibold text-[var(--text-dim)]">Practice (extra reps)</span>
+          <span className="text-sm font-semibold text-[var(--text-dim)]">More races (extra laps)</span>
           <svg
             className={`h-4 w-4 text-[var(--text-faint)] transition-transform ${showPractice ? "rotate-180" : ""}`}
             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true"
@@ -286,12 +290,12 @@ export function PathHomeScreen({
         </button>
         {showPractice && (
           <div className="mt-2 grid grid-cols-2 gap-2 animate-card-deal">
-            <ModeChip label="Quick Drill" onClick={() => onStart("quick-drill")} />
-            <ModeChip label="Speed Round" onClick={() => onStart("speed-round")} />
-            <ModeChip label="Boss Deals" onClick={() => onStart("boss-deals")} />
-            <ModeChip label="Objection Volley" onClick={() => onStart("objection-volley")} />
+            <ModeChip label="Practice Lap" onClick={() => onStart("quick-drill")} />
+            <ModeChip label="Time Trial" onClick={() => onStart("speed-round")} />
+            <ModeChip label="Championship Cup" onClick={() => onStart("boss-deals")} />
+            <ModeChip label="Versus" onClick={() => onStart("objection-volley")} />
             <ModeChip label="Match Pairs" onClick={() => onStart("match-pairs")} />
-            <ModeChip label="Family Focus" onClick={() => setShowFamilyPicker(true)} />
+            <ModeChip label="Circuit Focus" onClick={() => setShowFamilyPicker(true)} />
           </div>
         )}
       </div>
@@ -300,7 +304,7 @@ export function PathHomeScreen({
       {showFamilyPicker && (
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 animate-card-deal">
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
-            Choose a family
+            Choose a circuit
           </p>
           <div className="grid grid-cols-2 gap-2">
             {families.map((fam) => (
@@ -326,9 +330,12 @@ export function PathHomeScreen({
 
       {/* Winding path — units as an ordered ladder of lessons */}
       <div className="relative px-2">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
-          Your path
-        </p>
+        <div className="mb-3 flex items-center gap-2">
+          <span className="gp-checkers w-6" aria-hidden="true" />
+          <p className="font-display text-xs font-bold uppercase tracking-[0.12em] text-[var(--ink)]">
+            Championship map
+          </p>
+        </div>
         {nodes.map((node, i) => {
           const { unit } = node;
           // The featured unit is showcased in its own card above — keep it out

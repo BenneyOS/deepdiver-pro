@@ -70,7 +70,7 @@ export function ObjectionVolley({ onHome }: { onHome: () => void }) {
         </p>
         <div className="mx-auto w-fit rounded-2xl border border-[var(--border)] bg-[var(--card)] px-6 py-3">
           <div className="font-telemetry text-2xl font-bold text-[var(--accent-ink)]">{score}</div>
-          <div className="text-xs text-[var(--text-dim)]">points</div>
+          <div className="text-xs text-[var(--text-dim)]">coins</div>
         </div>
         <button
           type="button"
