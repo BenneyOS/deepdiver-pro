@@ -104,16 +104,17 @@ export function Reveal({
               </svg>
             )}
           </span>
-          <span className={`text-base font-bold ${correct ? "text-[var(--success)]" : "text-[var(--danger)]"}`}>
-            {correct ? "Correct" : "Not quite"}
+          <span className={`font-display text-base font-black uppercase tracking-wide ${correct ? "text-[var(--success)]" : "text-[var(--danger)]"}`}>
+            {correct ? "Winning line" : "Spun out"}
           </span>
         </div>
         {correct && (
-          <div className="relative">
+          <div className="relative flex items-center gap-1">
+            <span className="text-sm text-[var(--turbo-gold)]" aria-hidden="true">&#9679;</span>
             <span className="font-telemetry text-base font-bold text-[var(--accent-ink)] animate-points-glow">
               +{points}
             </span>
-            <ParticleBurst active={correct} color="var(--accent)" count={6} />
+            <ParticleBurst active={correct} color="var(--turbo-gold)" count={6} />
           </div>
         )}
       </div>
@@ -122,7 +123,7 @@ export function Reveal({
           takeaway, distinct from the answer text, so no two reveals feel the
           same and there's a real learning every time. */}
       <div
-        className="rounded-2xl border border-[var(--accent)]/40 bg-[var(--accent-bg)] p-4 animate-section-enter"
+        className="rounded-2xl border-2 border-[var(--ink)] bg-[var(--accent-bg)] p-4 gp-shadow animate-section-enter"
         style={{ animationDelay: "40ms" }}
       >
         <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--accent-ink)]">
@@ -222,10 +223,8 @@ export function Reveal({
             bgColor = "bg-[var(--success)]/10";
             badge = (
               <span className="ml-auto flex items-center gap-1 text-xs font-bold text-[var(--success)] whitespace-nowrap">
-                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                Winning read
+                <span aria-hidden="true">&#127937;</span>
+                Winning line
               </span>
             );
           } else if (isPlayerPick && !correct) {
@@ -236,7 +235,7 @@ export function Reveal({
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                Your pick
+                Spun out
               </span>
             );
           }
@@ -248,7 +247,7 @@ export function Reveal({
           return (
             <div
               key={i}
-              className={`flex items-start gap-2 rounded-2xl border px-4 py-2.5 text-sm leading-relaxed transition-opacity ${borderColor} ${bgColor} ${isDimmed ? "opacity-50" : ""}`}
+              className={`flex items-start gap-2 rounded-2xl px-4 py-2.5 text-sm leading-relaxed transition-opacity ${isDimmed ? "border" : "border-2"} ${borderColor} ${bgColor} ${isDimmed ? "opacity-50" : ""}`}
             >
               <span className={`font-bold ${isDimmed ? "text-[var(--text-faint)]" : isCorrectOption ? "text-[var(--success)]" : isPlayerPick ? "text-[var(--danger)]" : "text-[var(--text-faint)]"}`}>
                 {label}.
@@ -313,10 +312,10 @@ export function Reveal({
       <button
         type="button"
         onClick={onNext}
-        className="w-full rounded-2xl bg-[var(--accent)] py-4 text-center font-bold text-white shadow-sm transition-all hover:bg-[var(--accent-hover)] active:scale-[0.98] min-h-[44px] animate-section-enter"
-        style={{ animationDelay: "200ms", transitionTimingFunction: "var(--ease-standard)" }}
+        className="font-display w-full rounded-2xl border-2 border-[var(--ink)] bg-[var(--accent)] py-4 text-center font-bold uppercase tracking-wide text-white gp-shadow gp-press min-h-[44px] animate-section-enter"
+        style={{ animationDelay: "200ms" }}
       >
-        {isLastRound ? "View Scorecard" : "Next Deal"}
+        {isLastRound ? "See podium" : "Next lap"}
       </button>
     </div>
   );

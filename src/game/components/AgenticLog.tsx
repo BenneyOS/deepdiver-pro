@@ -24,10 +24,10 @@ function generateLogLines(hits: number, total: number, streak: number): string[]
   }
 
   if (streak >= 3) {
-    lines.push(`${streak}-streak \u2014 raising difficulty`);
+    lines.push(`${streak}-chain — turbo boost engaged`);
   }
 
-  lines.push("selecting next scenario\u2026");
+  lines.push("lining up the next lap…");
 
   return lines;
 }
@@ -52,7 +52,7 @@ export function AgenticLog({ hits, total, streak, onComplete }: AgenticLogProps)
       <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
         <div className="mb-4 flex items-center gap-3">
           <Ada expression="thinking" size={36} />
-          <span className="text-sm font-medium text-[var(--text-dim)]">Ada is thinking&hellip;</span>
+          <span className="text-sm font-medium text-[var(--text-dim)]">Ace is on the radio&hellip;</span>
         </div>
         <div className="space-y-2 font-telemetry">
           {lines.slice(0, visibleLines).map((line, i) => (

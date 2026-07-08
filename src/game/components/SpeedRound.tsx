@@ -87,7 +87,7 @@ export function SpeedRound({ onHome }: { onHome: () => void }) {
         <Ada expression={hits >= 15 ? "impressed" : "pleased"} size={56} />
         <h2 className="text-2xl font-extrabold text-[var(--ink)]">Time!</h2>
         <div className="grid grid-cols-3 gap-3">
-          <Stat label="Score" value={score} />
+          <Stat label="Coins" value={score} />
           <Stat label="Correct" value={`${hits}/${answered}`} />
           <Stat label="Best combo" value={`${maxCombo}x`} />
         </div>

@@ -1,27 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  /* Warm theme — cream + terracotta (MODE_INTROS_AND_THEME) */
-  --page: #FBF7F0;
-  --card: #F4ECDF;
-  --card-2: #EFE6D6;
-  --ink: #2A2320;
-  --text: #2A2320;
-  --text-dim: #9C9184;
-  --text-faint: #B3A794;
-  --border: #EBE3D6;
-  --accent: #C77D3A;
-  --accent-strong: #E8A24A;
-  --accent-ink: #9A5A22;
-  --accent-bg: #F7E9D0;
+  /* Diagnostic Grand Prix — warm-cream track-side + racing-green + race-red +
+     turbo-gold. Bold arcade-poster palette (RESKIN_PRD). race-red is nudged a
+     touch deeper than #E8402C so white text on it clears WCAG AA. */
+  --page: #FFF9ED;
+  --card: #FFFFFF;
+  --card-2: #FFF3D6;
+  --ink: #14342B;
+  --text: #14342B;
+  --text-dim: #3A5A4E;
+  --text-faint: #8A8578;
+  --border: #DCE3D2;
+  --accent: #D2331F;
+  --accent-strong: #F5C542;
+  --accent-ink: #B32414;
+  --accent-bg: #FFE9A8;
   --success: #1E9E62;
   --danger: #C0392B;
-  --streak: #E07B3C;
-  --reward: #E8A24A;
+  --streak: #F5C542;
+  --reward: #F5C542;
+
+  /* Grand Prix racing tokens */
+  --race-red: #D2331F;
+  --turbo-gold: #F5C542;
+  --turbo-gold-bg: #FFE9A8;
+  --track-green: #7FC6A3;
+  --flag: #8A5A00;
+  --sand: #8A8578;
 
   /* Legacy aliases */
   --ink-light: var(--card);
-  --accent-hover: #B36E2E;
+  --accent-hover: #B32414;
   --text-primary: var(--text);
   --text-secondary: var(--text-dim);
   --text-muted: var(--text-faint);
@@ -30,8 +40,10 @@
   --ease-spring: cubic-bezier(.3, 1.6, .4, 1);
   --ease-standard: cubic-bezier(.2, .9, .3, 1);
 
-  /* Fonts */
+  /* Fonts — heavy grotesque display for racing energy, tabular mono for the
+     dashboard numerals (coins, laps, times), clean sans body. */
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Archivo', 'Inter', system-ui, sans-serif;
   --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 }
@@ -258,4 +270,104 @@ body {
 /* Mono for telemetry / scores */
 .font-telemetry {
   font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Heavy grotesque display face — headlines, HUD, podium */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* === DIAGNOSTIC GRAND PRIX — signature arcade-poster style ===
+   Chunky ink outlines + hard offset drop-shadows (NOT soft blur), and a
+   tactile "depress into the shadow" press-state. */
+.gp-outline {
+  border: 2px solid var(--ink);
+}
+.gp-shadow {
+  box-shadow: 3px 3px 0 0 var(--ink);
+}
+.gp-shadow-sm {
+  box-shadow: 2px 2px 0 0 var(--ink);
+}
+.gp-shadow-red {
+  box-shadow: 3px 3px 0 0 var(--accent-ink);
+}
+.gp-shadow-gold {
+  box-shadow: 3px 3px 0 0 var(--flag);
+}
+/* Press: the element sinks into its own shadow (arcade button feel). */
+.gp-press {
+  transition: transform 90ms var(--ease-standard), box-shadow 90ms var(--ease-standard);
+}
+.gp-press:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 0 var(--ink) !important;
+}
+
+/* Checkered-flag divider / finish marker (small, tasteful) */
+.gp-checkers {
+  height: 12px;
+  background-image:
+    linear-gradient(45deg, var(--ink) 25%, transparent 25%, transparent 75%, var(--ink) 75%),
+    linear-gradient(45deg, var(--ink) 25%, transparent 25%, transparent 75%, var(--ink) 75%);
+  background-size: 12px 12px;
+  background-position: 0 0, 6px 6px;
+  background-color: var(--card);
+  border-radius: 3px;
+  opacity: 0.85;
+}
+
+/* Racing-stripe accent for headers (diagonal red + gold) */
+.gp-stripes {
+  background-image: repeating-linear-gradient(
+    115deg,
+    var(--race-red) 0, var(--race-red) 10px,
+    var(--turbo-gold) 10px, var(--turbo-gold) 20px,
+    transparent 20px, transparent 30px
+  );
+}
+
+/* Boost / turbo meter — fills as the streak climbs, flares gold at full. */
+.gp-boost-track {
+  height: 8px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--card);
+  overflow: hidden;
+}
+.gp-boost-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--turbo-gold), var(--race-red));
+  transition: width 320ms var(--ease-spring);
+}
+@keyframes boost-flare {
+  0% { transform: scale(1); filter: brightness(1); }
+  40% { transform: scale(1.06); filter: brightness(1.25); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+.animate-boost-flare {
+  animation: boost-flare 500ms var(--ease-spring);
+}
+
+/* Podium rank-up rise */
+@keyframes podium-rise {
+  0% { opacity: 0; transform: translateY(24px) scale(0.9); }
+  60% { transform: translateY(-4px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-podium-rise {
+  animation: podium-rise 560ms var(--ease-spring) both;
+}
+
+/* Green-light "go" pulse on the current-circuit CTA */
+@keyframes go-pulse {
+  0%, 100% { box-shadow: 3px 3px 0 0 var(--ink); }
+  50% { box-shadow: 3px 3px 0 0 var(--ink), 0 0 0 4px rgba(30,158,98,0.28); }
+}
+.animate-go-pulse {
+  animation: go-pulse 2s ease-in-out infinite;
 }

@@ -8,11 +8,15 @@ interface HudProps {
   score: number;
 }
 
+// The turbo/boost meter fills over a 5-correct chain; hitting a full bar is a
+// signature "2× coins" moment. Purely a visual read of the existing streak.
+const BOOST_CHAIN = 5;
+
 export function Hud({ dealNumber, totalDeals, streak, score }: HudProps) {
   const prevScore = useRef(score);
   const prevStreak = useRef(streak);
   const [scoreAnim, setScoreAnim] = useState(false);
-  const [streakAnim, setStreakAnim] = useState(false);
+  const [boostFlare, setBoostFlare] = useState(false);
   const [showBurst, setShowBurst] = useState(false);
 
   useEffect(() => {
@@ -27,9 +31,9 @@ export function Hud({ dealNumber, totalDeals, streak, score }: HudProps) {
 
   useEffect(() => {
     if (streak > prevStreak.current && streak > 0) {
-      setStreakAnim(true);
+      setBoostFlare(true);
       setShowBurst(true);
-      const t1 = setTimeout(() => setStreakAnim(false), 400);
+      const t1 = setTimeout(() => setBoostFlare(false), 500);
       const t2 = setTimeout(() => setShowBurst(false), 600);
       prevStreak.current = streak;
       return () => { clearTimeout(t1); clearTimeout(t2); };
@@ -37,28 +41,41 @@ export function Hud({ dealNumber, totalDeals, streak, score }: HudProps) {
     prevStreak.current = streak;
   }, [streak]);
 
+  const boostSteps = streak % BOOST_CHAIN === 0 && streak > 0 ? BOOST_CHAIN : streak % BOOST_CHAIN;
+  const boostPct = (boostSteps / BOOST_CHAIN) * 100;
+  const boostFull = streak > 0 && streak % BOOST_CHAIN === 0;
+
   return (
-    <div className="mx-auto flex w-full max-w-md items-center justify-between px-2 py-3">
-      <div className="font-telemetry text-sm text-[var(--text-dim)]">
-        Deal{" "}
-        <span className="font-bold text-[var(--ink)]">
-          {dealNumber}
-        </span>
-        /{totalDeals}
+    <div className="mx-auto flex w-full max-w-md items-center justify-between gap-3 px-2 py-3">
+      {/* Lap counter */}
+      <div className="font-display text-sm font-bold uppercase tracking-wide text-[var(--text-dim)]">
+        Lap{" "}
+        <span className="font-telemetry text-[var(--ink)]">{dealNumber}</span>
+        <span className="text-[var(--text-faint)]">/{totalDeals}</span>
       </div>
-      <div className="flex items-center gap-4">
-        {streak > 0 && (
-          <div className={`relative ${streakAnim ? "animate-streak-pop" : ""}`}>
-            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--accent-bg)] px-2.5 py-1 text-xs font-bold text-[var(--accent-ink)]">
-              <span aria-hidden="true">&#x1F525;</span>
-              {streak}
-            </span>
-            <ParticleBurst active={showBurst} color="var(--accent)" count={6} />
+
+      <div className="flex items-center gap-3">
+        {/* Boost / turbo meter */}
+        <div
+          className={`flex items-center gap-1.5 ${boostFlare ? "animate-boost-flare" : ""}`}
+          aria-label={`Turbo boost ${boostSteps} of ${BOOST_CHAIN}`}
+        >
+          <span
+            className={`text-sm ${boostFull ? "text-[var(--race-red)]" : "text-[var(--turbo-gold)]"}`}
+            aria-hidden="true"
+          >
+            &#9889;
+          </span>
+          <div className="gp-boost-track relative w-14">
+            <div className="gp-boost-fill" style={{ width: `${boostPct}%` }} />
+            <ParticleBurst active={showBurst} color="var(--turbo-gold)" count={6} />
           </div>
-        )}
-        <div className={`font-telemetry text-sm ${scoreAnim ? "animate-points-glow" : ""}`}>
-          <span className="font-bold text-[var(--ink)]">{score}</span>
-          <span className="text-[var(--text-faint)]"> pts</span>
+        </div>
+
+        {/* Coins */}
+        <div className={`flex items-center gap-1 ${scoreAnim ? "animate-points-glow" : ""}`}>
+          <span className="text-sm text-[var(--turbo-gold)]" aria-hidden="true">&#9679;</span>
+          <span className="font-telemetry text-sm font-bold text-[var(--ink)]">{score}</span>
         </div>
       </div>
     </div>

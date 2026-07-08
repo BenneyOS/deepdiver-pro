@@ -20,12 +20,12 @@ export function CaseFilesGuide({ seed, onHome, onDrill }: Props) {
     <div className="mx-auto w-full max-w-md space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-[var(--ink)]">
+          <h1 className="font-display flex items-center gap-2 text-2xl font-black tracking-tight text-[var(--ink)]">
             <span aria-hidden="true">{FAMILY_ICONS[FEATURED_FAMILY]}</span>
             Case Files
           </h1>
           <p className="text-sm text-[var(--text-dim)]">
-            Real Devin customer wins — the 7 plays that closed them
+            Real Devin customer wins — the 7 plays that took the podium
           </p>
         </div>
       </div>
@@ -69,7 +69,7 @@ function MotionCard({
   const panelId = `casefile-${motion.lessonId}`;
 
   return (
-    <li className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)]">
+    <li className="overflow-hidden rounded-2xl border-2 border-[var(--ink)] bg-[var(--card)] gp-shadow-sm">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -138,7 +138,7 @@ function MotionCard({
             type="button"
             onClick={onDrill}
             data-testid={`drill-${motion.lessonId}`}
-            className="w-full rounded-xl bg-[var(--accent)] py-3 text-center text-sm font-bold text-white transition-all hover:bg-[var(--accent-hover)] active:scale-[0.98] min-h-[44px]"
+            className="font-display w-full rounded-xl border-2 border-[var(--ink)] bg-[var(--accent)] py-3 text-center text-sm font-bold uppercase tracking-wide text-white gp-shadow-sm gp-press min-h-[44px]"
           >
             Drill this motion
           </button>

@@ -278,7 +278,10 @@ function App() {
         ) : (
           <>
             {round.showQuote && (
-              <div className="mx-auto w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm animate-card-deal" key={game.currentIndex}>
+              <div className="mx-auto w-full max-w-md rounded-2xl border-2 border-[var(--ink)] bg-[var(--card)] p-5 gp-shadow animate-card-deal" key={game.currentIndex}>
+                <p className="mb-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--race-red)]">
+                  <span aria-hidden="true">&#128225;</span> Pit radio
+                </p>
                 <blockquote className="border-l-2 border-[var(--accent)] pl-4 text-lg leading-relaxed text-[var(--ink)] font-buyer-quote">
                   &ldquo;{round.card.prompt}&rdquo;
                 </blockquote>
@@ -286,7 +289,7 @@ function App() {
             )}
 
             {round.promptOverride && (
-              <div className="mx-auto w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm animate-card-deal" key={`p-${game.currentIndex}`}>
+              <div className="mx-auto w-full max-w-md rounded-2xl border-2 border-[var(--ink)] bg-[var(--card)] p-5 gp-shadow animate-card-deal" key={`p-${game.currentIndex}`}>
                 <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-faint)]">
                   The pitch says&hellip;
                 </p>

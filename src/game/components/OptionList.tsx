@@ -45,16 +45,15 @@ export function OptionList({
               aria-label={`Option ${label}: ${option.text}`}
               disabled={disabled}
               onClick={() => handleSelect(i)}
-              className={`w-full rounded-2xl border px-4 py-3 text-left text-sm leading-relaxed transition-all
+              className={`w-full rounded-2xl border-2 px-4 py-3 text-left text-sm font-medium leading-relaxed
                 ${
                   isSelected
-                    ? "border-[var(--ink)] bg-[var(--ink)] text-white"
-                    : "border-[var(--border)] bg-[var(--card)] text-[var(--ink)] hover:border-[var(--text-dim)]"
+                    ? "border-[var(--ink)] bg-[var(--ink)] text-white gp-shadow"
+                    : "border-[var(--ink)] bg-[var(--card)] text-[var(--ink)] gp-shadow-sm gp-press"
                 }
-                ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer active:scale-[0.97]"}
+                ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
                 ${isBouncing ? "animate-option-bounce" : ""}
                 min-h-[44px]`}
-              style={{ transitionTimingFunction: "var(--ease-standard)" }}
             >
               <span className={`mr-2 font-bold ${isSelected ? "text-white/60" : "text-[var(--text-faint)]"}`}>
                 {label}.
