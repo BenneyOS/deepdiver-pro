@@ -8,7 +8,7 @@ import {
   isUnitUnlocked,
   focusedUnitIndex,
   nextLessonInUnit,
-  unlockedUnitCount,
+  FEATURED_FAMILY,
   type UnitState,
   type LessonRef,
 } from "../engine/curriculum";
@@ -65,7 +65,28 @@ export function PathHomeScreen({
   // Path lessons, used only to fall back to the very first lesson when the whole
   // curriculum is finished. unitsUnlocked drives the one-time unlock toast.
   const lessons = allLessons(seed.cards, families);
-  const unitsUnlocked = unlockedUnitCount(seed.cards, families, completed);
+  // Only the linear ladder (excluding the always-on featured unit) drives the
+  // "new unit unlocked" toast, so the featured unit never mis-fires it.
+  const pathUnlocked = families.reduce(
+    (n, fam, i) =>
+      fam !== FEATURED_FAMILY && isUnitUnlocked(seed.cards, families, i, completed)
+        ? n + 1
+        : n,
+    0,
+  );
+
+  // The featured Case Files unit — surfaced in its own card at the top of Home,
+  // always playable, and kept out of the linear path below.
+  const caseFilesUnit = families.includes(FEATURED_FAMILY)
+    ? unitState(seed.cards, FEATURED_FAMILY, completed)
+    : null;
+  const caseFilesNext = caseFilesUnit
+    ? nextLessonInUnit(seed.cards, FEATURED_FAMILY, completed)
+    : null;
+  const handleCaseFiles = () => {
+    const target = caseFilesNext ?? caseFilesUnit?.lessons[0] ?? null;
+    if (target) onStartLesson(target.id);
+  };
 
   // Fire a one-time "Unlocked!" toast when a new unit becomes playable. Baseline
   // is 1 (Unit A is always unlocked), persisted so it only fires once per unlock.
@@ -79,15 +100,15 @@ export function PathHomeScreen({
     } catch {
       prev = 1;
     }
-    if (unitsUnlocked > prev) {
-      const newlyLabel = FAMILY_LABELS[families[unitsUnlocked - 1]];
+    if (pathUnlocked > prev) {
+      const newlyLabel = FAMILY_LABELS[families[pathUnlocked - 1]];
       setUnlockToast(newlyLabel);
       if (toastTimer.current) window.clearTimeout(toastTimer.current);
       toastTimer.current = window.setTimeout(() => setUnlockToast(null), 4500);
     }
-    if (unitsUnlocked !== prev) {
+    if (pathUnlocked !== prev) {
       try {
-        localStorage.setItem(KEY, String(unitsUnlocked));
+        localStorage.setItem(KEY, String(pathUnlocked));
       } catch {
         /* storage unavailable */
       }
@@ -95,7 +116,7 @@ export function PathHomeScreen({
     return () => {
       if (toastTimer.current) window.clearTimeout(toastTimer.current);
     };
-  }, [unitsUnlocked, families]);
+  }, [pathUnlocked, families]);
 
   // The unit "Continue" is currently working through, and how close it is to
   // unlocking the next unit — powers the countdown cue.
@@ -147,6 +168,50 @@ export function PathHomeScreen({
             New unit unlocked — {unlockToast}!
           </span>
         </div>
+      )}
+
+      {/* FEATURED — Case Files sits at the very top as a showcase (real customer
+          wins), always playable and separate from the linear path below. */}
+      {caseFilesUnit && (
+        <button
+          type="button"
+          onClick={handleCaseFiles}
+          data-testid="case-files-featured"
+          className="flex w-full items-center gap-4 rounded-3xl border border-[var(--accent)]/45 bg-[var(--accent-bg)] px-5 py-4 text-left shadow-sm transition-all hover:border-[var(--accent)] active:scale-[0.99] animate-card-deal"
+          style={{ transitionTimingFunction: "var(--ease-spring)" }}
+          aria-label={`Case Files: Real Customer Wins — ${caseFilesUnit.done} of ${caseFilesUnit.total} lessons done. ${
+            caseFilesUnit.complete ? "Mastered" : "Play"
+          }`}
+        >
+          <span
+            aria-hidden="true"
+            className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-[var(--card)] text-3xl shadow-inner"
+          >
+            {FAMILY_ICONS[FEATURED_FAMILY]}
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-2">
+              <span className="rounded-full bg-[var(--accent)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                Featured
+              </span>
+              <span className="text-xs font-medium text-[var(--accent-ink)]">
+                {caseFilesUnit.done}/{caseFilesUnit.total} lessons
+              </span>
+            </span>
+            <span className="mt-1 block text-base font-extrabold leading-tight text-[var(--ink)]">
+              {FAMILY_LABELS[FEATURED_FAMILY]}
+            </span>
+            <span className="block text-xs text-[var(--text-dim)]">
+              Diagnose real Devin customer wins &amp; pick the winning motion
+            </span>
+          </span>
+          <svg
+            className="h-5 w-5 flex-shrink-0 text-[var(--accent-ink)]"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       )}
 
       {/* HERO — the single dominant progress moment. One ring for the current
@@ -271,6 +336,9 @@ export function PathHomeScreen({
         </p>
         {nodes.map((node, i) => {
           const { unit } = node;
+          // The featured unit is showcased in its own card above — keep it out
+          // of the linear ladder so it isn't listed twice.
+          if (unit.family === FEATURED_FAMILY) return null;
           const isComplete = unit.complete;
           const isCurrent = node.isCurrent;
           const isLocked = !node.isUnlocked;

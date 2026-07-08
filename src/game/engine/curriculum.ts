@@ -21,6 +21,13 @@ import type { Card, Family } from "../../data/schema";
 export const LESSON_SIZE = 5;
 
 /**
+ * The "Case Files: Real Customer Wins" unit. It's a featured showcase (surfaced
+ * at the top of Home and always unlocked) rather than a rung on the linear
+ * ladder, so it stays out of the normal path progression and the hero ring.
+ */
+export const FEATURED_FAMILY: Family = "O";
+
+/**
  * How many lessons of a unit you must finish before the NEXT unit unlocks.
  * Kept low and flat (not a percentage) so the sense of progress is fast and
  * predictable regardless of unit size. Units smaller than this unlock the next
@@ -159,6 +166,9 @@ export function isUnitUnlocked(
   completed: CompletedLessons,
 ): boolean {
   if (index <= 0) return true;
+  // Case Files is a featured showcase unit built from real customer wins — it's
+  // always playable rather than gated behind clearing the entire path first.
+  if (families[index] === FEATURED_FAMILY) return true;
   return unitState(cards, families[index - 1], completed).clearedNext;
 }
 
@@ -205,6 +215,7 @@ export function currentUnitIndex(
   completed: CompletedLessons,
 ): number {
   for (let i = 0; i < families.length; i++) {
+    if (families[i] === FEATURED_FAMILY) continue; // featured, not on the ladder
     if (
       isUnitUnlocked(cards, families, i, completed) &&
       !unitState(cards, families[i], completed).complete
@@ -232,6 +243,7 @@ export function focusedUnitIndex(
 ): number {
   let deepestEngaged = -1;
   for (let i = families.length - 1; i >= 0; i--) {
+    if (families[i] === FEATURED_FAMILY) continue; // featured, tracked separately
     if (unitState(cards, families[i], completed).done > 0) {
       deepestEngaged = i;
       break;
@@ -246,6 +258,7 @@ export function focusedUnitIndex(
   // The deepest engaged unit is mastered — move forward to the next playable,
   // not-yet-complete unit so the hero tracks the new frontier.
   for (let i = deepestEngaged + 1; i < families.length; i++) {
+    if (families[i] === FEATURED_FAMILY) continue; // featured, tracked separately
     if (
       isUnitUnlocked(cards, families, i, completed) &&
       !unitState(cards, families[i], completed).complete

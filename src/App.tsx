@@ -26,6 +26,7 @@ import {
   nextLessonInUnit,
   isUnitUnlocked,
   focusedUnitIndex,
+  FEATURED_FAMILY,
 } from "./game/engine/curriculum";
 import { useCurriculum } from "./game/store/useCurriculum";
 
@@ -170,6 +171,7 @@ function App() {
       if (!isLesson) return null;
       for (let i = 0; i < allFamilies.length; i++) {
         const fam = allFamilies[i];
+        if (fam === FEATURED_FAMILY) continue; // featured, offered on Home instead
         if (fam === continueLesson?.family) continue;
         if (!isUnitUnlocked(seed.cards, allFamilies, i, completed)) continue;
         const next = nextLessonInUnit(seed.cards, fam, completed);
