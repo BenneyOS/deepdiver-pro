@@ -39,6 +39,7 @@ export type GamePhase =
   | "volley"
   | "match"
   | "portfolio"
+  | "casefiles"
   | "scorecard";
 
 export interface ClearEvent {
@@ -85,6 +86,7 @@ interface GameState {
   nextRound: () => void;
   goHome: () => void;
   openPortfolio: () => void;
+  openCaseFiles: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -406,6 +408,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   openPortfolio: () => {
     set({ phase: "portfolio" });
+  },
+
+  openCaseFiles: () => {
+    set({ phase: "casefiles" });
   },
 }));
 

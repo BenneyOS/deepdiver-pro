@@ -79,11 +79,24 @@ function tierField(card: Card): string {
   return getCorrectAnswer(card);
 }
 
+// Case Files (family O) Tier-1 asks "which GTM motion is playing out?" and the
+// answer is a motion name. If distractors are drawn from the broad pool, the one
+// motion-shaped option stands out as an odd-one-out giveaway. Forcing same-family
+// + same-tier candidates guarantees every option is a sibling motion, from the
+// very first exposure — not only once the card is near-mastered.
+function forcesSiblingDistractors(card: Card): boolean {
+  return card.family === "O" && card.tier === 1;
+}
+
 // Candidates carry family/tier so the distractor engine can favour confusable,
 // same-family near-misses over random unrelated answers.
 function getDistractorCandidates(card: Card, allCards: Card[]): DistractorCandidate[] {
+  const siblingsOnly = forcesSiblingDistractors(card);
   return allCards
     .filter((c) => c.id !== card.id)
+    .filter(
+      (c) => !siblingsOnly || (c.family === card.family && c.tier === card.tier),
+    )
     .map((c) => ({ text: tierField(c), family: c.family, tier: c.tier }));
 }
 
@@ -104,11 +117,14 @@ export function generateOptions(
   const rand = opts.rand ?? Math.random;
   const { distractorCount, hardness } = difficultyForBox(opts.box ?? 1);
   const correct = getCorrectAnswer(card);
+  // Case Files Tier-1 always uses the hardest band so the sibling motions (the
+  // only candidates) fill every slot, regardless of Leitner box.
+  const effectiveHardness = forcesSiblingDistractors(card) ? 1 : hardness;
   const distractors = selectDistractors(
     { family: card.family, tier: card.tier, correct },
     getDistractorCandidates(card, allCards),
     distractorCount,
-    hardness,
+    effectiveHardness,
     rand,
   );
 
